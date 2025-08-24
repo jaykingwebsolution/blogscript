@@ -1,0 +1,14 @@
+{
+  "name": "blogscript",
+  "version": "1.0.0",
+  "description": "A blog script application",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch",
+    "build": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "@tailwindcss/forms": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.0"
+  }
+}
