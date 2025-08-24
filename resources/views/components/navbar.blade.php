@@ -9,7 +9,7 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-8">
-                    <a href="#" class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="{{ route('home') }}" class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Music</a>
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Artists</a>
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Gist</a>
@@ -18,6 +18,19 @@
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
                     <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Privacy Policy</a>
+                    
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="text-accent hover:text-yellow-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Admin</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+                        <a href="{{ route('register') }}" class="bg-primary text-white hover:bg-secondary px-4 py-2 rounded-md text-sm font-medium transition-colors">Sign Up</a>
+                    @endauth
                 </div>
             </div>
             
@@ -34,7 +47,7 @@
         <!-- Mobile Navigation -->
         <div id="mobile-menu" class="hidden md:hidden pb-3">
             <div class="space-y-1">
-                <a href="#" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="{{ route('home') }}" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Music</a>
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Artists</a>
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Gist</a>
@@ -43,6 +56,19 @@
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">About</a>
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Contact</a>
                 <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Privacy Policy</a>
+                
+                @auth
+                    @if(Auth::user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="text-accent hover:text-yellow-600 block px-3 py-2 rounded-md text-base font-medium">Admin Dashboard</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" class="block px-3 py-2">
+                        @csrf
+                        <button type="submit" class="text-gray-600 hover:text-primary text-left text-base font-medium">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Login</a>
+                    <a href="{{ route('register') }}" class="bg-primary text-white hover:bg-secondary block px-3 py-2 rounded-md text-base font-medium text-center">Sign Up</a>
+                @endauth
             </div>
         </div>
     </div>

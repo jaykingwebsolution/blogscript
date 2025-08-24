@@ -26,15 +26,31 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for($i = 1; $i <= 3; $i++)
-                @include('components.card', [
-                    'title' => 'Amazing Song ' . $i,
-                    'description' => 'This is an incredible track that has been trending across all music platforms. Experience the perfect blend of rhythm and melody.',
-                    'image' => 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music+' . $i,
-                    'badge' => 'New Release',
-                    'link' => '#'
-                ])
-            @endfor
+            @if(isset($useDummyData) && $useDummyData)
+                @for($i = 1; $i <= 3; $i++)
+                    @include('components.card', [
+                        'title' => 'Amazing Song ' . $i,
+                        'description' => 'This is an incredible track that has been trending across all music platforms. Experience the perfect blend of rhythm and melody.',
+                        'image' => 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music+' . $i,
+                        'badge' => 'New Release',
+                        'link' => '#'
+                    ])
+                @endfor
+            @else
+                @forelse($featuredMusic as $music)
+                    @include('components.card', [
+                        'title' => $music->title,
+                        'description' => $music->description ?: 'Experience this amazing track from ' . $music->artist_name,
+                        'image' => $music->image_url ?: 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music',
+                        'badge' => 'New Release',
+                        'link' => '#'
+                    ])
+                @empty
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">No featured music available yet. Check back soon!</p>
+                    </div>
+                @endforelse
+            @endif
         </div>
     </div>
 </section>
@@ -48,15 +64,31 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @for($i = 1; $i <= 4; $i++)
-                @include('components.card', [
-                    'title' => 'Artist Name ' . $i,
-                    'description' => 'Rising star in the music industry with multiple chart-topping hits. Known for their unique style and powerful vocals.',
-                    'image' => 'https://via.placeholder.com/400x300/1E40AF/FFFFFF?text=Artist+' . $i,
-                    'badge' => 'Trending',
-                    'link' => '#'
-                ])
-            @endfor
+            @if(isset($useDummyData) && $useDummyData)
+                @for($i = 1; $i <= 4; $i++)
+                    @include('components.card', [
+                        'title' => 'Artist Name ' . $i,
+                        'description' => 'Rising star in the music industry with multiple chart-topping hits. Known for their unique style and powerful vocals.',
+                        'image' => 'https://via.placeholder.com/400x300/1E40AF/FFFFFF?text=Artist+' . $i,
+                        'badge' => 'Trending',
+                        'link' => '#'
+                    ])
+                @endfor
+            @else
+                @forelse($trendingArtists as $artist)
+                    @include('components.card', [
+                        'title' => $artist->name,
+                        'description' => $artist->bio ?: 'Rising star in the music industry with multiple chart-topping hits.',
+                        'image' => $artist->image_url ?: 'https://via.placeholder.com/400x300/1E40AF/FFFFFF?text=Artist',
+                        'badge' => 'Trending',
+                        'link' => '#'
+                    ])
+                @empty
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">No trending artists available yet. Check back soon!</p>
+                    </div>
+                @endforelse
+            @endif
         </div>
     </div>
 </section>
@@ -70,15 +102,31 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for($i = 1; $i <= 3; $i++)
-                @include('components.card', [
-                    'title' => 'Breaking Entertainment News ' . $i,
-                    'description' => 'Get the latest scoop on your favorite celebrities and entertainment industry updates. This story covers all the important details you need to know.',
-                    'image' => 'https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=News+' . $i,
-                    'badge' => 'Latest',
-                    'link' => '#'
-                ])
-            @endfor
+            @if(isset($useDummyData) && $useDummyData)
+                @for($i = 1; $i <= 3; $i++)
+                    @include('components.card', [
+                        'title' => 'Breaking Entertainment News ' . $i,
+                        'description' => 'Get the latest scoop on your favorite celebrities and entertainment industry updates. This story covers all the important details you need to know.',
+                        'image' => 'https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=News+' . $i,
+                        'badge' => 'Latest',
+                        'link' => '#'
+                    ])
+                @endfor
+            @else
+                @forelse($latestNews as $news)
+                    @include('components.card', [
+                        'title' => $news->title,
+                        'description' => $news->excerpt ?: Str::limit($news->content, 150),
+                        'image' => $news->image_url ?: 'https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=News',
+                        'badge' => 'Latest',
+                        'link' => '#'
+                    ])
+                @empty
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">No latest news available yet. Check back soon!</p>
+                    </div>
+                @endforelse
+            @endif
         </div>
     </div>
 </section>
@@ -92,15 +140,31 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @for($i = 1; $i <= 4; $i++)
-                @include('components.card', [
-                    'title' => 'Music Video ' . $i,
-                    'description' => 'Watch this amazing music video featuring stunning visuals and incredible performances from top artists.',
-                    'image' => 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Video+' . $i,
-                    'badge' => 'HD Video',
-                    'link' => '#'
-                ])
-            @endfor
+            @if(isset($useDummyData) && $useDummyData)
+                @for($i = 1; $i <= 4; $i++)
+                    @include('components.card', [
+                        'title' => 'Music Video ' . $i,
+                        'description' => 'Watch this amazing music video featuring stunning visuals and incredible performances from top artists.',
+                        'image' => 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Video+' . $i,
+                        'badge' => 'HD Video',
+                        'link' => '#'
+                    ])
+                @endfor
+            @else
+                @forelse($recentVideos as $video)
+                    @include('components.card', [
+                        'title' => $video->title,
+                        'description' => $video->description ?: 'Watch this amazing video featuring stunning visuals and incredible performances.',
+                        'image' => $video->thumbnail_url ?: 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Video',
+                        'badge' => 'HD Video',
+                        'link' => '#'
+                    ])
+                @empty
+                    <div class="col-span-full text-center py-8">
+                        <p class="text-gray-600">No recent videos available yet. Check back soon!</p>
+                    </div>
+                @endforelse
+            @endif
         </div>
     </div>
 </section>
