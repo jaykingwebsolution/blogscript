@@ -52,6 +52,9 @@ Route::get('/dmca', [PageController::class, 'dmca'])->name('dmca');
 // Search
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
+// Newsletter
+Route::post('/newsletter/subscribe', [PageController::class, 'newsletterSubscribe'])->name('newsletter.subscribe');
+
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

@@ -175,9 +175,10 @@
         <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
         <p class="text-xl mb-8">Subscribe to our newsletter and never miss the latest in music and entertainment</p>
         
-        <form class="max-w-md mx-auto">
+        <form class="max-w-md mx-auto" method="POST" action="{{ route('newsletter.subscribe') }}">
+            @csrf
             <div class="flex flex-col sm:flex-row gap-4">
-                <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent">
+                <input type="email" name="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent" required>
                 <button type="submit" class="bg-accent hover:bg-yellow-500 text-gray-900 px-8 py-3 rounded-lg font-semibold transition-colors">Subscribe</button>
             </div>
         </form>

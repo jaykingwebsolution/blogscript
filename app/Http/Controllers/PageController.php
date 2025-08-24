@@ -40,4 +40,16 @@ class PageController extends Controller
         
         return back()->with('success', 'Thank you for your message! We will get back to you soon.');
     }
+
+    public function newsletterSubscribe(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
+        // Here you would typically save to database or send to email service
+        // For now, just redirect back with success message
+        
+        return back()->with('success', 'Thank you for subscribing to our newsletter!');
+    }
 }
