@@ -11,11 +11,12 @@ class Video extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'thumbnail_url',
         'video_url',
         'duration',
-        'category',
+        'category_id',
         'is_featured',
         'status',
         'created_by'
@@ -40,5 +41,15 @@ class Video extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'video_tags');
     }
 }

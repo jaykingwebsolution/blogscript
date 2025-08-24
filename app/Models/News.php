@@ -11,11 +11,11 @@ class News extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'content',
         'excerpt',
         'image_url',
-        'category',
-        'tags',
+        'category_id',
         'is_featured',
         'status',
         'published_at',
@@ -26,8 +26,7 @@ class News extends Model
         'is_featured' => 'boolean',
         'published_at' => 'datetime',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'tags' => 'array'
+        'updated_at' => 'datetime'
     ];
 
     public function scopeFeatured($query)
@@ -48,5 +47,15 @@ class News extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'post_tags', 'news_id');
     }
 }

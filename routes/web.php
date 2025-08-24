@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\MusicController;
+use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +24,29 @@ use App\Http\Controllers\Admin\AdminController;
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+
+// Music Routes
+Route::get('/music', [MusicController::class, 'index'])->name('music.index');
+Route::get('/music/{slug}', [MusicController::class, 'show'])->name('music.show');
+
+// Artists Routes
+Route::get('/artists', [ArtistController::class, 'index'])->name('artists.index');
+Route::get('/artists/{username}', [ArtistController::class, 'show'])->name('artists.show');
+
+// Videos Routes
+Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
+Route::get('/videos/{slug}', [VideoController::class, 'show'])->name('videos.show');
+
+// Blog/News Routes
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/{slug}', [PostController::class, 'show'])->name('posts.show');
+
+// Static Pages
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact', [PageController::class, 'submitContactForm'])->name('contact.submit');
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/dmca', [PageController::class, 'dmca'])->name('dmca');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

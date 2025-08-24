@@ -11,10 +11,13 @@ class Artist extends Model
 
     protected $fillable = [
         'name',
+        'username',
+        'slug',
         'bio',
         'image_url',
         'genre',
         'country',
+        'social_links',
         'is_trending',
         'status',
         'created_by'
@@ -22,6 +25,7 @@ class Artist extends Model
 
     protected $casts = [
         'is_trending' => 'boolean',
+        'social_links' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

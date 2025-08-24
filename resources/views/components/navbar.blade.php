@@ -10,14 +10,16 @@
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-8">
                     <a href="{{ route('home') }}" class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Music</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Artists</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Gist</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Video</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">News</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
-                    <a href="#" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Privacy Policy</a>
+                    <a href="{{ route('music.index') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Music</a>
+                    <a href="{{ route('music.index', ['category' => 'albums']) }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Albums</a>
+                    <a href="{{ route('music.index', ['category' => 'mixtapes']) }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Mixtapes</a>
+                    <a href="{{ route('music.index', ['genre' => 'gospel']) }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Gospel</a>
+                    <a href="{{ route('artists.index') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Artists</a>
+                    <a href="{{ route('videos.index') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Videos</a>
+                    <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Gist</a>
+                    <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">News</a>
+                    <a href="{{ route('contact') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                    <a href="{{ route('about') }}" class="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
                     
                     @auth
                         @if(Auth::user()->isAdmin())
@@ -48,14 +50,17 @@
         <div id="mobile-menu" class="hidden md:hidden pb-3">
             <div class="space-y-1">
                 <a href="{{ route('home') }}" class="text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Music</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Artists</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Gist</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Video</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">News</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Contact</a>
-                <a href="#" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Privacy Policy</a>
+                <a href="{{ route('music.index') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Music</a>
+                <a href="{{ route('music.index', ['category' => 'albums']) }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Albums</a>
+                <a href="{{ route('music.index', ['category' => 'mixtapes']) }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Mixtapes</a>
+                <a href="{{ route('music.index', ['genre' => 'gospel']) }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Gospel</a>
+                <a href="{{ route('artists.index') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Artists</a>
+                <a href="{{ route('videos.index') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Videos</a>
+                <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Gist</a>
+                <a href="{{ route('posts.index') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">News</a>
+                <a href="{{ route('contact') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <a href="{{ route('about') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="{{ route('privacy-policy') }}" class="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Privacy Policy</a>
                 
                 @auth
                     @if(Auth::user()->isAdmin())
