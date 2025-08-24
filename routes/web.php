@@ -9,6 +9,7 @@ use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,9 @@ Route::post('/contact', [PageController::class, 'submitContactForm'])->name('con
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/dmca', [PageController::class, 'dmca'])->name('dmca');
+
+// Search
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
