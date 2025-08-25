@@ -155,4 +155,3 @@ class User extends Authenticatable
         return AdminNotification::getActiveForUser($this)->count();
     }
 }
-}

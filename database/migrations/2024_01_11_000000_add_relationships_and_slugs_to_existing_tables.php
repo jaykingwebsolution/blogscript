@@ -17,19 +17,34 @@ return new class extends Migration
         Schema::table('news', function (Blueprint $table) {
             $table->string('slug')->unique()->after('title');
             $table->foreignId('category_id')->nullable()->constrained()->after('excerpt');
-            
-            // Drop indexes first before dropping columns (required for SQLite)
+        });
+        
+        // Drop index separately for SQLite compatibility
+        Schema::table('news', function (Blueprint $table) {
             $table->dropIndex(['category', 'status']); // news_category_status_index
+        });
+        
+        // Drop columns separately for SQLite compatibility  
+        Schema::table('news', function (Blueprint $table) {
             $table->dropColumn('category');
+        });
+        
+        Schema::table('news', function (Blueprint $table) {
             $table->dropColumn('tags');
         });
 
         Schema::table('videos', function (Blueprint $table) {
             $table->string('slug')->unique()->after('title');
             $table->foreignId('category_id')->nullable()->constrained()->after('duration');
-            
-            // Drop indexes first before dropping columns (required for SQLite)
+        });
+        
+        // Drop index separately for SQLite compatibility
+        Schema::table('videos', function (Blueprint $table) {
             $table->dropIndex(['category', 'status']); // videos_category_status_index
+        });
+        
+        // Drop column separately for SQLite compatibility
+        Schema::table('videos', function (Blueprint $table) {
             $table->dropColumn('category');
         });
 
@@ -42,15 +57,47 @@ return new class extends Migration
 
     public function down()
     {
+        $driverName = Schema::connection(null)->getConnection()->getDriverName();
+        
+        // Drop foreign keys and columns separately for SQLite compatibility
+        if ($driverName !== 'sqlite') {
+            Schema::table('music', function (Blueprint $table) {
+                $table->dropForeign(['artist_id']);
+            });
+            
+            Schema::table('music', function (Blueprint $table) {
+                $table->dropForeign(['category_id']);
+            });
+        }
+        
         Schema::table('music', function (Blueprint $table) {
-            $table->dropForeign(['artist_id']);
-            $table->dropForeign(['category_id']);
-            $table->dropColumn(['slug', 'artist_id', 'category_id']);
+            $table->dropColumn('slug');
+        });
+        
+        Schema::table('music', function (Blueprint $table) {
+            $table->dropColumn('artist_id');
+        });
+        
+        Schema::table('music', function (Blueprint $table) {
+            $table->dropColumn('category_id');
         });
 
+        // Drop foreign keys and columns separately for SQLite compatibility
+        if ($driverName !== 'sqlite') {
+            Schema::table('news', function (Blueprint $table) {
+                $table->dropForeign(['category_id']);
+            });
+        }
+        
         Schema::table('news', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn(['slug', 'category_id']);
+            $table->dropColumn('slug');
+        });
+        
+        Schema::table('news', function (Blueprint $table) {
+            $table->dropColumn('category_id');
+        });
+        
+        Schema::table('news', function (Blueprint $table) {
             $table->string('category')->after('excerpt');
             $table->json('tags')->after('category');
             
@@ -58,17 +105,39 @@ return new class extends Migration
             $table->index(['category', 'status']);
         });
 
+        // Drop foreign keys and columns separately for SQLite compatibility
+        if ($driverName !== 'sqlite') {
+            Schema::table('videos', function (Blueprint $table) {
+                $table->dropForeign(['category_id']);
+            });
+        }
+        
         Schema::table('videos', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn(['slug', 'category_id']);
+            $table->dropColumn('slug');
+        });
+        
+        Schema::table('videos', function (Blueprint $table) {
+            $table->dropColumn('category_id');
+        });
+        
+        Schema::table('videos', function (Blueprint $table) {
             $table->string('category')->after('duration');
             
             // Recreate the indexes that were dropped
             $table->index(['category', 'status']);
         });
 
+        // Drop columns separately for SQLite compatibility
         Schema::table('artists', function (Blueprint $table) {
-            $table->dropColumn(['username', 'slug', 'social_links']);
+            $table->dropColumn('username');
+        });
+        
+        Schema::table('artists', function (Blueprint $table) {
+            $table->dropColumn('slug');
+        });
+        
+        Schema::table('artists', function (Blueprint $table) {
+            $table->dropColumn('social_links');
         });
     }
 };
