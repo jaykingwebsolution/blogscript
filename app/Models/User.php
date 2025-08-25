@@ -28,7 +28,11 @@ class User extends Authenticatable
         'distribution_paid',
         'distribution_paid_at',
         'distribution_payment_reference',
-        'distribution_amount_paid'
+        'distribution_amount_paid',
+        'subscription_status',
+        'subscription_plan_id',
+        'subscription_paid_at',
+        'subscription_expires_at'
     ];
 
     protected $hidden = [
@@ -43,7 +47,9 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
         'social_links' => 'array',
         'distribution_paid' => 'boolean',
-        'distribution_paid_at' => 'datetime'
+        'distribution_paid_at' => 'datetime',
+        'subscription_paid_at' => 'datetime',
+        'subscription_expires_at' => 'datetime'
     ];
 
     public function isAdmin()
@@ -195,5 +201,46 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Music::class, 'likes', 'user_id', 'music_id')
                     ->withTimestamps();
+    }
+
+    public function manualPayments()
+    {
+        return $this->hasMany(ManualPayment::class);
+    }
+
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(PricingPlan::class, 'subscription_plan_id');
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription_status === 'active' && 
+               $this->subscription_expires_at && 
+               $this->subscription_expires_at->isFuture();
+    }
+
+    public function isSubscriptionExpired()
+    {
+        return $this->subscription_expires_at && $this->subscription_expires_at->isPast();
+    }
+
+    public function likeSong($musicId)
+    {
+        if (!$this->likedSongs()->where('music_id', $musicId)->exists()) {
+            $this->likedSongs()->attach($musicId);
+            return true;
+        }
+        return false;
+    }
+
+    public function unlikeSong($musicId)
+    {
+        return $this->likedSongs()->detach($musicId) > 0;
+    }
+
+    public function hasLikedSong($musicId)
+    {
+        return $this->likedSongs()->where('music_id', $musicId)->exists();
     }
 }

@@ -283,6 +283,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'update'])->name('pricing.update');
     Route::delete('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'destroy'])->name('pricing.destroy');
     Route::post('/pricing/{pricingPlan}/toggle-status', [\App\Http\Controllers\Admin\PricingController::class, 'toggleStatus'])->name('pricing.toggle-status');
+    
+    // Manual Payment Management
+    Route::get('/manual-payments', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'index'])->name('manual-payments.index');
+    Route::get('/manual-payments/{manualPayment}', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'show'])->name('manual-payments.show');
+    Route::post('/manual-payments/{manualPayment}/approve', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'approve'])->name('manual-payments.approve');
+    Route::post('/manual-payments/{manualPayment}/reject', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'reject'])->name('manual-payments.reject');
+    Route::post('/manual-payments/bulk-approve', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'bulkApprove'])->name('manual-payments.bulk-approve');
+    Route::get('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'settings'])->name('manual-payments.settings');
+    Route::put('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'updateSettings'])->name('manual-payments.update-settings');
+    Route::get('/manual-payments/{manualPayment}/download', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'downloadProof'])->name('manual-payments.download');
 });
 
 // Notification Routes
@@ -292,6 +302,42 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
     Route::get('/notifications/unread-count', [AdminNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
 });
+
+// Payment Routes
+Route::middleware('auth')->prefix('payment')->name('payment.')->group(function () {
+    Route::get('/plans', [PaymentController::class, 'showPlans'])->name('plans');
+    Route::get('/distribution', [PaymentController::class, 'showDistributionPayment'])->name('distribution');
+    Route::get('/subscription', [PaymentController::class, 'showSubscriptionPayment'])->name('subscription');
+    
+    // Paystack Integration
+    Route::post('/distribution/initialize', [PaymentController::class, 'initializeDistributionPayment'])->name('distribution.initialize');
+    Route::post('/subscription/initialize', [PaymentController::class, 'initializeSubscriptionPayment'])->name('subscription.initialize');
+    Route::get('/distribution/callback', [PaymentController::class, 'handleDistributionCallback'])->name('distribution.callback');
+    Route::get('/subscription/callback', [PaymentController::class, 'handleSubscriptionCallback'])->name('subscription.callback');
+    
+    // Manual Payments
+    Route::post('/manual', [PaymentController::class, 'submitManualPayment'])->name('manual.submit');
+    
+    // Demo
+    Route::post('/distribution/demo', [PaymentController::class, 'simulatePaymentSuccess'])->name('distribution.demo');
+});
+
+// Like/Unlike Routes  
+Route::middleware('auth')->group(function () {
+    Route::post('/music/{music}/like', [LikeController::class, 'toggle'])->name('music.like.toggle');
+    Route::get('/music/liked', [LikeController::class, 'index'])->name('music.liked');
+    Route::delete('/music/liked/clear', [LikeController::class, 'clear'])->name('music.liked.clear');
+});
+
+// Playlist Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/playlists/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
+    Route::post('/playlists/{playlist}/add-music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
+    Route::delete('/playlists/{playlist}/remove-music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
+    Route::put('/playlists/{playlist}/update-order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
+});
+
+Route::resource('playlists', PlaylistController::class);
 
 // Spotify Routes
 Route::prefix('spotify')->name('spotify.')->group(function () {

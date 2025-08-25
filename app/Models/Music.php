@@ -115,4 +115,22 @@ class Music extends Model
         return $this->belongsToMany(User::class, 'likes', 'music_id', 'user_id')
                     ->withTimestamps();
     }
+
+    public function likedBy()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'music_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+    public function isLikedBy($user)
+    {
+        if (!$user) return false;
+        
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
 }
