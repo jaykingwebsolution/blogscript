@@ -150,6 +150,8 @@ class AdminDashboardSeeder extends Seeder
         $artists = [
             [
                 'name' => 'Burna Boy',
+                'username' => 'burnaboy',
+                'slug' => 'burna-boy',
                 'bio' => 'Grammy-winning Nigerian artist known for Afrobeat music.',
                 'genre' => 'Afrobeat',
                 'country' => 'Nigeria',
@@ -160,6 +162,8 @@ class AdminDashboardSeeder extends Seeder
             ],
             [
                 'name' => 'Wizkid',
+                'username' => 'wizkidayo',
+                'slug' => 'wizkid',
                 'bio' => 'International Afrobeats superstar and Grammy winner.',
                 'genre' => 'Afrobeats',
                 'country' => 'Nigeria',
@@ -170,6 +174,8 @@ class AdminDashboardSeeder extends Seeder
             ],
             [
                 'name' => 'Tiwa Savage',
+                'username' => 'tiwasavage',
+                'slug' => 'tiwa-savage',
                 'bio' => 'Queen of Afrobeats and international recording artist.',
                 'genre' => 'Afrobeats',
                 'country' => 'Nigeria',
@@ -329,20 +335,20 @@ class AdminDashboardSeeder extends Seeder
         $subscriptions = [
             [
                 'user_id' => User::where('email', 'artist@test.com')->first()->id ?? $admin->id,
-                'plan_id' => Plan::where('name', 'Artist Basic')->first()->id ?? 1,
+                'plan_name' => 'artist',
                 'status' => 'active',
                 'amount' => 2500.00,
-                'currency' => 'NGN',
-                'starts_at' => now()->subDays(10),
                 'expires_at' => now()->addDays(20),
-                'payment_method' => 'paystack'
+                'started_at' => now()->subDays(10),
+                'paystack_reference' => 'T_' . uniqid(),
+                'paystack_access_code' => 'AC_' . uniqid()
             ]
         ];
 
         foreach ($subscriptions as $subscriptionData) {
             Subscription::firstOrCreate([
                 'user_id' => $subscriptionData['user_id'],
-                'plan_id' => $subscriptionData['plan_id']
+                'plan_name' => $subscriptionData['plan_name']
             ], $subscriptionData);
         }
 
