@@ -9,6 +9,7 @@ use App\Models\Artist;
 use App\Models\Video;
 use App\Models\News;
 use App\Models\User;
+use App\Models\Media;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;

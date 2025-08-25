@@ -160,7 +160,7 @@
                                     notificationList.innerHTML = '<div class="p-4 text-center text-gray-400">No new notifications</div>';
                                 } else {
                                     notificationList.innerHTML = this.notifications.map(notification => `
-                                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600 last:border-b-0" onclick="markNotificationAsRead(${notification.id}, '${notification.action_url || ''}')">
+                                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600 last:border-b-0" onclick="markNotificationAsRead(${notification.id}, &quot;${(notification.action_url || '').replace(/"/g, '&quot;')}&quot;)">
                                             <div class="flex items-start space-x-3">
                                                 <div class="flex-shrink-0">
                                                     <div class="w-8 h-8 rounded-full bg-spotify-green/20 flex items-center justify-center">
@@ -170,9 +170,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="text-sm font-medium text-white">${notification.title}</p>
-                                                    <p class="text-sm text-gray-400 mt-1">${notification.message}</p>
-                                                    <p class="text-xs text-gray-500 mt-2">${notification.created_at}</p>
+                                                    <p class="text-sm font-medium text-white">${(notification.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+                                                    <p class="text-sm text-gray-400 mt-1">${(notification.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+                                                    <p class="text-xs text-gray-500 mt-2">${notification.created_at || ''}</p>
                                                 </div>
                                             </div>
                                         </div>

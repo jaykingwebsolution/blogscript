@@ -268,8 +268,8 @@ function addToPlaylist(playlistId) {
 function shareMusic() {
     if (navigator.share) {
         navigator.share({
-            title: '{{ addslashes($music->title) }}',
-            text: 'Check out this song by {{ addslashes($music->artist_name ?? ($music->artist->name ?? "Unknown Artist")) }}',
+            title: @json($music->title),
+            text: @json('Check out this song by ' . ($music->artist_name ?? ($music->artist->name ?? 'Unknown Artist'))),
             url: window.location.href
         });
     } else {

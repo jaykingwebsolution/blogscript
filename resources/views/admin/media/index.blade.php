@@ -123,7 +123,7 @@
                         </button>
                     </form>
                     
-                    <button onclick="showRejectModal('{{ $media->id }}')" 
+                    <button onclick="showRejectModal({{ $media->id }})" 
                             class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-2 rounded-md text-sm">
                         <i class="fas fa-times mr-1"></i>Reject
                     </button>
@@ -225,7 +225,7 @@
                                             </button>
                                         </form>
                                         
-                                        <button onclick="showRejectModal('{{ $media->id }}')" 
+                                        <button onclick="showRejectModal({{ $media->id }})" 
                                                 class="text-red-600 hover:text-red-900" title="Reject">
                                             <i class="fas fa-times"></i>
                                         </button>
