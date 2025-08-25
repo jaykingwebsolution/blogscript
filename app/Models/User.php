@@ -125,6 +125,16 @@ class User extends Authenticatable
         return $this->hasMany(TrendingRequest::class);
     }
 
+    public function media()
+    {
+        return $this->hasMany(Media::class);
+    }
+
+    public function userNotifications()
+    {
+        return $this->hasMany(UserNotification::class);
+    }
+
     public function hasActiveSubscription()
     {
         return $this->subscription && $this->subscription->isActive();
@@ -138,6 +148,11 @@ class User extends Authenticatable
     public function getDisplayName()
     {
         return $this->artist_stage_name ?? $this->name;
+    }
+
+    public function getUnreadNotificationsCount()
+    {
+        return AdminNotification::getActiveForUser($this)->count();
     }
 }
 }

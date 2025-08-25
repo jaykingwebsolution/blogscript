@@ -13,6 +13,10 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ArtistRequestController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\AdminNotificationController;
+use App\Http\Controllers\SpotifyPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +100,15 @@ Route::prefix('artist')->name('artist.')->middleware('auth')->group(function () 
     Route::get('/music/{music}/edit', [\App\Http\Controllers\Artist\MusicController::class, 'edit'])->name('music.edit');
     Route::put('/music/{music}', [\App\Http\Controllers\Artist\MusicController::class, 'update'])->name('music.update');
     Route::delete('/music/{music}', [\App\Http\Controllers\Artist\MusicController::class, 'destroy'])->name('music.destroy');
+    
+    // Media Routes
+    Route::get('/media', [MediaController::class, 'index'])->name('media.index');
+    Route::get('/media/upload', [MediaController::class, 'create'])->name('media.upload');
+    Route::post('/media', [MediaController::class, 'store'])->name('media.store');
+    Route::get('/media/{media}', [MediaController::class, 'show'])->name('media.show');
+    Route::get('/media/{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+    Route::put('/media/{media}', [MediaController::class, 'update'])->name('media.update');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
 // Paystack Callback Route
@@ -104,6 +117,27 @@ Route::get('/paystack/callback', [SubscriptionController::class, 'handleCallback
 // Admin Routes (Protected by admin middleware in controller)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Plan Management Routes
+    Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [PlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/{plan}/edit', [PlanController::class, 'edit'])->name('plans.edit');
+    Route::put('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+    Route::delete('/plans/{plan}', [PlanController::class, 'destroy'])->name('plans.destroy');
+    
+    // Media Management Routes
+    Route::get('/media', [AdminController::class, 'mediaIndex'])->name('media.index');
+    Route::post('/media/{media}/approve', [AdminController::class, 'mediaApprove'])->name('media.approve');
+    Route::post('/media/{media}/reject', [AdminController::class, 'mediaReject'])->name('media.reject');
+    
+    // Notification Management Routes
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('notifications.create');
+    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('notifications.store');
+    Route::get('/notifications/{adminNotification}/edit', [AdminNotificationController::class, 'edit'])->name('notifications.edit');
+    Route::put('/notifications/{adminNotification}', [AdminNotificationController::class, 'update'])->name('notifications.update');
+    Route::delete('/notifications/{adminNotification}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
     
     // Music Management
     Route::get('/music', [AdminController::class, 'musicIndex'])->name('music.index');
@@ -140,4 +174,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/trending', [AdminController::class, 'trendingIndex'])->name('trending.index');
     Route::post('/trending/{request}/approve', [AdminController::class, 'trendingApprove'])->name('trending.approve');
     Route::post('/trending/{request}/reject', [AdminController::class, 'trendingReject'])->name('trending.reject');
+});
+
+// Notification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+    Route::get('/notifications/unread-count', [AdminNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+});
+
+// Spotify Routes
+Route::prefix('spotify')->name('spotify.')->group(function () {
+    Route::get('/', [SpotifyPostController::class, 'index'])->name('index');
+    Route::get('/featured', [SpotifyPostController::class, 'featured'])->name('featured');
+    Route::get('/{spotifyPost}', [SpotifyPostController::class, 'show'])->name('show');
 });

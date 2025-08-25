@@ -7,6 +7,7 @@ use App\Models\Music;
 use App\Models\Artist;
 use App\Models\Video;
 use App\Models\News;
+use App\Models\SpotifyPost;
 
 class HomeController extends Controller
 {
@@ -18,12 +19,14 @@ class HomeController extends Controller
             $featuredArtists = Artist::published()->trending()->latest()->take(4)->get();
             $latestPosts = News::published()->latest()->take(3)->get();
             $recentVideos = Video::published()->latest()->take(3)->get();
+            $spotifyHighlights = SpotifyPost::getFeatured(5);
 
             return view('home', compact(
                 'latestMusic', 
                 'featuredArtists', 
                 'latestPosts', 
-                'recentVideos'
+                'recentVideos',
+                'spotifyHighlights'
             ));
         } catch (\Exception $e) {
             // Fallback to empty collections if database is not available
@@ -32,6 +35,7 @@ class HomeController extends Controller
                 'featuredArtists' => collect(),
                 'latestPosts' => collect(),
                 'recentVideos' => collect(),
+                'spotifyHighlights' => collect(),
                 'useDummyData' => true
             ]);
         }

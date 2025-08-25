@@ -39,6 +39,108 @@
                 <!-- Auth Links -->
                 <div class="flex items-center space-x-4">
                     @auth
+                        <!-- Notification Bell -->
+                        <div class="relative" x-data="{ 
+                            open: false, 
+                            unreadCount: 0,
+                            notifications: [],
+                            async loadNotifications() {
+                                try {
+                                    const response = await fetch('/notifications/unread-count');
+                                    const data = await response.json();
+                                    this.unreadCount = data.count;
+                                } catch (error) {
+                                    console.error('Failed to load notifications:', error);
+                                }
+                            },
+                            async markAsRead(notificationId) {
+                                try {
+                                    await fetch('/notifications/mark-as-read', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+                                        },
+                                        body: JSON.stringify({ notification_id: notificationId })
+                                    });
+                                    await this.loadNotifications();
+                                } catch (error) {
+                                    console.error('Failed to mark notification as read:', error);
+                                }
+                            },
+                            async markAllAsRead() {
+                                try {
+                                    await fetch('/notifications/mark-all-as-read', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').getAttribute('content')
+                                        }
+                                    });
+                                    this.unreadCount = 0;
+                                } catch (error) {
+                                    console.error('Failed to mark all notifications as read:', error);
+                                }
+                            }
+                        }" x-init="loadNotifications(); setInterval(() => loadNotifications(), 60000);">
+                            
+                            <button @click="open = !open" class="relative p-2 text-gray-600 hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-full">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                                </svg>
+                                <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"></span>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-80 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-medium text-gray-900">Notifications</h3>
+                                        <button @click="markAllAsRead()" x-show="unreadCount > 0" class="text-sm text-purple-600 hover:text-purple-800">
+                                            Mark all as read
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                                        @php
+                                            $userNotifications = auth()->user() ? \App\Models\AdminNotification::getActiveForUser(auth()->user())->take(5) : collect();
+                                        @endphp
+                                        
+                                        @forelse($userNotifications as $notification)
+                                            <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer" 
+                                                 onclick="markNotificationAsRead({{ $notification->id }})">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                                        <i class="{{ $notification->icon_class }}"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-900">{{ $notification->title }}</p>
+                                                    <p class="text-sm text-gray-600 truncate">{{ Str::limit($notification->message, 60) }}</p>
+                                                    <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="text-center py-6">
+                                                <div class="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                                                    </svg>
+                                                </div>
+                                                <p class="text-sm text-gray-500">No new notifications</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                    
+                                    @if($userNotifications->count() > 0)
+                                        <div class="mt-3 pt-3 border-t border-gray-100">
+                                            <a href="{{ route('notifications.index') }}" class="block text-center text-sm text-purple-600 hover:text-purple-800 font-medium">
+                                                View all notifications
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- User Dropdown -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
