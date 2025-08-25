@@ -17,6 +17,9 @@ return new class extends Migration
         Schema::table('news', function (Blueprint $table) {
             $table->string('slug')->unique()->after('title');
             $table->foreignId('category_id')->nullable()->constrained()->after('excerpt');
+            
+            // Drop indexes first before dropping columns (required for SQLite)
+            $table->dropIndex(['category', 'status']); // news_category_status_index
             $table->dropColumn('category');
             $table->dropColumn('tags');
         });
@@ -24,6 +27,9 @@ return new class extends Migration
         Schema::table('videos', function (Blueprint $table) {
             $table->string('slug')->unique()->after('title');
             $table->foreignId('category_id')->nullable()->constrained()->after('duration');
+            
+            // Drop indexes first before dropping columns (required for SQLite)
+            $table->dropIndex(['category', 'status']); // videos_category_status_index
             $table->dropColumn('category');
         });
 
@@ -47,12 +53,18 @@ return new class extends Migration
             $table->dropColumn(['slug', 'category_id']);
             $table->string('category')->after('excerpt');
             $table->json('tags')->after('category');
+            
+            // Recreate the indexes that were dropped
+            $table->index(['category', 'status']);
         });
 
         Schema::table('videos', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
             $table->dropColumn(['slug', 'category_id']);
             $table->string('category')->after('duration');
+            
+            // Recreate the indexes that were dropped
+            $table->index(['category', 'status']);
         });
 
         Schema::table('artists', function (Blueprint $table) {
