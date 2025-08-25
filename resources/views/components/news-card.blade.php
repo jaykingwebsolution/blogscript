@@ -1,7 +1,7 @@
 @props(['post'])
 
 <div {{ $attributes->merge(['class' => 'mb-6']) }}>
-    <img src="{{ $post->featured_image ? asset('storage/' . $post->featured_image) : 'https://via.placeholder.com/300x150/10B981/FFFFFF?text=News' }}" 
+    <img src="{{ $post->featured_image ? asset('storage/' . $post->featured_image) : 'asset("images/default-news.svg")' }}" 
          alt="{{ $post->title }}" 
          class="w-full h-32 object-cover rounded-lg mb-3">
     <h3 class="font-semibold text-gray-900 mb-2">

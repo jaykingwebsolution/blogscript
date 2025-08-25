@@ -127,7 +127,7 @@
                 @foreach($likedSongs->take(6) as $song)
                 <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                     <div class="relative mb-4">
-                        <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : 'https://via.placeholder.com/200x200/3B82F6/FFFFFF?text=♪' }}" 
+                        <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : asset('images/default-music.svg') }}" 
                              alt="{{ $song->title }}" 
                              class="w-full aspect-square object-cover rounded-lg shadow-md">
                         <button class="play-btn absolute bottom-2 right-2 w-12 h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -156,7 +156,7 @@
                 @foreach($playlists as $playlist)
                 <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                     <div class="relative mb-4">
-                        <img src="{{ $playlist->cover_image ? asset('storage/' . $playlist->cover_image) : 'https://via.placeholder.com/300x200/667eea/FFFFFF?text=Playlist' }}" 
+                        <img src="{{ $playlist->cover_image ? asset('storage/' . $playlist->cover_image) : 'asset("images/default-playlist.svg")' }}" 
                              alt="{{ $playlist->name }}" 
                              class="w-full h-40 object-cover rounded-lg shadow-md">
                         <button class="play-btn absolute bottom-4 right-4 w-12 h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -186,7 +186,7 @@
                 @foreach($uploadedMusic->take(6) as $track)
                 <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                     <div class="relative mb-4">
-                        <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : 'https://via.placeholder.com/200x200/10B981/FFFFFF?text=♪' }}" 
+                        <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : 'asset("images/default-music.svg")' }}" 
                              alt="{{ $track->title }}" 
                              class="w-full aspect-square object-cover rounded-lg shadow-md">
                         <button class="play-btn absolute bottom-2 right-2 w-12 h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">

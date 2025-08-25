@@ -97,13 +97,13 @@
                     @endphp
                     @forelse($recentPlaylists as $playlist)
                         <a href="{{ route('playlists.show', $playlist->id) }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm transition-colors">
-                            <img src="{{ $playlist->cover_image ? asset('storage/' . $playlist->cover_image) : 'https://via.placeholder.com/40x40/1db954/FFFFFF?text=P' }}" alt="Playlist" class="w-6 h-6 rounded">
+                            <img src="{{ $playlist->cover_image ? asset('storage/' . $playlist->cover_image) : asset('images/default-playlist.svg') }}" alt="Playlist" class="w-6 h-6 rounded">
                             <span class="truncate">{{ $playlist->name }}</span>
                         </a>
                     @empty
                         @for($i = 1; $i <= 3; $i++)
                         <div class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-500 text-sm">
-                            <img src="https://via.placeholder.com/40x40/1db954/FFFFFF?text=P{{ $i }}" alt="Playlist" class="w-6 h-6 rounded opacity-50">
+                            <img src="{{ asset('images/default-playlist.svg') }}" alt="Playlist" class="w-6 h-6 rounded opacity-50">
                             <span class="truncate">Create your first playlist</span>
                         </div>
                         @endfor
@@ -111,7 +111,7 @@
                 @else
                     @for($i = 1; $i <= 3; $i++)
                     <div class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-500 text-sm">
-                        <img src="https://via.placeholder.com/40x40/1db954/FFFFFF?text=P{{ $i }}" alt="Playlist" class="w-6 h-6 rounded opacity-50">
+                        <img src="{{ asset('images/default-playlist.svg') }}" alt="Playlist" class="w-6 h-6 rounded opacity-50">
                         <span class="truncate">Log in to see playlists</span>
                     </div>
                     @endfor
@@ -125,7 +125,7 @@
             <!-- User Dropdown -->
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center space-x-3 w-full text-left hover:bg-gray-700 p-2 rounded-lg transition-colors">
-                    <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : 'https://via.placeholder.com/32x32/3b82f6/FFFFFF?text=' . substr(auth()->user()->name, 0, 1) }}" alt="Profile" class="w-8 h-8 rounded-full">
+                    <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('images/default-artist.svg') }}" alt="Profile" class="w-8 h-8 rounded-full">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
                         <p class="text-xs text-gray-400 truncate">{{ ucfirst(auth()->user()->role) }}</p>

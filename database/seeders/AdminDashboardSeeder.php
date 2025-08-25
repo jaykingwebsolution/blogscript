@@ -158,7 +158,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_trending' => true,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Burna+Boy'
+                'image_url' => '/images/default-artist.svg'
             ],
             [
                 'name' => 'Wizkid',
@@ -170,7 +170,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_trending' => true,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Wizkid'
+                'image_url' => '/images/default-artist.svg'
             ],
             [
                 'name' => 'Tiwa Savage',
@@ -182,7 +182,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_trending' => false,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Tiwa+Savage'
+                'image_url' => '/images/default-artist.svg'
             ]
         ];
 
@@ -200,7 +200,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_featured' => true,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Last+Last',
+                'image_url' => '/images/default-music.svg',
                 'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                 'duration' => '3:42'
             ],
@@ -212,7 +212,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_featured' => true,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Essence',
+                'image_url' => '/images/default-music.svg',
                 'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
                 'duration' => '4:15'
             ],
@@ -224,7 +224,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'published',
                 'created_by' => $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=Somebody+Son',
+                'image_url' => '/images/default-music.svg',
                 'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
                 'duration' => '3:28'
             ],
@@ -236,7 +236,7 @@ class AdminDashboardSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'draft',
                 'created_by' => User::where('email', 'artist@test.com')->first()->id ?? $admin->id,
-                'image_url' => 'https://via.placeholder.com/400x400?text=New+Beat',
+                'image_url' => '/images/default-music.svg',
                 'audio_url' => 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
                 'duration' => '4:02'
             ]
@@ -253,7 +253,7 @@ class AdminDashboardSeeder extends Seeder
                 'title' => 'Studio Recording Session',
                 'description' => 'Behind the scenes of my latest recording.',
                 'type' => 'image',
-                'external_url' => 'https://via.placeholder.com/800x600?text=Studio+Session',
+                'external_url' => '/images/default.svg',
                 'mime_type' => 'image/jpeg',
                 'file_size' => 245678,
                 'metadata' => ['dimensions' => '800x600'],
@@ -277,7 +277,7 @@ class AdminDashboardSeeder extends Seeder
                 'title' => 'Music Video Teaser',
                 'description' => 'Teaser for upcoming music video.',
                 'type' => 'video',
-                'external_url' => 'https://via.placeholder.com/1280x720?text=Video+Teaser',
+                'external_url' => '/images/default.svg',
                 'mime_type' => 'video/mp4',
                 'file_size' => 12345678,
                 'metadata' => ['duration' => 30, 'resolution' => '1280x720'],

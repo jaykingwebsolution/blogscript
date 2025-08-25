@@ -142,10 +142,6 @@ class User extends Authenticatable
         return $this->hasMany(UserNotification::class);
     }
 
-    public function hasActiveSubscription()
-    {
-        return $this->subscription && $this->subscription->isActive();
-    }
 
     public function isVerified()
     {

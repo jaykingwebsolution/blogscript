@@ -204,13 +204,13 @@
                             @for($i = 1; $i <= 5; $i++)
                             <div class="music-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer group">
                                 <div class="relative mb-4">
-                                    <img src="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}" 
+                                    <img src="{{ asset("images/default-music.svg") }}" 
                                          alt="Track {{ $i }}" 
                                          class="w-full aspect-square object-cover rounded-lg">
                                     <button class="play-track-btn absolute bottom-2 right-2 w-10 h-10 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
                                             data-title="Amazing Track {{ $i }}"
                                             data-artist="Artist Name {{ $i }}"
-                                            data-cover="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}"
+                                            data-cover="{{ asset("images/default-music.svg") }}"
                                             data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-{{ $i }}.mp3">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M8 5v10l7-5z"/>
@@ -247,7 +247,7 @@
                             @for($i = 1; $i <= 6; $i++)
                             <div class="text-center group cursor-pointer">
                                 <div class="relative mx-auto w-24 h-24 mb-3">
-                                    <img src="https://via.placeholder.com/150x150/{{ ['8B5CF6', '06B6D4', 'F59E0B', 'EF4444', '10B981', '3B82F6'][($i-1)%6] }}/FFFFFF?text=Artist" 
+                                    <img src="{{ asset("images/default-artist.svg") }}" 
                                          alt="Artist {{ $i }}" 
                                          class="w-full h-full object-cover rounded-full border-4 border-transparent group-hover:border-blue-500 transition-all">
                                     @if($i <= 3)
@@ -276,7 +276,7 @@
                             @for($i = 1; $i <= 4; $i++)
                             <div class="music-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer">
                                 <div class="relative mb-4">
-                                    <img src="https://via.placeholder.com/300x200/{{ ['667eea', 'f093fb', '4facfe', 'ffecd2'][($i-1)%4] }}/FFFFFF?text=Playlist+{{ $i }}" 
+                                    <img src="{{ asset("images/default-playlist.svg") }}" 
                                          alt="Playlist {{ $i }}" 
                                          class="w-full h-32 object-cover rounded-lg">
                                     <div class="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
@@ -305,7 +305,7 @@
         <div class="flex items-center justify-between">
             <!-- Currently Playing -->
             <div class="flex items-center space-x-4 flex-1 min-w-0">
-                <img src="https://via.placeholder.com/60x60/3B82F6/FFFFFF?text=♪" 
+                <img src="{{ asset("images/default-music.svg") }}" 
                      alt="Current Track" 
                      class="w-12 h-12 rounded-lg object-cover">
                 <div class="min-w-0 flex-1">

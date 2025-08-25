@@ -238,10 +238,10 @@
                             <button @click="profileOpen = !profileOpen" class="flex items-center space-x-2 hover:bg-white/10 rounded-full p-1 transition-colors">
                                 @php
                                     $defaultAvatars = [
-                                        'artist' => 'https://via.placeholder.com/32x32/1db954/FFFFFF?text=♪',
-                                        'record_label' => 'https://via.placeholder.com/32x32/8b5cf6/FFFFFF?text=🏢',
-                                        'listener' => 'https://via.placeholder.com/32x32/3b82f6/FFFFFF?text=👤',
-                                        'admin' => 'https://via.placeholder.com/32x32/ef4444/FFFFFF?text=⚙',
+                                        'artist' => asset('images/default-music.svg'),
+                                        'record_label' => asset('images/default-artist.svg'),
+                                        'listener' => asset('images/default-artist.svg'),
+                                        'admin' => asset('images/default.svg'),
                                     ];
                                     $avatarUrl = auth()->user()->profile_picture 
                                         ? asset('storage/' . auth()->user()->profile_picture)

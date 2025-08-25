@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="col-span-6 flex items-center space-x-3">
-                            <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : 'https://via.placeholder.com/64x64/1DB954/FFFFFF?text=♪' }}" 
+                            <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : 'asset("images/default-music.svg")' }}" 
                                  alt="{{ $song->title }}" 
                                  class="w-10 h-10 rounded">
                             <div>

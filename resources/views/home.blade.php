@@ -130,7 +130,7 @@
                     @for($i = 1; $i <= 6; $i++)
                     <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                         <div class="relative mb-3 sm:mb-4">
-                            <img src="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6', '06B6D4'][($i-1)%6] }}/FFFFFF?text=Album" 
+                            <img src="{{ asset('images/default-music.svg') }}" 
                                  alt="Album {{ $i }}" 
                                  class="w-full aspect-square object-cover rounded-lg shadow-md">
                             <button class="play-btn absolute bottom-2 right-2 w-10 h-10 sm:w-12 sm:h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -157,7 +157,7 @@
                     @for($i = 1; $i <= 6; $i++)
                     <div class="group text-center cursor-pointer">
                         <div class="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 sm:mb-4">
-                            <img src="https://via.placeholder.com/150x150/{{ ['8B5CF6', '06B6D4', 'F59E0B', 'EF4444', '10B981', '3B82F6'][($i-1)%6] }}/FFFFFF?text=Artist" 
+                            <img src="{{ asset('images/default-artist.svg') }}" 
                                  alt="Artist {{ $i }}" 
                                  class="w-full h-full object-cover rounded-full shadow-lg group-hover:shadow-xl transition-shadow">
                             <button class="play-btn absolute bottom-1 sm:bottom-2 right-1 sm:right-2 w-8 h-8 sm:w-10 sm:h-10 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -184,7 +184,7 @@
                     @for($i = 1; $i <= 4; $i++)
                     <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                         <div class="relative mb-3 sm:mb-4">
-                            <img src="https://via.placeholder.com/300x200/{{ ['667eea', 'f093fb', '4facfe', 'ffecd2'][($i-1)%4] }}/FFFFFF?text=Playlist" 
+                            <img src="{{ asset('images/default-playlist.svg') }}" 
                                  alt="Playlist {{ $i }}" 
                                  class="w-full h-32 sm:h-40 object-cover rounded-lg shadow-md">
                             <button class="play-btn absolute bottom-3 sm:bottom-4 right-3 sm:right-4 w-10 h-10 sm:w-12 sm:h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
@@ -210,7 +210,7 @@
         <div class="flex items-center justify-between">
             <!-- Currently Playing -->
             <div class="flex items-center space-x-4 flex-1 min-w-0">
-                <img src="https://via.placeholder.com/60x60/1db954/FFFFFF?text=♪" 
+                <img src="{{ asset('images/default-music.svg') }}" 
                      alt="Current Track" 
                      class="w-14 h-14 rounded-lg object-cover shadow-lg">
                 <div class="min-w-0 flex-1">
