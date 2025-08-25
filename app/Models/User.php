@@ -19,7 +19,12 @@ class User extends Authenticatable
         'role',
         'status',
         'approved_at',
-        'approved_by'
+        'approved_by',
+        'bio',
+        'profile_picture',
+        'social_links',
+        'artist_stage_name',
+        'artist_genre'
     ];
 
     protected $hidden = [
@@ -32,6 +37,7 @@ class User extends Authenticatable
         'approved_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'social_links' => 'array'
     ];
 
     public function isAdmin()
@@ -42,6 +48,21 @@ class User extends Authenticatable
     public function isEditor()
     {
         return $this->role === 'editor';
+    }
+
+    public function isArtist()
+    {
+        return $this->role === 'artist';
+    }
+
+    public function isListener()
+    {
+        return $this->role === 'listener';
+    }
+
+    public function isRecordLabel()
+    {
+        return $this->role === 'record_label';
     }
 
     public function isApproved()
@@ -88,4 +109,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(News::class, 'created_by');
     }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    public function verificationRequests()
+    {
+        return $this->hasMany(VerificationRequest::class);
+    }
+
+    public function trendingRequests()
+    {
+        return $this->hasMany(TrendingRequest::class);
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription && $this->subscription->isActive();
+    }
+
+    public function isVerified()
+    {
+        return $this->verification_status === 'verified';
+    }
+
+    public function getDisplayName()
+    {
+        return $this->artist_stage_name ?? $this->name;
+    }
+}
 }

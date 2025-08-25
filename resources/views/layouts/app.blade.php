@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'BlogScript - Music, News & Entertainment')</title>
+    <title>@yield('title', 'Music Platform - Discover, Upload, Stream')</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <!-- Fallback to CDN for development -->
+    <!-- Tailwind CSS CDN for development -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactive components -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3B82F6',
-                        secondary: '#1E40AF',
+                        primary: '#7C3AED',
+                        secondary: '#EC4899',
                         accent: '#F59E0B'
                     }
                 }
