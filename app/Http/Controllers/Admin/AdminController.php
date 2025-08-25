@@ -196,12 +196,31 @@ class AdminController extends Controller
     }
 
     // User Management & Approval
-    public function userIndex()
+    public function userIndex(Request $request)
     {
-        $users = User::with(['subscription', 'verificationRequests'])
-                     ->withCount(['createdMusic', 'media'])
-                     ->latest()
-                     ->paginate(15);
+        $query = User::with(['subscription', 'verificationRequests'])
+                     ->withCount(['createdMusic', 'media']);
+
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('artist_stage_name', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->get('role'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->get('status'));
+        }
+
+        $users = $query->latest()->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 

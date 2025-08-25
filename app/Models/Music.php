@@ -46,6 +46,11 @@ class Music extends Model
         return $query->where('status', 'published');
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 'draft');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

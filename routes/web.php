@@ -33,6 +33,11 @@ use App\Http\Controllers\SpotifyPostController;
 |
 */
 
+// Preview Routes (for testing without database)
+Route::get('/admin-preview', function () {
+    return view('admin-preview');
+})->name('admin.preview');
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');

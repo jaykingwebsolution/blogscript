@@ -277,5 +277,8 @@ class DatabaseSeeder extends Seeder
         foreach ($news as $newsData) {
             News::create($newsData);
         }
+
+        // Run the admin dashboard seeder for enhanced admin features
+        $this->call(AdminDashboardSeeder::class);
     }
 }
