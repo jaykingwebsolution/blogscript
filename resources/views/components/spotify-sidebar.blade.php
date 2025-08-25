@@ -262,8 +262,8 @@
     </aside>
     
     <!-- Mobile menu button -->
-    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden fixed top-4 left-4 z-30 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden fixed top-4 left-4 z-40 w-10 h-10 bg-black/80 hover:bg-black/90 rounded-full flex items-center justify-center text-white backdrop-blur-sm">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
     </button>

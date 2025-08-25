@@ -75,11 +75,145 @@
     @stack('styles')
 </head>
 <body class="h-full bg-gray-50 dark:bg-spotify-black font-sans antialiased">
-    <div class="flex h-screen">
+    <div class="flex h-screen overflow-hidden">
         @include('components.spotify-sidebar')
         
-        <main class="flex-1 flex flex-col overflow-hidden">
-            @yield('content')
+        <main class="flex-1 flex flex-col min-h-screen max-w-full overflow-hidden">
+            <!-- Top Header Navbar -->
+            <header class="flex-shrink-0 bg-spotify-black/90 dark:bg-spotify-black/90 backdrop-blur-sm border-b border-gray-800 lg:pl-0 pl-16">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <!-- Left section - Back/Forward buttons (desktop only) -->
+                    <div class="flex items-center space-x-2">
+                        <div class="hidden lg:flex items-center space-x-2">
+                            <button class="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <button class="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Search bar (hidden on mobile) -->
+                        @auth
+                        <form method="GET" action="{{ route('search') }}" class="hidden md:flex items-center ml-4">
+                            <div class="relative">
+                                <input type="text" 
+                                       name="q" 
+                                       placeholder="What do you want to listen to?" 
+                                       class="w-80 px-4 py-2 pl-10 pr-4 text-sm bg-white/10 text-white placeholder-white/70 border border-white/20 rounded-full focus:ring-2 focus:ring-white/50 focus:border-transparent backdrop-blur-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </form>
+                        @endauth
+                    </div>
+
+                    <!-- Right section - User actions -->
+                    <div class="flex items-center space-x-3">
+                        <!-- Dark mode toggle -->
+                        <button onclick="toggleDarkMode()" class="w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors">
+                            <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                            </svg>
+                            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </button>
+
+                        @auth
+                        <!-- User Profile Icon and Dropdown -->
+                        <div class="relative" x-data="{ profileOpen: false }">
+                            <button @click="profileOpen = !profileOpen" class="flex items-center space-x-2 hover:bg-white/10 rounded-full p-1 transition-colors">
+                                @php
+                                    $defaultAvatars = [
+                                        'artist' => 'https://via.placeholder.com/32x32/1db954/FFFFFF?text=♪',
+                                        'record_label' => 'https://via.placeholder.com/32x32/8b5cf6/FFFFFF?text=🏢',
+                                        'listener' => 'https://via.placeholder.com/32x32/3b82f6/FFFFFF?text=👤',
+                                        'admin' => 'https://via.placeholder.com/32x32/ef4444/FFFFFF?text=⚙',
+                                    ];
+                                    $avatarUrl = auth()->user()->profile_picture 
+                                        ? asset('storage/' . auth()->user()->profile_picture)
+                                        : ($defaultAvatars[auth()->user()->role] ?? $defaultAvatars['listener']);
+                                @endphp
+                                <img src="{{ $avatarUrl }}" 
+                                     alt="{{ auth()->user()->name }}" 
+                                     class="w-8 h-8 rounded-full ring-2 ring-white/20">
+                                <span class="hidden sm:block text-sm text-white font-medium">{{ Str::limit(auth()->user()->name, 12) }}</span>
+                                <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- Profile Dropdown -->
+                            <div x-show="profileOpen" @click.away="profileOpen = false" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute right-0 top-full mt-2 w-48 bg-gray-800 rounded-lg shadow-lg ring-1 ring-white/10 z-50">
+                                <div class="py-1">
+                                    <a href="{{ route('dashboard.profile') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        View Profile
+                                    </a>
+                                    <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                                        </svg>
+                                        Dashboard
+                                    </a>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                            Admin Panel  
+                                        </a>
+                                    @endif
+                                    <div class="border-t border-gray-600 my-1"></div>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                            </svg>
+                                            Sign Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                        <!-- Login/Register for guests -->
+                        <div class="flex items-center space-x-2">
+                            <a href="{{ route('login') }}" class="px-4 py-2 text-sm bg-spotify-green text-white rounded-full font-semibold hover:bg-green-600 transition-colors">
+                                Log In
+                            </a>
+                            <a href="{{ route('register') }}" class="hidden sm:block px-4 py-2 text-sm border border-gray-600 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-colors">
+                                Sign Up
+                            </a>
+                        </div>
+                        @endauth
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content Area with proper scrolling -->
+            <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+                @yield('content')
+            </div>
         </main>
     </div>
     
