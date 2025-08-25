@@ -87,18 +87,23 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:music,slug',
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
-            'audio_url' => 'nullable|url',
+            'music_url' => 'nullable|url',
+            'download_url' => 'nullable|url',
             'duration' => 'nullable|string|max:10',
             'genre' => 'nullable|string|max:100',
             'is_featured' => 'boolean',
             'status' => 'required|in:draft,published,archived'
         ]);
 
+        // Generate slug from title
+        $validated['slug'] = \Str::slug($validated['title']);
         $validated['created_by'] = Auth::id();
+
+        // Ensure is_featured is false if not checked
+        $validated['is_featured'] = $request->has('is_featured');
 
         Music::create($validated);
 
@@ -114,16 +119,24 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:music,slug,' . $music->id,
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
-            'audio_url' => 'nullable|url',
+            'music_url' => 'nullable|url',
+            'download_url' => 'nullable|url',
             'duration' => 'nullable|string|max:10',
             'genre' => 'nullable|string|max:100',
             'is_featured' => 'boolean',
             'status' => 'required|in:draft,published,archived'
         ]);
+
+        // Update slug if title changed
+        if ($validated['title'] !== $music->title) {
+            $validated['slug'] = \Str::slug($validated['title']);
+        }
+
+        // Ensure is_featured is false if not checked
+        $validated['is_featured'] = $request->has('is_featured');
 
         $music->update($validated);
 
@@ -137,9 +150,35 @@ class AdminController extends Controller
     }
 
     // Artist Management
-    public function artistIndex()
+    public function artistIndex(Request $request)
     {
-        $artists = Artist::with('creator')->latest()->paginate(10);
+        $query = Artist::with(['creator'])
+                       ->withCount(['music']);
+
+        // Apply filters
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('username', 'LIKE', "%{$search}%")
+                  ->orWhere('bio', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('genre')) {
+            $query->where('genre', $request->get('genre'));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->get('status'));
+        }
+
+        if ($request->filled('country')) {
+            $query->where('country', $request->get('country'));
+        }
+
+        $artists = $query->latest()->paginate(15);
+
         return view('admin.artists.index', compact('artists'));
     }
 
@@ -152,6 +191,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:100|unique:artists,username',
             'bio' => 'nullable|string',
             'image_url' => 'nullable|url',
             'genre' => 'nullable|string|max:100',
@@ -160,7 +200,12 @@ class AdminController extends Controller
             'status' => 'required|in:draft,published,archived'
         ]);
 
+        // Generate slug from name if not provided
+        $validated['slug'] = \Str::slug($validated['name']);
         $validated['created_by'] = Auth::id();
+
+        // Ensure is_trending is false if not checked
+        $validated['is_trending'] = $request->has('is_trending');
 
         Artist::create($validated);
 
@@ -169,6 +214,7 @@ class AdminController extends Controller
 
     public function artistEdit(Artist $artist)
     {
+        $artist->loadCount(['music']);
         return view('admin.artists.edit', compact('artist'));
     }
 
@@ -176,6 +222,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:100|unique:artists,username,' . $artist->id,
             'bio' => 'nullable|string',
             'image_url' => 'nullable|url',
             'genre' => 'nullable|string|max:100',
@@ -183,6 +230,14 @@ class AdminController extends Controller
             'is_trending' => 'boolean',
             'status' => 'required|in:draft,published,archived'
         ]);
+
+        // Update slug if name changed
+        if ($validated['name'] !== $artist->name) {
+            $validated['slug'] = \Str::slug($validated['name']);
+        }
+
+        // Ensure is_trending is false if not checked
+        $validated['is_trending'] = $request->has('is_trending');
 
         $artist->update($validated);
 
