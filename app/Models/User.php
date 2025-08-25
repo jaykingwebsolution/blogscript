@@ -24,7 +24,11 @@ class User extends Authenticatable
         'profile_picture',
         'social_links',
         'artist_stage_name',
-        'artist_genre'
+        'artist_genre',
+        'distribution_paid',
+        'distribution_paid_at',
+        'distribution_payment_reference',
+        'distribution_amount_paid'
     ];
 
     protected $hidden = [
@@ -37,7 +41,9 @@ class User extends Authenticatable
         'approved_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'social_links' => 'array'
+        'social_links' => 'array',
+        'distribution_paid' => 'boolean',
+        'distribution_paid_at' => 'datetime'
     ];
 
     public function isAdmin()
@@ -148,6 +154,26 @@ class User extends Authenticatable
     public function getUnreadNotificationsCount()
     {
         return AdminNotification::getActiveForUser($this)->count();
+    }
+
+    public function hasDistributionAccess()
+    {
+        return $this->distribution_paid || $this->isAdmin();
+    }
+
+    public function canSubmitDistribution()
+    {
+        return ($this->isArtist() || $this->isRecordLabel()) && $this->hasDistributionAccess();
+    }
+
+    public function markDistributionAsPaid($amount, $reference = null)
+    {
+        $this->update([
+            'distribution_paid' => true,
+            'distribution_paid_at' => now(),
+            'distribution_payment_reference' => $reference,
+            'distribution_amount_paid' => $amount
+        ]);
     }
 
     public function playlists()

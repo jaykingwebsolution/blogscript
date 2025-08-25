@@ -162,6 +162,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'store'])->name('distribution.store');
     Route::get('/distribution/my-submissions', [App\Http\Controllers\DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
     Route::get('/distribution/my-submissions/{distributionRequest}', [App\Http\Controllers\DistributionController::class, 'show'])->name('distribution.show');
+    
+    // Payment Routes
+    Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
+    Route::post('/payment/distribution/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeDistributionPayment'])->name('payment.distribution.initialize');
+    Route::get('/payment/distribution/callback', [\App\Http\Controllers\PaymentController::class, 'handleDistributionCallback'])->name('payment.distribution.callback');
+    Route::post('/payment/distribution/demo', [\App\Http\Controllers\PaymentController::class, 'simulatePaymentSuccess'])->name('payment.distribution.demo');
 });
 
 // Artist Routes (Authenticated Artists and Record Labels)
@@ -268,6 +274,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/distribution/{distributionRequest}/decline', [\App\Http\Controllers\Admin\DistributionController::class, 'decline'])->name('distribution.decline');
     Route::put('/distribution/{distributionRequest}/status', [\App\Http\Controllers\Admin\DistributionController::class, 'updateStatus'])->name('distribution.update-status');
     Route::delete('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'destroy'])->name('distribution.destroy');
+    
+    // Pricing Management
+    Route::get('/pricing', [\App\Http\Controllers\Admin\PricingController::class, 'index'])->name('pricing.index');
+    Route::get('/pricing/create', [\App\Http\Controllers\Admin\PricingController::class, 'create'])->name('pricing.create');
+    Route::post('/pricing', [\App\Http\Controllers\Admin\PricingController::class, 'store'])->name('pricing.store');
+    Route::get('/pricing/{pricingPlan}/edit', [\App\Http\Controllers\Admin\PricingController::class, 'edit'])->name('pricing.edit');
+    Route::put('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'update'])->name('pricing.update');
+    Route::delete('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'destroy'])->name('pricing.destroy');
+    Route::post('/pricing/{pricingPlan}/toggle-status', [\App\Http\Controllers\Admin\PricingController::class, 'toggleStatus'])->name('pricing.toggle-status');
 });
 
 // Notification Routes

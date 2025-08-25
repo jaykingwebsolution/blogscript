@@ -128,6 +128,111 @@
                         </button>
 
                         @auth
+                        <!-- Notification Bell -->
+                        <div class="relative" x-data="{ 
+                            notificationOpen: false, 
+                            unreadCount: 0,
+                            notifications: [],
+                            async fetchNotifications() {
+                                try {
+                                    const response = await fetch('/notifications/unread-count');
+                                    const data = await response.json();
+                                    this.unreadCount = data.count;
+                                    
+                                    // Fetch latest notifications for dropdown
+                                    const notifResponse = await fetch('/notifications', {
+                                        headers: {
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    });
+                                    const notifData = await notifResponse.json();
+                                    this.notifications = notifData.notifications || [];
+                                    
+                                    // Update notification list in dropdown
+                                    this.updateNotificationList();
+                                } catch (error) {
+                                    console.error('Error fetching notifications:', error);
+                                }
+                            },
+                            updateNotificationList() {
+                                const notificationList = document.getElementById('notification-list');
+                                if (this.notifications.length === 0) {
+                                    notificationList.innerHTML = '<div class="p-4 text-center text-gray-400">No new notifications</div>';
+                                } else {
+                                    notificationList.innerHTML = this.notifications.map(notification => `
+                                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600 last:border-b-0" onclick="markNotificationAsRead(${notification.id}, '${notification.action_url || ''}')">
+                                            <div class="flex items-start space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-8 h-8 rounded-full bg-spotify-green/20 flex items-center justify-center">
+                                                        <svg class="w-4 h-4 text-spotify-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3-3v-4c0-5.523-4.477-10-10-10S2 4.477 2 10v4l-3 3h5m9 0a3 3 0 11-6 0m6 0H9"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-white">${notification.title}</p>
+                                                    <p class="text-sm text-gray-400 mt-1">${notification.message}</p>
+                                                    <p class="text-xs text-gray-500 mt-2">${notification.created_at}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('');
+                                }
+                            },
+                            async markAsRead(notificationId) {
+                                try {
+                                    await fetch('/notifications/mark-as-read', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+                                        },
+                                        body: JSON.stringify({ notification_id: notificationId })
+                                    });
+                                    await this.fetchNotifications();
+                                } catch (error) {
+                                    console.error('Error marking notification as read:', error);
+                                }
+                            }
+                        }" x-init="fetchNotifications(); setInterval(fetchNotifications, 30000)">
+                            <button @click="notificationOpen = !notificationOpen; if(notificationOpen) fetchNotifications()" 
+                                    class="relative w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3-3v-4c0-5.523-4.477-10-10-10S2 4.477 2 10v4l-3 3h5m9 0a3 3 0 11-6 0m6 0H9"/>
+                                </svg>
+                                <!-- Notification Badge -->
+                                <span x-show="unreadCount > 0" 
+                                      x-text="unreadCount > 99 ? '99+' : unreadCount"
+                                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px] text-[10px] font-medium">
+                                </span>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div x-show="notificationOpen" 
+                                 @click.away="notificationOpen = false"
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute right-0 top-full mt-2 w-96 bg-gray-800 rounded-lg shadow-lg ring-1 ring-white/10 z-50 max-h-80 overflow-hidden">
+                                <div class="px-4 py-3 border-b border-gray-700">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-sm font-medium text-white">Notifications</h3>
+                                        <button @click="fetch('/notifications/mark-all-as-read', {method: 'POST', headers: {'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content}}).then(() => fetchNotifications())" 
+                                                class="text-xs text-gray-400 hover:text-white">Mark all read</button>
+                                    </div>
+                                </div>
+                                <div class="max-h-64 overflow-y-auto" id="notification-list">
+                                    <!-- Notifications will be loaded here via AJAX -->
+                                    <div class="p-4 text-center text-gray-400">
+                                        Loading notifications...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- User Profile Icon and Dropdown -->
                         <div class="relative" x-data="{ profileOpen: false }">
                             <button @click="profileOpen = !profileOpen" class="flex items-center space-x-2 hover:bg-white/10 rounded-full p-1 transition-colors">
@@ -246,7 +351,7 @@
         }
         
         // Mark notification as read
-        async function markNotificationAsRead(notificationId) {
+        async function markNotificationAsRead(notificationId, actionUrl = '') {
             try {
                 await fetch('/notifications/mark-as-read', {
                     method: 'POST',
@@ -257,8 +362,14 @@
                     body: JSON.stringify({ notification_id: notificationId })
                 });
                 
-                if (window.Alpine && window.Alpine.store && window.Alpine.store('notifications')) {
-                    window.Alpine.store('notifications').loadNotifications();
+                // If there's an action URL, redirect to it
+                if (actionUrl && actionUrl.trim() !== '') {
+                    window.open(actionUrl, '_blank');
+                }
+                
+                // Refresh notification count
+                if (typeof window.fetchNotifications === 'function') {
+                    window.fetchNotifications();
                 }
             } catch (error) {
                 console.error('Failed to mark notification as read:', error);

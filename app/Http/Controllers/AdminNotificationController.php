@@ -21,7 +21,26 @@ class AdminNotificationController extends Controller
             $notifications = AdminNotification::latest()->paginate(15);
             return view('admin.notifications.index', compact('notifications'));
         } else {
-            $notifications = AdminNotification::getActiveForUser(auth()->user());
+            // Return JSON for AJAX requests
+            if (request()->ajax()) {
+                $notifications = AdminNotification::getActiveForUser(auth()->user())->take(10);
+                return response()->json([
+                    'notifications' => $notifications->map(function($notification) {
+                        return [
+                            'id' => $notification->id,
+                            'title' => $notification->title,
+                            'message' => Str::limit($notification->message, 80),
+                            'type' => $notification->type,
+                            'icon_class' => $notification->icon_class,
+                            'action_url' => $notification->action_url,
+                            'created_at' => $notification->created_at->diffForHumans(),
+                        ];
+                    }),
+                    'count' => AdminNotification::getActiveForUser(auth()->user())->count()
+                ]);
+            }
+            
+            $notifications = AdminNotification::getActiveForUser(auth()->user())->take(50);
             return view('dashboard.notifications', compact('notifications'));
         }
     }

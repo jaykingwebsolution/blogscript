@@ -26,6 +26,14 @@ class DistributionController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
+        
+        // Check if user has distribution access (has paid)
+        if (!$user->hasDistributionAccess()) {
+            return redirect()->route('payment.distribution')
+                           ->with('info', 'You need to pay the distribution fee to submit music for distribution.');
+        }
+        
         $genres = DistributionRequest::getGenres();
         return view('distribution.create', compact('genres'));
     }
@@ -35,6 +43,14 @@ class DistributionController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        
+        // Check if user has distribution access (has paid)
+        if (!$user->hasDistributionAccess()) {
+            return redirect()->route('payment.distribution')
+                           ->with('error', 'You need to pay the distribution fee to submit music for distribution.');
+        }
+        
         $request->validate([
             'artist_name' => 'required|string|max:255',
             'song_title' => 'required|string|max:255',
@@ -44,8 +60,6 @@ class DistributionController extends Controller
             'audio_file' => 'required|mimes:mp3,wav,m4a,aac|max:51200', // 50MB
             'description' => 'nullable|string|max:1000',
         ]);
-
-        $user = Auth::user();
         
         // Handle file uploads
         $coverImagePath = null;
