@@ -181,6 +181,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/music/{music}', [AdminController::class, 'musicDestroy'])->name('music.destroy');
     Route::post('/music/{music}/approve', [AdminController::class, 'musicApprove'])->name('music.approve');
     Route::post('/music/{music}/reject', [AdminController::class, 'musicReject'])->name('music.reject');
+    Route::post('/music/{music}/feature', [AdminController::class, 'musicFeature'])->name('music.feature');
+    Route::post('/music/{music}/unfeature', [AdminController::class, 'musicUnfeature'])->name('music.unfeature');
     
     // Artist Management
     Route::get('/artists', [AdminController::class, 'artistIndex'])->name('artists.index');
@@ -192,6 +194,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // User Management
     Route::get('/users', [AdminController::class, 'userIndex'])->name('users.index');
+    Route::get('/users/create', [AdminController::class, 'userCreate'])->name('users.create');
+    Route::post('/users', [AdminController::class, 'userStore'])->name('users.store');
+    Route::get('/users/{user}', [AdminController::class, 'userShow'])->name('users.show');
+    Route::get('/users/{user}/edit', [AdminController::class, 'userEdit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'userUpdate'])->name('users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'userDestroy'])->name('users.destroy');
     Route::post('/users/{user}/approve', [AdminController::class, 'userApprove'])->name('users.approve');
     Route::post('/users/{user}/suspend', [AdminController::class, 'userSuspend'])->name('users.suspend');
     
