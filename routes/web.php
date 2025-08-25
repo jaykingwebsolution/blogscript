@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminController;
@@ -16,6 +17,9 @@ use App\Http\Controllers\ArtistRequestController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\AdminNotificationController;
+use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\Auth\RoleBasedRegisterController;
+use App\Http\Controllers\Dashboard\ListenerDashboardController;
 use App\Http\Controllers\SpotifyPostController;
 
 /*
@@ -65,15 +69,44 @@ Route::post('/newsletter/subscribe', [PageController::class, 'newsletterSubscrib
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+Route::get('/register', [RoleBasedRegisterController::class, 'showRoleSelection'])->name('register');
+Route::get('/register/{role}', [RoleBasedRegisterController::class, 'showRegisterForm'])->name('register.role');
+Route::post('/register/{role}', [RoleBasedRegisterController::class, 'register'])->name('register.role.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Playlist Routes
+Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlists.index');
+Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
 
 // Dashboard and Profile Routes (Authenticated Users)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        $user = Auth::user();
+        
+        // Redirect to role-specific dashboard
+        if ($user->isListener()) {
+            return app(ListenerDashboardController::class)->index();
+        } elseif ($user->isArtist()) {
+            return redirect()->route('artist.dashboard');
+        } elseif ($user->isRecordLabel()) {
+            return redirect()->route('label.dashboard');
+        } elseif ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        
         return view('dashboard.index');
     })->name('dashboard');
+    
+    // Playlist Management
+    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
+    Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
+    Route::post('/playlists', [PlaylistController::class, 'store'])->name('playlists.store');
+    Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit'])->name('playlists.edit');
+    Route::put('/playlists/{playlist}', [PlaylistController::class, 'update'])->name('playlists.update');
+    Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
+    Route::post('/playlists/{playlist}/music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
+    Route::delete('/playlists/{playlist}/music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
+    Route::put('/playlists/{playlist}/order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
     
     Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('dashboard.profile');
     Route::put('/dashboard/profile', [ProfileController::class, 'update'])->name('dashboard.profile.update');

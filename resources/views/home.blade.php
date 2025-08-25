@@ -1,380 +1,428 @@
 @extends('layouts.app')
 
-@section('title', 'Music Platform - Home')
+@section('title', 'Music Streaming Platform - Discover Amazing Music')
+
+@push('styles')
+<style>
+    /* Audio Player Styles */
+    .audio-player {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .music-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .music-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .play-btn {
+        background: rgba(59, 130, 246, 0.9);
+        backdrop-filter: blur(10px);
+    }
+    
+    .play-btn:hover {
+        background: rgba(59, 130, 246, 1);
+    }
+    
+    .sidebar-link {
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar-link:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-left: 4px solid #3b82f6;
+    }
+    
+    /* Dark mode styles */
+    .dark .music-card {
+        background: #1f2937;
+        border: 1px solid #374151;
+    }
+    
+    .dark .audio-player {
+        background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    }
+</style>
+@endpush
 
 @section('content')
-<!-- Hero Section with Slider -->
-<section class="relative bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white overflow-hidden">
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">Welcome to Music Platform</h1>
-            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Your ultimate destination for music, entertainment, and trending artists. Discover the latest hits, trending content, and breaking news all in one place.</p>
-            <div class="space-x-4">
-                <a href="{{ route('music.index') }}" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-8 py-3 rounded-lg font-semibold transition-colors shadow-lg">Explore Music</a>
-                <a href="{{ route('artists.index') }}" class="border-2 border-white text-white hover:bg-white hover:text-purple-600 px-8 py-3 rounded-lg font-semibold transition-colors">Browse Artists</a>
-            </div>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-24">
+    <!-- Mobile Header -->
+    <div class="lg:hidden bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="px-4 py-3 flex items-center justify-between">
+            <button id="mobile-menu-btn" class="text-gray-600 dark:text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900 dark:text-white">Music Platform</h1>
+            <button id="dark-mode-toggle" class="text-gray-600 dark:text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
         </div>
     </div>
-</section>
 
-<!-- Main Content Grid - 3 Columns -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- Latest Music Column -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Latest Music</h2>
-                        <a href="{{ route('music.index') }}" class="text-purple-600 hover:text-purple-800 font-semibold">View All</a>
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed lg:static lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out z-40 w-64 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+            <div class="p-4">
+                <div class="flex items-center space-x-2 mb-8">
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                        </svg>
                     </div>
-                    
-                    @forelse($latestMusic ?? [] as $music)
-                        <x-music-card :music="$music" class="mb-4" />
-                    @empty
-                        <!-- Demo Content -->
-                        @for($i = 1; $i <= 3; $i++)
-                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors mb-4">
-                            <img src="https://via.placeholder.com/80x80/3B82F6/FFFFFF?text=Music" alt="Music Cover" class="w-16 h-16 rounded-lg object-cover">
-                            <div class="ml-4 flex-1">
-                                <h3 class="font-semibold text-gray-900">Amazing Afrobeats Hit {{ $i }}</h3>
-                                <p class="text-sm text-gray-600">Artist Name {{ $i }}</p>
-                                <div class="flex items-center mt-1">
-                                    <button class="text-purple-600 hover:text-purple-800 mr-4">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">MusicStream</h1>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="/" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-blue-600 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-9 9a1 1 0 001.414 1.414L2 12.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-4.586l.293.293a1 1 0 001.414-1.414l-9-9z"/>
+                        </svg>
+                        <span class="font-medium">Home</span>
+                    </a>
+
+                    <a href="{{ route('music.index') }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                        </svg>
+                        <span>Browse Music</span>
+                    </a>
+
+                    <a href="{{ route('artists.index') }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                        </svg>
+                        <span>Artists</span>
+                    </a>
+
+                    @auth
+                    <a href="{{ route('playlists.my-playlists') }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                        </svg>
+                        <span>My Playlists</span>
+                    </a>
+                    @endauth
+
+                    <a href="{{ route('playlists.index') }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Trending</span>
+                    </a>
+
+                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</p>
+                        <div class="mt-2 space-y-1">
+                            <a href="#" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm">
+                                <span>Afrobeats</span>
+                            </a>
+                            <a href="#" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm">
+                                <span>Hip Hop</span>
+                            </a>
+                            <a href="#" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm">
+                                <span>R&B</span>
+                            </a>
+                            <a href="#" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm">
+                                <span>Pop</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-0">
+            <!-- Featured Banner -->
+            <section class="relative h-96 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 overflow-hidden">
+                <div class="absolute inset-0 bg-black/40"></div>
+                <div class="relative h-full flex items-center px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-4xl">
+                        <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Discover Amazing Music</h1>
+                        <p class="text-xl md:text-2xl text-white/90 mb-8">Stream millions of songs, create playlists, and discover new artists</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button class="bg-white text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M8 5v10l7-5z"/>
+                                </svg>
+                                Play Now
+                            </button>
+                            @auth
+                            <a href="{{ route('playlists.create') }}" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors text-center">
+                                Create Playlist
+                            </a>
+                            @else
+                            <a href="{{ route('register') }}" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors text-center">
+                                Join Now
+                            </a>
+                            @endauth
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Content -->
+            <section class="py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Recently Played / Featured Music -->
+                    <div class="mb-12">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Featured Tracks</h2>
+                            <a href="{{ route('music.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">View All</a>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                            @for($i = 1; $i <= 5; $i++)
+                            <div class="music-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                                <div class="relative mb-4">
+                                    <img src="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}" 
+                                         alt="Track {{ $i }}" 
+                                         class="w-full aspect-square object-cover rounded-lg">
+                                    <button class="play-track-btn absolute bottom-2 right-2 w-10 h-10 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
+                                            data-title="Amazing Track {{ $i }}"
+                                            data-artist="Artist Name {{ $i }}"
+                                            data-cover="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}"
+                                            data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-{{ $i }}.mp3">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M8 5v10l7-5z"/>
                                         </svg>
                                     </button>
-                                    <button class="text-gray-500 hover:text-gray-700">
+                                </div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white mb-1 truncate">Amazing Track {{ $i }}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Artist Name {{ $i }}</p>
+                                <div class="flex items-center mt-2 space-x-2">
+                                    <button class="text-gray-400 hover:text-red-500 transition-colors">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M3 17a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"/>
+                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-blue-500 transition-colors">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
                                         </svg>
                                     </button>
                                 </div>
                             </div>
+                            @endfor
                         </div>
-                        @endfor
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- News/Gist Column -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Latest News & Gist</h2>
-                        <a href="{{ route('posts.index') }}" class="text-purple-600 hover:text-purple-800 font-semibold">View All</a>
                     </div>
-                    
-                    @forelse($latestPosts ?? [] as $post)
-                        <x-news-card :post="$post" class="mb-4" />
-                    @empty
-                        <!-- Demo Content -->
-                        @for($i = 1; $i <= 3; $i++)
-                        <div class="mb-6">
-                            <img src="https://via.placeholder.com/300x150/10B981/FFFFFF?text=News+{{ $i }}" alt="News" class="w-full h-32 object-cover rounded-lg mb-3">
-                            <h3 class="font-semibold text-gray-900 mb-2">Breaking: New Music Industry Trends in {{ date('Y') }}</h3>
-                            <p class="text-sm text-gray-600 mb-2">Discover the latest trends shaping the music industry and how artists are adapting to new technologies...</p>
-                            <div class="text-xs text-gray-500">{{ now()->subHours($i)->format('M j, Y') }}</div>
+
+                    <!-- Trending Artists -->
+                    <div class="mb-12">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Trending Artists</h2>
+                            <a href="{{ route('artists.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">View All</a>
                         </div>
-                        @endfor
-                    @endforelse
-                </div>
-            </div>
 
-            <!-- Trending Artists Column -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">Trending Artists</h2>
-                        <a href="{{ route('artists.index') }}" class="text-purple-600 hover:text-purple-800 font-semibold">View All</a>
-                    </div>
-                    
-                    @forelse($featuredArtists ?? [] as $artist)
-                        <x-artist-card :artist="$artist" class="mb-4" />
-                    @empty
-                        <!-- Demo Content -->
-                        @for($i = 1; $i <= 4; $i++)
-                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors mb-4">
-                            <img src="https://via.placeholder.com/60x60/F59E0B/FFFFFF?text=Artist" alt="Artist" class="w-12 h-12 rounded-full object-cover">
-                            <div class="ml-4 flex-1">
-                                <div class="flex items-center">
-                                    <h3 class="font-semibold text-gray-900">Trending Artist {{ $i }}</h3>
-                                    @if($i <= 2)
-                                        <svg class="w-4 h-4 text-blue-500 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                            @for($i = 1; $i <= 6; $i++)
+                            <div class="text-center group cursor-pointer">
+                                <div class="relative mx-auto w-24 h-24 mb-3">
+                                    <img src="https://via.placeholder.com/150x150/{{ ['8B5CF6', '06B6D4', 'F59E0B', 'EF4444', '10B981', '3B82F6'][($i-1)%6] }}/FFFFFF?text=Artist" 
+                                         alt="Artist {{ $i }}" 
+                                         class="w-full h-full object-cover rounded-full border-4 border-transparent group-hover:border-blue-500 transition-all">
+                                    @if($i <= 3)
+                                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
+                                    </div>
                                     @endif
                                 </div>
-                                <p class="text-sm text-gray-600">Afrobeats, Pop</p>
-                                <div class="flex items-center mt-1">
-                                    <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">Trending</span>
+                                <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Artist Name {{ $i }}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">{{ ['Afrobeats', 'Hip Hop', 'R&B', 'Pop', 'Reggae', 'Jazz'][($i-1)%6] }}</p>
+                            </div>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- Playlists -->
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Popular Playlists</h2>
+                            <a href="{{ route('playlists.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">View All</a>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            @for($i = 1; $i <= 4; $i++)
+                            <div class="music-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                <div class="relative mb-4">
+                                    <img src="https://via.placeholder.com/300x200/{{ ['667eea', 'f093fb', '4facfe', 'ffecd2'][($i-1)%4] }}/FFFFFF?text=Playlist+{{ $i }}" 
+                                         alt="Playlist {{ $i }}" 
+                                         class="w-full h-32 object-cover rounded-lg">
+                                    <div class="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                                        {{ rand(15, 50) }} songs
+                                    </div>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">{{ ['Afrobeats Hits', 'Chill Vibes', 'Workout Mix', 'Late Night R&B'][$i-1] }}</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{{ ['The hottest Afrobeats tracks', 'Relax and unwind', 'High-energy workout songs', 'Smooth R&B for late nights'][$i-1] }}</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs text-gray-500 dark:text-gray-500">by Music Lover</span>
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Play</button>
                                 </div>
                             </div>
-                        </div>
-                        @endfor
-                    @endforelse
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Videos & Mixtapes Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Videos & Mixtapes</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Watch the latest music videos and listen to exclusive mixtapes</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for($i = 1; $i <= 3; $i++)
-            <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                <div class="aspect-w-16 aspect-h-9">
-                    <img src="https://via.placeholder.com/400x225/EF4444/FFFFFF?text=Video+{{ $i }}" alt="Video" class="w-full h-48 object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="bg-white bg-opacity-90 rounded-full p-4 hover:bg-opacity-100 transition-colors cursor-pointer">
-                            <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M8 5v10l7-5z"/>
-                            </svg>
+                            @endfor
                         </div>
                     </div>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 mb-2">Amazing Music Video {{ $i }}</h3>
-                    <p class="text-sm text-gray-600">Artist Name {{ $i }}</p>
-                    <div class="text-xs text-gray-500 mt-2">{{ now()->subDays($i)->format('M j, Y') }}</div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<!-- Sticky Audio Player -->
+<div id="audio-player" class="audio-player fixed bottom-0 left-0 right-0 z-50 px-4 py-3 hidden">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between">
+            <!-- Currently Playing -->
+            <div class="flex items-center space-x-4 flex-1 min-w-0">
+                <img src="https://via.placeholder.com/60x60/3B82F6/FFFFFF?text=♪" 
+                     alt="Current Track" 
+                     class="w-12 h-12 rounded-lg object-cover">
+                <div class="min-w-0 flex-1">
+                    <h4 class="text-white font-medium truncate">Amazing Track Name</h4>
+                    <p class="text-white/80 text-sm truncate">Artist Name</p>
+                </div>
+                <button class="text-white/80 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center space-x-6 flex-1 justify-center">
+                <button class="text-white/80 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"/>
+                    </svg>
+                </button>
+                <button id="play-pause-btn" class="w-10 h-10 bg-white text-gray-900 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l7-5z"/>
+                    </svg>
+                </button>
+                <button class="text-white/80 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798L4.555 5.168z"/>
+                    </svg>
+                </button>
+                <button class="text-white/80 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </button>
+                <button class="text-white/80 hover:text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h4a1 1 0 011 1v2h4a1 1 0 110 2h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Volume & Options -->
+            <div class="flex items-center space-x-4 flex-1 justify-end">
+                <div class="hidden sm:flex items-center space-x-2">
+                    <span class="text-white/80 text-sm">2:34</span>
+                    <div class="w-24 bg-white/20 rounded-full h-1">
+                        <div class="bg-white rounded-full h-1 w-1/3"></div>
+                    </div>
+                    <span class="text-white/80 text-sm">4:12</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-white/80" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.775L4.72 14.087a.5.5 0 00-.393-.17 2 2 0 01-2-2V8.083a2 2 0 012-2 .5.5 0 00.393-.17l3.663-2.688a1 1 0 01.617-.224zM13 5.5a1 1 0 011-1c2.452 0 4.441 1.89 4.441 4.221a1 1 0 11-2 0c0-1.24-.974-2.221-2.441-2.221a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    <div class="w-16 bg-white/20 rounded-full h-1">
+                        <div class="bg-white rounded-full h-1 w-2/3"></div>
+                    </div>
                 </div>
             </div>
-            @endfor
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="mt-2">
+            <div class="w-full bg-white/20 rounded-full h-1">
+                <div class="bg-white rounded-full h-1 w-1/3 transition-all duration-100"></div>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Newsletter Section -->
-<section class="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
-        <p class="text-xl mb-8">Get the latest music releases, artist news, and exclusive content delivered to your inbox</p>
-        
-        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" method="POST" action="{{ route('newsletter.subscribe') }}">
-            @csrf
-            <input type="email" name="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
-            <button type="submit" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors">Subscribe</button>
-        </form>
-    </div>
-</section>
-
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"></div>
 @endsection
-                        <p class="text-gray-600">No featured music available yet. Check back soon!</p>
-                    </div>
-                @endforelse
-            @endif
-        </div>
-    </div>
-</section>
 
-<!-- Trending Artists Section -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Artists</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Meet the artists making waves in the industry right now</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @if(isset($useDummyData) && $useDummyData)
-                @for($i = 1; $i <= 4; $i++)
-                    @include('components.card', [
-                        'title' => 'Artist Name ' . $i,
-                        'description' => 'Rising star in the music industry with multiple chart-topping hits. Known for their unique style and powerful vocals.',
-                        'image' => 'https://via.placeholder.com/400x300/1E40AF/FFFFFF?text=Artist+' . $i,
-                        'badge' => 'Trending',
-                        'link' => '#'
-                    ])
-                @endfor
-            @else
-                @forelse($trendingArtists as $artist)
-                    @include('components.card', [
-                        'title' => $artist->name,
-                        'description' => $artist->bio ?: 'Rising star in the music industry with multiple chart-topping hits.',
-                        'image' => $artist->image_url ?: 'https://via.placeholder.com/400x300/1E40AF/FFFFFF?text=Artist',
-                        'badge' => 'Trending',
-                        'link' => '#'
-                    ])
-                @empty
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-gray-600">No trending artists available yet. Check back soon!</p>
-                    </div>
-                @endforelse
-            @endif
-        </div>
-    </div>
-</section>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
 
-<!-- Latest Blog Posts Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Blog Posts</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Stay updated with the latest news, gossips, and entertainment stories</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @if(isset($useDummyData) && $useDummyData)
-                @for($i = 1; $i <= 3; $i++)
-                    @include('components.card', [
-                        'title' => 'Breaking Entertainment News ' . $i,
-                        'description' => 'Get the latest scoop on your favorite celebrities and entertainment industry updates. This story covers all the important details you need to know.',
-                        'image' => 'https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=News+' . $i,
-                        'badge' => 'Latest',
-                        'link' => '#'
-                    ])
-                @endfor
-            @else
-                @forelse($latestNews as $news)
-                    @include('components.card', [
-                        'title' => $news->title,
-                        'description' => $news->excerpt ?: Str::limit($news->content, 150),
-                        'image' => $news->image_url ?: 'https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=News',
-                        'badge' => 'Latest',
-                        'link' => '#'
-                    ])
-                @empty
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-gray-600">No latest news available yet. Check back soon!</p>
-                    </div>
-                @endforelse
-            @endif
-        </div>
-    </div>
-</section>
+    mobileMenuBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('-translate-x-full');
+        sidebarOverlay.classList.toggle('hidden');
+    });
 
-<!-- Recent Videos Section -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Recent Videos</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Watch the latest music videos, interviews, and exclusive content</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @if(isset($useDummyData) && $useDummyData)
-                @for($i = 1; $i <= 4; $i++)
-                    @include('components.card', [
-                        'title' => 'Music Video ' . $i,
-                        'description' => 'Watch this amazing music video featuring stunning visuals and incredible performances from top artists.',
-                        'image' => 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Video+' . $i,
-                        'badge' => 'HD Video',
-                        'link' => '#'
-                    ])
-                @endfor
-            @else
-                @forelse($recentVideos as $video)
-                    @include('components.card', [
-                        'title' => $video->title,
-                        'description' => $video->description ?: 'Watch this amazing video featuring stunning visuals and incredible performances.',
-                        'image' => $video->thumbnail_url ?: 'https://via.placeholder.com/400x300/EF4444/FFFFFF?text=Video',
-                        'badge' => 'HD Video',
-                        'link' => '#'
-                    ])
-                @empty
-                    <div class="col-span-full text-center py-8">
-                        <p class="text-gray-600">No recent videos available yet. Check back soon!</p>
-                    </div>
-                @endforelse
-            @endif
-        </div>
-    </div>
-</section>
+    sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.add('-translate-x-full');
+        sidebarOverlay.classList.add('hidden');
+    });
 
-<!-- Spotify Highlights Section -->
-@if(isset($spotifyHighlights) && $spotifyHighlights->count() > 0)
-<section class="py-16 bg-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                <i class="fab fa-spotify text-green-500 mr-3"></i>Spotify Highlights
-            </h2>
-            <p class="text-xl text-gray-600">Latest releases and trending tracks from Spotify</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            @foreach($spotifyHighlights as $track)
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
-                    <div class="aspect-w-1 aspect-h-1">
-                        <img src="{{ $track->image_url_or_default }}" 
-                             alt="{{ $track->title }}" 
-                             class="w-full h-48 object-cover">
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-gray-900 mb-2 line-clamp-2" title="{{ $track->title }}">
-                            {{ Str::limit($track->title, 40) }}
-                        </h3>
-                        <p class="text-gray-600 text-sm mb-3">
-                            {{ Str::limit($track->artist_names, 30) }}
-                        </p>
-                        
-                        @if($track->album_name)
-                            <p class="text-xs text-gray-500 mb-2">{{ Str::limit($track->album_name, 35) }}</p>
-                        @endif
-                        
-                        <div class="flex items-center justify-between">
-                            @if($track->spotify_url)
-                                <a href="{{ $track->spotify_url }}" 
-                                   target="_blank" 
-                                   class="flex items-center text-green-600 hover:text-green-700 text-sm font-medium">
-                                    <i class="fab fa-spotify mr-1"></i>
-                                    Listen
-                                </a>
-                            @endif
-                            
-                            @if($track->popularity)
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                    </svg>
-                                    {{ $track->popularity }}%
-                                </div>
-                            @endif
-                        </div>
-                        
-                        @if($track->release_date)
-                            <div class="mt-2 text-xs text-gray-400">
-                                Released {{ $track->release_date->format('M d, Y') }}
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            @endforeach
-        </div>
-        
-        <div class="text-center mt-8">
-            <a href="{{ route('spotify.index') }}" 
-               class="inline-flex items-center bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-                <i class="fab fa-spotify mr-2"></i>
-                View All Spotify Content
-            </a>
-        </div>
-    </div>
-</section>
-@endif
-<!-- Newsletter Section -->
-<section class="py-16 bg-primary text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
-        <p class="text-xl mb-8">Subscribe to our newsletter and never miss the latest in music and entertainment</p>
-        
-        <form class="max-w-md mx-auto" method="POST" action="{{ route('newsletter.subscribe') }}">
-            @csrf
-            <div class="flex flex-col sm:flex-row gap-4">
-                <input type="email" name="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent" required>
-                <button type="submit" class="bg-accent hover:bg-yellow-500 text-gray-900 px-8 py-3 rounded-lg font-semibold transition-colors">Subscribe</button>
-            </div>
-        </form>
-    </div>
-</section>
-@endsection
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const html = document.documentElement;
+    
+    // Check for saved dark mode preference
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+    }
+
+    darkModeToggle.addEventListener('click', function() {
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.theme = 'light';
+        } else {
+            html.classList.add('dark');
+            localStorage.theme = 'dark';
+        }
+    });
+
+    // Audio player functionality
+    const audioPlayer = document.getElementById('audio-player');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    let isPlaying = false;
+
+    // Show audio player when play button is clicked
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.play-btn') || e.target.closest('button[contains(text(), "Play")]')) {
+            audioPlayer.classList.remove('hidden');
+            isPlaying = true;
+            updatePlayPauseButton();
+        }
+    });
+
+    playPauseBtn.addEventListener('click', function() {
+        isPlaying = !isPlaying;
+        updatePlayPauseButton();
+    });
+
+    function updatePlayPauseButton() {
+        playPauseBtn.innerHTML = isPlaying 
+            ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zM11 8a1 1 0 012 0v4a1 1 0 11-2 0V8z"/></svg>'
+            : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 5v10l7-5z"/></svg>';
+    }
+});
+</script>
+@endpush
