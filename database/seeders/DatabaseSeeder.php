@@ -99,6 +99,7 @@ class DatabaseSeeder extends Seeder
         $music = [
             [
                 'title' => 'Amazing Afrobeats Hit',
+                'slug' => 'amazing-afrobeats-hit',
                 'description' => 'This incredible Afrobeats track has been trending across all music platforms in Africa. A perfect blend of traditional rhythms and modern production.',
                 'artist_name' => 'Afrobeats King',
                 'image_url' => 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music+1',
@@ -110,6 +111,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Highlife Revival',
+                'slug' => 'highlife-revival',
                 'description' => 'A beautiful revival of classic Highlife music with contemporary elements that speak to both old and new generations.',
                 'artist_name' => 'Highlife Legend',
                 'image_url' => 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music+2',
@@ -121,6 +123,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Inspirational Gospel Anthem',
+                'slug' => 'inspirational-gospel-anthem',
                 'description' => 'An uplifting gospel song that has touched hearts and souls across the continent with its powerful message of hope.',
                 'artist_name' => 'Gospel Sensation',
                 'image_url' => 'https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Music+3',

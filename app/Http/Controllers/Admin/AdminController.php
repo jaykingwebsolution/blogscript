@@ -65,6 +65,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:music,slug',
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
@@ -91,6 +92,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:music,slug,' . $music->id,
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
