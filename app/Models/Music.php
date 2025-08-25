@@ -18,18 +18,22 @@ class Music extends Model
         'artist_name',
         'category_id',
         'image_url',
+        'cover_image',
         'audio_url',
+        'audio_file',
         'duration',
         'genre',
         'is_featured',
         'status',
-        'created_by'
+        'created_by',
+        'release_date'
     ];
 
     protected $casts = [
         'is_featured' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'release_date' => 'date',
     ];
 
     public function scopeFeatured($query)

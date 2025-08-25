@@ -14,23 +14,23 @@ class HomeController extends Controller
     {
         try {
             // Get featured/latest content from database
-            $featuredMusic = Music::published()->featured()->latest()->take(3)->get();
-            $trendingArtists = Artist::published()->trending()->latest()->take(4)->get();
-            $latestNews = News::published()->latest()->take(3)->get();
-            $recentVideos = Video::published()->latest()->take(4)->get();
+            $latestMusic = Music::published()->with(['category', 'tags'])->latest()->take(4)->get();
+            $featuredArtists = Artist::published()->trending()->latest()->take(4)->get();
+            $latestPosts = News::published()->latest()->take(3)->get();
+            $recentVideos = Video::published()->latest()->take(3)->get();
 
             return view('home', compact(
-                'featuredMusic', 
-                'trendingArtists', 
-                'latestNews', 
+                'latestMusic', 
+                'featuredArtists', 
+                'latestPosts', 
                 'recentVideos'
             ));
         } catch (\Exception $e) {
-            // Fallback to dummy data if database is not available
+            // Fallback to empty collections if database is not available
             return view('home', [
-                'featuredMusic' => collect(),
-                'trendingArtists' => collect(),
-                'latestNews' => collect(),
+                'latestMusic' => collect(),
+                'featuredArtists' => collect(),
+                'latestPosts' => collect(),
                 'recentVideos' => collect(),
                 'useDummyData' => true
             ]);
