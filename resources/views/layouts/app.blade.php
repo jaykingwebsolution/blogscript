@@ -35,6 +35,9 @@
     
     @include('components.footer')
     
+    <!-- Global Music Player -->
+    @include('components.music-player')
+    
     <script>
         // Mobile menu toggle
         function toggleMobileMenu() {

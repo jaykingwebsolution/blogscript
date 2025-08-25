@@ -188,7 +188,11 @@
                                     <img src="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}" 
                                          alt="Track {{ $i }}" 
                                          class="w-full aspect-square object-cover rounded-lg">
-                                    <button class="play-btn absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100">
+                                    <button class="play-track-btn absolute bottom-2 right-2 w-10 h-10 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100"
+                                            data-title="Amazing Track {{ $i }}"
+                                            data-artist="Artist Name {{ $i }}"
+                                            data-cover="https://via.placeholder.com/200x200/{{ ['3B82F6', 'EF4444', '10B981', 'F59E0B', '8B5CF6'][($i-1)%5] }}/FFFFFF?text=Track+{{ $i }}"
+                                            data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-{{ $i }}.mp3">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M8 5v10l7-5z"/>
                                         </svg>
