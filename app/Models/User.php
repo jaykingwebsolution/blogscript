@@ -164,4 +164,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Playlist::class)->where('visibility', 'public');
     }
+
+    public function distributionRequests()
+    {
+        return $this->hasMany(DistributionRequest::class);
+    }
 }

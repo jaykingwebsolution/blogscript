@@ -127,6 +127,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/verification', [ArtistRequestController::class, 'verificationStore'])->name('dashboard.verification.store');
     Route::get('/dashboard/trending', [ArtistRequestController::class, 'trendingIndex'])->name('dashboard.trending');
     Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
+
+    // Distribution Routes
+    Route::get('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'create'])->name('distribution.create');
+    Route::post('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'store'])->name('distribution.store');
+    Route::get('/distribution/my-submissions', [App\Http\Controllers\DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
+    Route::get('/distribution/my-submissions/{distributionRequest}', [App\Http\Controllers\DistributionController::class, 'show'])->name('distribution.show');
 });
 
 // Artist Routes (Authenticated Artists and Record Labels)
@@ -225,6 +231,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update');
     Route::post('/settings/remove-file', [\App\Http\Controllers\Admin\SiteSettingController::class, 'removeFile'])->name('settings.remove-file');
+
+    // Distribution Management
+    Route::get('/distribution', [\App\Http\Controllers\Admin\DistributionController::class, 'index'])->name('distribution.index');
+    Route::get('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'show'])->name('distribution.show');
+    Route::post('/distribution/{distributionRequest}/approve', [\App\Http\Controllers\Admin\DistributionController::class, 'approve'])->name('distribution.approve');
+    Route::post('/distribution/{distributionRequest}/decline', [\App\Http\Controllers\Admin\DistributionController::class, 'decline'])->name('distribution.decline');
+    Route::put('/distribution/{distributionRequest}/status', [\App\Http\Controllers\Admin\DistributionController::class, 'updateStatus'])->name('distribution.update-status');
+    Route::delete('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'destroy'])->name('distribution.destroy');
 });
 
 // Notification Routes
