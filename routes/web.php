@@ -331,7 +331,7 @@ Route::middleware('auth')->group(function () {
 
 // Playlist Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/playlists/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
+    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my');
     Route::post('/playlists/{playlist}/add-music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
     Route::delete('/playlists/{playlist}/remove-music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
     Route::put('/playlists/{playlist}/update-order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
