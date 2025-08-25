@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 <!-- Video Card Component -->
 @props(['video'])
 

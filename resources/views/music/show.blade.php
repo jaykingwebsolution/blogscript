@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 @extends('layouts.app')
 
 @section('title', $music->title . ' - ' . ($music->artist->name ?? $music->artist_name))

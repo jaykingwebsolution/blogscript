@@ -32,6 +32,9 @@ storage/framework/views/*
 storage/logs/*
 !storage/logs/.gitkeep
 
+# Database files
+database/database.sqlite
+
 # OS generated files
 .DS_Store
 .DS_Store?

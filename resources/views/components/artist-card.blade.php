@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 <!-- Artist Card Component -->
 @props(['artist'])
 
