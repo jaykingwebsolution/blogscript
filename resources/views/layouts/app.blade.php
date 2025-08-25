@@ -75,13 +75,13 @@
     @stack('styles')
 </head>
 <body class="h-full bg-gray-50 dark:bg-spotify-black font-sans antialiased">
-    @include('components.navbar')
-    
-    <main class="h-full">
-        @yield('content')
-    </main>
-    
-    @include('components.footer')
+    <div class="flex h-screen">
+        @include('components.spotify-sidebar')
+        
+        <main class="flex-1 flex flex-col overflow-hidden">
+            @yield('content')
+        </main>
+    </div>
     
     <!-- Global Music Player -->
     @include('components.music-player')

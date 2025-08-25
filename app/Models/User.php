@@ -169,4 +169,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(DistributionRequest::class);
     }
+    
+    public function likedSongs()
+    {
+        return $this->belongsToMany(Music::class, 'likes', 'user_id', 'music_id')
+                    ->withTimestamps();
+    }
 }

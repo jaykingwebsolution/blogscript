@@ -122,6 +122,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/subscription/initialize', [SubscriptionController::class, 'initializePayment'])->name('subscription.initialize');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     
+    // Library and Liked Songs Routes
+    Route::get('/dashboard/library', [App\Http\Controllers\Dashboard\DashboardController::class, 'library'])->name('dashboard.library');
+    Route::get('/dashboard/liked-songs', [App\Http\Controllers\Dashboard\DashboardController::class, 'likedSongs'])->name('dashboard.liked-songs');
+    Route::post('/music/toggle-like', [App\Http\Controllers\Dashboard\DashboardController::class, 'toggleLike'])->name('music.toggle-like');
+    
     // Artist Request Routes
     Route::get('/dashboard/verification', [ArtistRequestController::class, 'verificationIndex'])->name('dashboard.verification');
     Route::post('/dashboard/verification', [ArtistRequestController::class, 'verificationStore'])->name('dashboard.verification.store');

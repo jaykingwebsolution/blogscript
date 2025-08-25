@@ -109,4 +109,10 @@ class Music extends Model
 
         return $slug;
     }
+    
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'music_id', 'user_id')
+                    ->withTimestamps();
+    }
 }
