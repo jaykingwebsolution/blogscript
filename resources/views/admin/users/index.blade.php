@@ -29,7 +29,6 @@
                 <option value="listener" {{ request('role') == 'listener' ? 'selected' : '' }}>Listener</option>
                 <option value="artist" {{ request('role') == 'artist' ? 'selected' : '' }}>Artist</option>
                 <option value="record_label" {{ request('role') == 'record_label' ? 'selected' : '' }}>Record Label</option>
-                <option value="editor" {{ request('role') == 'editor' ? 'selected' : '' }}>Editor</option>
                 <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
             </select>
         </div>
@@ -90,8 +89,7 @@
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                 {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 
                                    ($user->role === 'artist' ? 'bg-blue-100 text-blue-800' :
-                                   ($user->role === 'record_label' ? 'bg-purple-100 text-purple-800' :
-                                   ($user->role === 'editor' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'))) }}">
+                                   ($user->role === 'record_label' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800')) }}">
                                 {{ ucwords(str_replace('_', ' ', $user->role)) }}
                             </span>
                         </td>

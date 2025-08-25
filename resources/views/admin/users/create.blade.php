@@ -61,7 +61,6 @@
                     <option value="listener" {{ old('role') == 'listener' ? 'selected' : '' }}>Listener</option>
                     <option value="artist" {{ old('role') == 'artist' ? 'selected' : '' }}>Artist</option>
                     <option value="record_label" {{ old('role') == 'record_label' ? 'selected' : '' }}>Record Label</option>
-                    <option value="editor" {{ old('role') == 'editor' ? 'selected' : '' }}>Editor</option>
                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
             </div>

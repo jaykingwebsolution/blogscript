@@ -28,13 +28,13 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample editor user
-        $editor = User::firstOrCreate(
-            ['email' => 'editor@blogscript.com'],
+        // Create artist user
+        $artist = User::firstOrCreate(
+            ['email' => 'artist@test.com'],
             [
-                'name' => 'Editor User',
-                'password' => Hash::make('editor123'),
-                'role' => 'editor',
+                'name' => 'Artist User',
+                'password' => Hash::make('password'),
+                'role' => 'artist',
                 'status' => 'approved',
                 'approved_at' => now(),
                 'approved_by' => $admin->id,
@@ -42,14 +42,44 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample pending user
-        User::create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => Hash::make('password123'),
-            'role' => 'user',
-            'status' => 'pending',
-        ]);
+        // Create record label user
+        $label = User::firstOrCreate(
+            ['email' => 'label@test.com'],
+            [
+                'name' => 'Record Label User',
+                'password' => Hash::make('password'),
+                'role' => 'record_label',
+                'status' => 'approved',
+                'approved_at' => now(),
+                'approved_by' => $admin->id,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Create listener user
+        $listener = User::firstOrCreate(
+            ['email' => 'listener@test.com'],
+            [
+                'name' => 'Listener User',
+                'password' => Hash::make('password'),
+                'role' => 'listener',
+                'status' => 'approved',
+                'approved_at' => now(),
+                'approved_by' => $admin->id,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Create sample pending user (will be rejected/deleted)
+        User::firstOrCreate(
+            ['email' => 'john@example.com'],
+            [
+                'name' => 'John Doe',
+                'password' => Hash::make('password123'),
+                'role' => 'listener',
+                'status' => 'pending',
+            ]
+        );
 
         // Create sample artists
         $artists = [
@@ -87,7 +117,7 @@ class DatabaseSeeder extends Seeder
                 'country' => 'South Africa',
                 'is_trending' => false,
                 'status' => 'published',
-                'created_by' => $editor->id
+                'created_by' => $admin->id
             ],
             [
                 'name' => 'Hip-Hop Star',
@@ -162,7 +192,7 @@ class DatabaseSeeder extends Seeder
                 'duration' => '4:12',
                 'is_featured' => true,
                 'status' => 'published',
-                'created_by' => $editor->id
+                'created_by' => $admin->id
             ],
             [
                 'title' => 'Inspirational Gospel Anthem',
@@ -204,7 +234,7 @@ class DatabaseSeeder extends Seeder
                 'category_id' => $videoCategory->id,
                 'is_featured' => false,
                 'status' => 'published',
-                'created_by' => $editor->id
+                'created_by' => $admin->id
             ],
             [
                 'title' => 'Gospel Concert Highlights',
@@ -226,7 +256,7 @@ class DatabaseSeeder extends Seeder
                 'category_id' => $videoCategory->id,
                 'is_featured' => false,
                 'status' => 'published',
-                'created_by' => $editor->id
+                'created_by' => $admin->id
             ]
         ];
 
@@ -258,7 +288,7 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => false,
                 'status' => 'published',
                 'published_at' => now()->subHours(12),
-                'created_by' => $editor->id
+                'created_by' => $admin->id
             ],
             [
                 'title' => 'Gospel Music Awards Honor Outstanding Artists',

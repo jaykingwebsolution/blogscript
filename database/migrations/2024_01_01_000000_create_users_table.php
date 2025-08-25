@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'editor', 'user'])->default('user');
+            $table->enum('role', ['admin', 'artist', 'listener', 'record_label'])->default('listener');
             $table->enum('status', ['pending', 'approved', 'suspended'])->default('pending');
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('set null');

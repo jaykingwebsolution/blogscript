@@ -45,11 +45,6 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isEditor()
-    {
-        return $this->role === 'editor';
-    }
-
     public function isArtist()
     {
         return $this->role === 'artist';

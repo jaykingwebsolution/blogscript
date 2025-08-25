@@ -49,7 +49,6 @@
                     <option value="listener" {{ old('role', $user->role) == 'listener' ? 'selected' : '' }}>Listener</option>
                     <option value="artist" {{ old('role', $user->role) == 'artist' ? 'selected' : '' }}>Artist</option>
                     <option value="record_label" {{ old('role', $user->role) == 'record_label' ? 'selected' : '' }}>Record Label</option>
-                    <option value="editor" {{ old('role', $user->role) == 'editor' ? 'selected' : '' }}>Editor</option>
                     @if(Auth::user()->isAdmin())
                     <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
                     @endif

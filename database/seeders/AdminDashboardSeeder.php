@@ -69,14 +69,14 @@ class AdminDashboardSeeder extends Seeder
                 'bio' => 'Music enthusiast and playlist curator.'
             ],
             [
-                'name' => 'Emma Editor',
-                'email' => 'editor@test.com',
+                'name' => 'Record Label Manager',
+                'email' => 'label@test.com',
                 'password' => Hash::make('password'),
-                'role' => 'editor',
+                'role' => 'record_label',
                 'status' => 'approved',
                 'approved_at' => now()->subDays(2),
                 'approved_by' => $admin->id,
-                'bio' => 'Content editor and music journalist.'
+                'bio' => 'Professional record label specializing in African music talent discovery and artist development.'
             ],
             [
                 'name' => 'Alex Pending',
@@ -391,8 +391,8 @@ class AdminDashboardSeeder extends Seeder
         $this->command->info('Admin Dashboard seeder completed successfully!');
         $this->command->info('Admin Login: admin@blogscript.com / admin123');
         $this->command->info('Artist Login: artist@test.com / password');
-        $this->command->info('Producer Login: producer@test.com / password');
+        $this->command->info('Producer (Record Label - Pending) Login: producer@test.com / password');
         $this->command->info('Listener Login: listener@test.com / password');
-        $this->command->info('Editor Login: editor@test.com / password');
+        $this->command->info('Record Label Login: label@test.com / password');
     }
 }
