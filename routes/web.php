@@ -10,6 +10,13 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ArtistRequestController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\AdminNotificationController;
+use App\Http\Controllers\SpotifyPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,9 +69,75 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Dashboard and Profile Routes (Authenticated Users)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard.index');
+    })->name('dashboard');
+    
+    Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('dashboard.profile');
+    Route::put('/dashboard/profile', [ProfileController::class, 'update'])->name('dashboard.profile.update');
+    Route::put('/dashboard/password', [ProfileController::class, 'updatePassword'])->name('dashboard.password.update');
+    
+    // Subscription Routes
+    Route::get('/dashboard/subscription', [SubscriptionController::class, 'index'])->name('dashboard.subscription');
+    Route::post('/subscription/initialize', [SubscriptionController::class, 'initializePayment'])->name('subscription.initialize');
+    Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    
+    // Artist Request Routes
+    Route::get('/dashboard/verification', [ArtistRequestController::class, 'verificationIndex'])->name('dashboard.verification');
+    Route::post('/dashboard/verification', [ArtistRequestController::class, 'verificationStore'])->name('dashboard.verification.store');
+    Route::get('/dashboard/trending', [ArtistRequestController::class, 'trendingIndex'])->name('dashboard.trending');
+    Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
+});
+
+// Artist Routes (Authenticated Artists and Record Labels)
+Route::prefix('artist')->name('artist.')->middleware('auth')->group(function () {
+    Route::get('/music', [\App\Http\Controllers\Artist\MusicController::class, 'index'])->name('music.index');
+    Route::get('/music/create', [\App\Http\Controllers\Artist\MusicController::class, 'create'])->name('music.create');
+    Route::post('/music', [\App\Http\Controllers\Artist\MusicController::class, 'store'])->name('music.store');
+    Route::get('/music/{music}', [\App\Http\Controllers\Artist\MusicController::class, 'show'])->name('music.show');
+    Route::get('/music/{music}/edit', [\App\Http\Controllers\Artist\MusicController::class, 'edit'])->name('music.edit');
+    Route::put('/music/{music}', [\App\Http\Controllers\Artist\MusicController::class, 'update'])->name('music.update');
+    Route::delete('/music/{music}', [\App\Http\Controllers\Artist\MusicController::class, 'destroy'])->name('music.destroy');
+    
+    // Media Routes
+    Route::get('/media', [MediaController::class, 'index'])->name('media.index');
+    Route::get('/media/upload', [MediaController::class, 'create'])->name('media.upload');
+    Route::post('/media', [MediaController::class, 'store'])->name('media.store');
+    Route::get('/media/{media}', [MediaController::class, 'show'])->name('media.show');
+    Route::get('/media/{media}/edit', [MediaController::class, 'edit'])->name('media.edit');
+    Route::put('/media/{media}', [MediaController::class, 'update'])->name('media.update');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+});
+
+// Paystack Callback Route
+Route::get('/paystack/callback', [SubscriptionController::class, 'handleCallback'])->name('subscription.callback');
+
 // Admin Routes (Protected by admin middleware in controller)
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Plan Management Routes
+    Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+    Route::get('/plans/create', [PlanController::class, 'create'])->name('plans.create');
+    Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
+    Route::get('/plans/{plan}/edit', [PlanController::class, 'edit'])->name('plans.edit');
+    Route::put('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+    Route::delete('/plans/{plan}', [PlanController::class, 'destroy'])->name('plans.destroy');
+    
+    // Media Management Routes
+    Route::get('/media', [AdminController::class, 'mediaIndex'])->name('media.index');
+    Route::post('/media/{media}/approve', [AdminController::class, 'mediaApprove'])->name('media.approve');
+    Route::post('/media/{media}/reject', [AdminController::class, 'mediaReject'])->name('media.reject');
+    
+    // Notification Management Routes
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('notifications.create');
+    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('notifications.store');
+    Route::get('/notifications/{adminNotification}/edit', [AdminNotificationController::class, 'edit'])->name('notifications.edit');
+    Route::put('/notifications/{adminNotification}', [AdminNotificationController::class, 'update'])->name('notifications.update');
+    Route::delete('/notifications/{adminNotification}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
     
     // Music Management
     Route::get('/music', [AdminController::class, 'musicIndex'])->name('music.index');
@@ -73,6 +146,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/music/{music}/edit', [AdminController::class, 'musicEdit'])->name('music.edit');
     Route::put('/music/{music}', [AdminController::class, 'musicUpdate'])->name('music.update');
     Route::delete('/music/{music}', [AdminController::class, 'musicDestroy'])->name('music.destroy');
+    Route::post('/music/{music}/approve', [AdminController::class, 'musicApprove'])->name('music.approve');
+    Route::post('/music/{music}/reject', [AdminController::class, 'musicReject'])->name('music.reject');
     
     // Artist Management
     Route::get('/artists', [AdminController::class, 'artistIndex'])->name('artists.index');
@@ -86,4 +161,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [AdminController::class, 'userIndex'])->name('users.index');
     Route::post('/users/{user}/approve', [AdminController::class, 'userApprove'])->name('users.approve');
     Route::post('/users/{user}/suspend', [AdminController::class, 'userSuspend'])->name('users.suspend');
+    
+    // Subscription Management
+    Route::get('/subscriptions', [AdminController::class, 'subscriptionIndex'])->name('subscriptions.index');
+    
+    // Verification Request Management
+    Route::get('/verification', [AdminController::class, 'verificationIndex'])->name('verification.index');
+    Route::post('/verification/{request}/approve', [AdminController::class, 'verificationApprove'])->name('verification.approve');
+    Route::post('/verification/{request}/reject', [AdminController::class, 'verificationReject'])->name('verification.reject');
+    
+    // Trending Request Management
+    Route::get('/trending', [AdminController::class, 'trendingIndex'])->name('trending.index');
+    Route::post('/trending/{request}/approve', [AdminController::class, 'trendingApprove'])->name('trending.approve');
+    Route::post('/trending/{request}/reject', [AdminController::class, 'trendingReject'])->name('trending.reject');
+});
+
+// Notification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+    Route::get('/notifications/unread-count', [AdminNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+});
+
+// Spotify Routes
+Route::prefix('spotify')->name('spotify.')->group(function () {
+    Route::get('/', [SpotifyPostController::class, 'index'])->name('index');
+    Route::get('/featured', [SpotifyPostController::class, 'featured'])->name('featured');
+    Route::get('/{spotifyPost}', [SpotifyPostController::class, 'show'])->name('show');
 });

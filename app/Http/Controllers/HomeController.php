@@ -7,6 +7,7 @@ use App\Models\Music;
 use App\Models\Artist;
 use App\Models\Video;
 use App\Models\News;
+use App\Models\SpotifyPost;
 
 class HomeController extends Controller
 {
@@ -14,24 +15,27 @@ class HomeController extends Controller
     {
         try {
             // Get featured/latest content from database
-            $featuredMusic = Music::published()->featured()->latest()->take(3)->get();
-            $trendingArtists = Artist::published()->trending()->latest()->take(4)->get();
-            $latestNews = News::published()->latest()->take(3)->get();
-            $recentVideos = Video::published()->latest()->take(4)->get();
+            $latestMusic = Music::published()->with(['category', 'tags'])->latest()->take(4)->get();
+            $featuredArtists = Artist::published()->trending()->latest()->take(4)->get();
+            $latestPosts = News::published()->latest()->take(3)->get();
+            $recentVideos = Video::published()->latest()->take(3)->get();
+            $spotifyHighlights = SpotifyPost::getFeatured(5);
 
             return view('home', compact(
-                'featuredMusic', 
-                'trendingArtists', 
-                'latestNews', 
-                'recentVideos'
+                'latestMusic', 
+                'featuredArtists', 
+                'latestPosts', 
+                'recentVideos',
+                'spotifyHighlights'
             ));
         } catch (\Exception $e) {
-            // Fallback to dummy data if database is not available
+            // Fallback to empty collections if database is not available
             return view('home', [
-                'featuredMusic' => collect(),
-                'trendingArtists' => collect(),
-                'latestNews' => collect(),
+                'latestMusic' => collect(),
+                'featuredArtists' => collect(),
+                'latestPosts' => collect(),
                 'recentVideos' => collect(),
+                'spotifyHighlights' => collect(),
                 'useDummyData' => true
             ]);
         }

@@ -65,6 +65,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:music,slug',
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
@@ -91,6 +92,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:music,slug,' . $music->id,
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'image_url' => 'nullable|url',
@@ -198,5 +200,106 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User suspended successfully!');
+    }
+
+    // Subscription Management
+    public function subscriptionIndex()
+    {
+        $subscriptions = \App\Models\Subscription::with('user')->latest()->paginate(20);
+        return view('admin.subscriptions.index', compact('subscriptions'));
+    }
+
+    // Verification Request Management
+    public function verificationIndex()
+    {
+        $requests = \App\Models\VerificationRequest::with('user')->pending()->latest()->paginate(20);
+        return view('admin.verification.index', compact('requests'));
+    }
+
+    public function verificationApprove(\App\Models\VerificationRequest $request)
+    {
+        $request->update([
+            'status' => 'approved',
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now()
+        ]);
+
+        // Update user verification status
+        $request->user->update([
+            'verification_status' => 'verified'
+        ]);
+
+        return back()->with('success', 'Verification request approved successfully!');
+    }
+
+    public function verificationReject(\App\Models\VerificationRequest $request, Request $httpRequest)
+    {
+        $httpRequest->validate([
+            'admin_notes' => 'required|string|max:1000'
+        ]);
+
+        $request->update([
+            'status' => 'rejected',
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+            'admin_notes' => $httpRequest->admin_notes
+        ]);
+
+        return back()->with('success', 'Verification request rejected.');
+    }
+
+    // Trending Request Management
+    public function trendingIndex()
+    {
+        $requests = \App\Models\TrendingRequest::with('user')->pending()->latest()->paginate(20);
+        return view('admin.trending.index', compact('requests'));
+    }
+
+    public function trendingApprove(\App\Models\TrendingRequest $request)
+    {
+        // Calculate expiry date based on type
+        $expiresAt = match($request->type) {
+            'week' => now()->addWeek(),
+            'month' => now()->addMonth(),
+            'all-time' => now()->addYear(), // All-time trending for 1 year
+        };
+
+        $request->update([
+            'status' => 'approved',
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+            'expires_at' => $expiresAt
+        ]);
+
+        return back()->with('success', 'Trending request approved successfully!');
+    }
+
+    public function trendingReject(\App\Models\TrendingRequest $request, Request $httpRequest)
+    {
+        $httpRequest->validate([
+            'admin_notes' => 'required|string|max:1000'
+        ]);
+
+        $request->update([
+            'status' => 'rejected',
+            'reviewed_by' => Auth::id(),
+            'reviewed_at' => now(),
+            'admin_notes' => $httpRequest->admin_notes
+        ]);
+
+        return back()->with('success', 'Trending request rejected.');
+    }
+
+    // Music approval (for artist uploads)
+    public function musicApprove(Music $music)
+    {
+        $music->update(['status' => 'published']);
+        return back()->with('success', 'Music approved and published!');
+    }
+
+    public function musicReject(Music $music)
+    {
+        $music->update(['status' => 'rejected']);
+        return back()->with('success', 'Music rejected.');
     }
 }
