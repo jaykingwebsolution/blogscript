@@ -154,4 +154,14 @@ class User extends Authenticatable
     {
         return AdminNotification::getActiveForUser($this)->count();
     }
+
+    public function playlists()
+    {
+        return $this->hasMany(Playlist::class);
+    }
+
+    public function publicPlaylists()
+    {
+        return $this->hasMany(Playlist::class)->where('visibility', 'public');
+    }
 }
