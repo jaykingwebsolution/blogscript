@@ -220,6 +220,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/trending', [AdminController::class, 'trendingIndex'])->name('trending.index');
     Route::post('/trending/{request}/approve', [AdminController::class, 'trendingApprove'])->name('trending.approve');
     Route::post('/trending/{request}/reject', [AdminController::class, 'trendingReject'])->name('trending.reject');
+    
+    // Site Settings Management
+    Route::get('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/remove-file', [\App\Http\Controllers\Admin\SiteSettingController::class, 'removeFile'])->name('settings.remove-file');
 });
 
 // Notification Routes

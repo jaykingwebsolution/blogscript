@@ -280,5 +280,8 @@ class DatabaseSeeder extends Seeder
 
         // Run the admin dashboard seeder for enhanced admin features
         $this->call(AdminDashboardSeeder::class);
+        
+        // Seed default site settings
+        $this->call(SiteSettingsSeeder::class);
     }
 }
