@@ -92,15 +92,39 @@ Route::middleware('auth')->group(function () {
         if ($user->isListener()) {
             return app(ListenerDashboardController::class)->index();
         } elseif ($user->isArtist()) {
-            return redirect()->route('artist.dashboard');
+            return redirect()->route('dashboard.artist');
         } elseif ($user->isRecordLabel()) {
-            return redirect()->route('label.dashboard');
+            return redirect()->route('dashboard.record-label');
         } elseif ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
         
         return view('dashboard.index');
     })->name('dashboard');
+    
+    // Role-based Dashboard Routes
+    Route::get('/dashboard/listener', [ListenerDashboardController::class, 'index'])->name('dashboard.listener');
+    Route::get('/dashboard/artist', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'index'])->name('dashboard.artist');
+    Route::get('/dashboard/record-label', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'index'])->name('dashboard.record-label');
+    
+    // Artist Dashboard Routes
+    Route::prefix('dashboard/artist')->name('dashboard.artist.')->middleware('auth')->group(function () {
+        Route::get('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitSong'])->name('submit-song');
+        Route::post('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitSong'])->name('submit-song.store');
+        Route::get('/submit-trending-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitTrendingSong'])->name('submit-trending-song');
+        Route::post('/submit-trending-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitTrendingSong'])->name('submit-trending-song.store');
+        Route::get('/submit-trending-mixtape', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitTrendingMixtape'])->name('submit-trending-mixtape');
+        Route::post('/submit-trending-mixtape', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitTrendingMixtape'])->name('submit-trending-mixtape.store');
+    });
+    
+    // Record Label Dashboard Routes
+    Route::prefix('dashboard/record-label')->name('dashboard.record-label.')->middleware('auth')->group(function () {
+        Route::get('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showSubmitSong'])->name('submit-song');
+        Route::post('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'submitSong'])->name('submit-song.store');
+        Route::get('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showCreateArtist'])->name('create-artist');
+        Route::post('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'createArtist'])->name('create-artist.store');
+    });
+    
     
     // Playlist Management
     Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
