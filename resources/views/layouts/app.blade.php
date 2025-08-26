@@ -157,26 +157,29 @@
                             updateNotificationList() {
                                 const notificationList = document.getElementById('notification-list');
                                 if (this.notifications.length === 0) {
-                                    notificationList.innerHTML = '<div class="p-4 text-center text-gray-400">No new notifications</div>';
+                                    notificationList.innerHTML = '<div class=\\x22p-4 text-center text-gray-400\\x22>No new notifications</div>';
                                 } else {
-                                    notificationList.innerHTML = this.notifications.map(notification => `
-                                        <div class="px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600 last:border-b-0" onclick="markNotificationAsRead(${notification.id}, &quot;${(notification.action_url || '').replace(/"/g, '&quot;')}&quot;)">
-                                            <div class="flex items-start space-x-3">
-                                                <div class="flex-shrink-0">
-                                                    <div class="w-8 h-8 rounded-full bg-spotify-green/20 flex items-center justify-center">
-                                                        <svg class="w-4 h-4 text-spotify-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3-3v-4c0-5.523-4.477-10-10-10S2 4.477 2 10v4l-3 3h5m9 0a3 3 0 11-6 0m6 0H9"/>
+                                    notificationList.innerHTML = this.notifications.map(notification => {
+                                        const safeTitle = (notification.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\x22/g, '&quot;');
+                                        const safeMessage = (notification.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\\x22/g, '&quot;');
+                                        const safeUrl = (notification.action_url || '').replace(/\\x22/g, '&quot;');
+                                        return `<div class=\\x22px-4 py-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600 last:border-b-0\\x22 onclick=\\x22markNotificationAsRead(${notification.id}, '${safeUrl}')\\x22>
+                                            <div class=\\x22flex items-start space-x-3\\x22>
+                                                <div class=\\x22flex-shrink-0\\x22>
+                                                    <div class=\\x22w-8 h-8 rounded-full bg-spotify-green/20 flex items-center justify-center\\x22>
+                                                        <svg class=\\x22w-4 h-4 text-spotify-green\\x22 fill=\\x22none\\x22 stroke=\\x22currentColor\\x22 viewBox=\\x220 0 24 24\\x22>
+                                                            <path stroke-linecap=\\x22round\\x22 stroke-linejoin=\\x22round\\x22 stroke-width=\\x222\\x22 d=\\x22M15 17h5l-3-3v-4c0-5.523-4.477-10-10-10S2 4.477 2 10v4l-3 3h5m9 0a3 3 0 11-6 0m6 0H9\\x22/>
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <div class="flex-1 min-w-0">
-                                                    <p class="text-sm font-medium text-white">${(notification.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
-                                                    <p class="text-sm text-gray-400 mt-1">${(notification.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
-                                                    <p class="text-xs text-gray-500 mt-2">${notification.created_at || ''}</p>
+                                                <div class=\\x22flex-1 min-w-0\\x22>
+                                                    <p class=\\x22text-sm font-medium text-white\\x22>${safeTitle}</p>
+                                                    <p class=\\x22text-sm text-gray-400 mt-1\\x22>${safeMessage}</p>
+                                                    <p class=\\x22text-xs text-gray-500 mt-2\\x22>${notification.created_at || ''}</p>
                                                 </div>
                                             </div>
-                                        </div>
-                                    `).join('');
+                                        </div>`;
+                                    }).join('');
                                 }
                             },
                             async markAsRead(notificationId) {
