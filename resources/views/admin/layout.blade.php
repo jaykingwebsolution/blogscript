@@ -188,6 +188,49 @@
                         </svg>
                         Import from Spotify
                     </a>
+                    <a href="{{ route('admin.trending.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.trending.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        Trending Posts
+                    </a>
+                </div>
+
+                <!-- Playlists Management Section -->
+                <div class="pt-4">
+                    <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Playlists Management</h3>
+                    <a href="{{ route('admin.playlists.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.playlists.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                        </svg>
+                        Manage Playlists
+                    </a>
+                </div>
+
+                <!-- Record Labels Section -->
+                <div class="pt-4">
+                    <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Record Labels</h3>
+                    <a href="{{ route('admin.record-labels.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.record-labels.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        Manage Record Labels
+                    </a>
+                </div>
+
+                <!-- Content Moderation Section -->
+                <div class="pt-4">
+                    <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Content Moderation</h3>
+                    <a href="{{ route('admin.moderation.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.moderation.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Content Moderation
+                    </a>
                 </div>
 
                 <!-- Communication Section -->
@@ -251,6 +294,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                         </svg>
                         Paystack Settings
+                    </a>
+                    <a href="{{ route('admin.api-keys.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.api-keys.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 12H9v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.586l4.707-4.707A1 1 0 0111 3h6a2 2 0 012 2v7z"/>
+                        </svg>
+                        API Keys & Integration
                     </a>
                 </div>
 

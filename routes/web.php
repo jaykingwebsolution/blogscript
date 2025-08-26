@@ -334,6 +334,52 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/spotify-import/{spotifyArtist}/sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'syncArtist'])->name('spotify-import.sync');
     Route::post('/spotify-import/bulk-sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'bulkSync'])->name('spotify-import.bulk-sync');
     Route::delete('/spotify-import/{spotifyArtist}', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'deleteArtist'])->name('spotify-import.delete');
+    
+    // Record Labels Management
+    Route::resource('record-labels', \App\Http\Controllers\Admin\RecordLabelController::class);
+    Route::post('/record-labels/{id}/approve', [\App\Http\Controllers\Admin\RecordLabelController::class, 'approve'])->name('record-labels.approve');
+    Route::post('/record-labels/{id}/suspend', [\App\Http\Controllers\Admin\RecordLabelController::class, 'suspend'])->name('record-labels.suspend');
+    
+    // Playlists Management
+    Route::resource('playlists', \App\Http\Controllers\Admin\PlaylistController::class);
+    Route::post('/playlists/{id}/feature', [\App\Http\Controllers\Admin\PlaylistController::class, 'feature'])->name('playlists.feature');
+    Route::post('/playlists/{id}/unfeature', [\App\Http\Controllers\Admin\PlaylistController::class, 'unfeature'])->name('playlists.unfeature');
+    Route::post('/playlists/{id}/moderate/{action}', [\App\Http\Controllers\Admin\PlaylistController::class, 'moderate'])->name('playlists.moderate');
+    Route::post('/playlists/bulk-action', [\App\Http\Controllers\Admin\PlaylistController::class, 'bulkAction'])->name('playlists.bulk-action');
+    
+    // Content Moderation Management
+    Route::prefix('moderation')->name('moderation.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ModerationController::class, 'index'])->name('index');
+        Route::get('/music', [\App\Http\Controllers\Admin\ModerationController::class, 'music'])->name('music');
+        Route::get('/artists', [\App\Http\Controllers\Admin\ModerationController::class, 'artists'])->name('artists');
+        Route::get('/posts', [\App\Http\Controllers\Admin\ModerationController::class, 'posts'])->name('posts');
+        Route::get('/comments', [\App\Http\Controllers\Admin\ModerationController::class, 'comments'])->name('comments');
+        Route::get('/reports', [\App\Http\Controllers\Admin\ModerationController::class, 'reports'])->name('reports');
+        Route::get('/settings', [\App\Http\Controllers\Admin\ModerationController::class, 'settings'])->name('settings');
+        Route::get('/logs', [\App\Http\Controllers\Admin\ModerationController::class, 'logs'])->name('logs');
+        Route::post('/approve/{type}/{id}', [\App\Http\Controllers\Admin\ModerationController::class, 'approve'])->name('approve');
+        Route::post('/reject/{type}/{id}', [\App\Http\Controllers\Admin\ModerationController::class, 'reject'])->name('reject');
+        Route::post('/flag/{type}/{id}', [\App\Http\Controllers\Admin\ModerationController::class, 'flag'])->name('flag');
+        Route::post('/bulk-action', [\App\Http\Controllers\Admin\ModerationController::class, 'bulkAction'])->name('bulk-action');
+        Route::post('/settings', [\App\Http\Controllers\Admin\ModerationController::class, 'updateSettings'])->name('update-settings');
+    });
+    
+    // API Keys & Integration Management
+    Route::prefix('api-keys')->name('api-keys.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\ApiKeyController::class, 'index'])->name('index');
+        Route::get('/spotify', [\App\Http\Controllers\Admin\ApiKeyController::class, 'spotify'])->name('spotify');
+        Route::get('/paystack', [\App\Http\Controllers\Admin\ApiKeyController::class, 'paystack'])->name('paystack');
+        Route::get('/services', [\App\Http\Controllers\Admin\ApiKeyController::class, 'services'])->name('services');
+        Route::get('/logs', [\App\Http\Controllers\Admin\ApiKeyController::class, 'logs'])->name('logs');
+        Route::post('/spotify', [\App\Http\Controllers\Admin\ApiKeyController::class, 'updateSpotify'])->name('update-spotify');
+        Route::post('/paystack', [\App\Http\Controllers\Admin\ApiKeyController::class, 'updatePaystack'])->name('update-paystack');
+        Route::post('/services', [\App\Http\Controllers\Admin\ApiKeyController::class, 'updateServices'])->name('update-services');
+        Route::post('/test/{service}', [\App\Http\Controllers\Admin\ApiKeyController::class, 'testConnection'])->name('test-connection');
+        Route::post('/generate', [\App\Http\Controllers\Admin\ApiKeyController::class, 'generateApiKey'])->name('generate');
+        Route::delete('/revoke/{keyId}', [\App\Http\Controllers\Admin\ApiKeyController::class, 'revokeApiKey'])->name('revoke');
+        Route::get('/export', [\App\Http\Controllers\Admin\ApiKeyController::class, 'export'])->name('export');
+        Route::post('/import', [\App\Http\Controllers\Admin\ApiKeyController::class, 'import'])->name('import');
+    });
 });
 
 // Notification Routes
