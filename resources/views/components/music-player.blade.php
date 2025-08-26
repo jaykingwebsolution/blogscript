@@ -271,6 +271,7 @@ class MusicPlayer {
                 e.preventDefault();
                 const btn = e.target.matches('.play-track-btn') ? e.target : e.target.closest('.play-track-btn');
                 const trackData = {
+                    id: btn.dataset.id,
                     title: btn.dataset.title,
                     artist: btn.dataset.artist,
                     cover: btn.dataset.cover,
@@ -290,6 +291,7 @@ class MusicPlayer {
         
         // Update UI
         this.updateTrackInfo();
+        this.updateLikeButtonState();
         
         // Play audio
         this.audio.play().then(() => {
@@ -445,12 +447,75 @@ class MusicPlayer {
         }
     }
 
-    toggleLike() {
-        // Implementation for like functionality
-        console.log('Toggle like');
+    async updateLikeButtonState() {
+        if (!this.currentTrack || !this.currentTrack.id) return;
+
         const likeBtn = document.getElementById('like-btn');
-        if (likeBtn) {
-            likeBtn.classList.toggle('text-red-400');
+        if (!likeBtn) return;
+
+        try {
+            // Check if current track is liked
+            const response = await fetch(`/music/${this.currentTrack.id}/like-status`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Update UI based on like status
+                if (result.liked) {
+                    likeBtn.classList.add('text-red-400');
+                    likeBtn.classList.remove('text-white/80');
+                } else {
+                    likeBtn.classList.remove('text-red-400');
+                    likeBtn.classList.add('text-white/80');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking like status:', error);
+        }
+    }
+
+    async toggleLike() {
+        if (!this.currentTrack || !this.currentTrack.id) {
+            console.log('No track selected or missing track ID');
+            return;
+        }
+
+        const likeBtn = document.getElementById('like-btn');
+        if (!likeBtn) return;
+
+        try {
+            // Send request to backend
+            const response = await fetch(`/music/${this.currentTrack.id}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Update UI based on response
+                if (result.liked) {
+                    likeBtn.classList.add('text-red-400');
+                    likeBtn.classList.remove('text-white/80');
+                } else {
+                    likeBtn.classList.remove('text-red-400');
+                    likeBtn.classList.add('text-white/80');
+                }
+                
+                console.log('Like toggled successfully');
+            } else {
+                console.error('Failed to toggle like');
+            }
+        } catch (error) {
+            console.error('Error toggling like:', error);
         }
     }
 

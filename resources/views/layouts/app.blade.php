@@ -6,48 +6,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'MusicStream - Discover, Upload, Stream')</title>
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts - using system fonts for now -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    </style>
     
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Icons (basic replacements) -->
+    <link rel="stylesheet" href="{{ asset('css/icons.css') }}")
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Tailwind CSS (compiled locally) -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe', 
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
-                        },
-                        spotify: {
-                            green: '#1db954',
-                            black: '#191414',
-                            dark: '#121212',
-                            gray: '#282828',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <!-- Alpine.js (local) -->
+    <script defer src="{{ asset('js/alpine.min.js') }}"></script>
+
 
     <style>
         /* Custom scrollbar */

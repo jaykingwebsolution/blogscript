@@ -1,0 +1,24 @@
+/* Basic Font Awesome replacements for essential icons */
+.fa-heart::before,
+.fas.fa-heart::before { content: "♥"; }
+
+.fa-bell::before,
+.fas.fa-bell::before { content: "🔔"; }
+
+.fa-play::before,
+.fas.fa-play::before { content: "▶"; }
+
+.fa-pause::before,
+.fas.fa-pause::before { content: "⏸"; }
+
+.fa-plus::before,
+.fas.fa-plus::before { content: "+"; }
+
+/* Basic icon styling */
+.fa, .fas, .far {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+}
