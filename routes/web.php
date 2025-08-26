@@ -326,6 +326,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/distribution-pricing/{distributionPricing}/edit', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'edit'])->name('distribution-pricing.edit');
     Route::put('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'update'])->name('distribution-pricing.update');
     Route::delete('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'destroy'])->name('distribution-pricing.destroy');
+    
+    // Spotify Import Management
+    Route::get('/spotify-import', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'index'])->name('spotify-import.index');
+    Route::post('/spotify-import/search', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'search'])->name('spotify-import.search');
+    Route::post('/spotify-import/import', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'importArtist'])->name('spotify-import.import');
+    Route::post('/spotify-import/{spotifyArtist}/sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'syncArtist'])->name('spotify-import.sync');
+    Route::post('/spotify-import/bulk-sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'bulkSync'])->name('spotify-import.bulk-sync');
+    Route::delete('/spotify-import/{spotifyArtist}', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'deleteArtist'])->name('spotify-import.delete');
 });
 
 // Notification Routes
