@@ -24,7 +24,7 @@
                     @forelse($music as $track)
                     <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                         <div class="relative">
-                            <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : 'https://via.placeholder.com/300x200/7C3AED/FFFFFF?text=Music' }}" 
+                            <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : 'asset("images/default-music.svg")' }}" 
                                  alt="{{ $track->title }}" class="w-full h-48 object-cover">
                             
                             <div class="absolute top-2 right-2">

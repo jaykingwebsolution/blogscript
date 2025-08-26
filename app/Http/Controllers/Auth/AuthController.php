@@ -35,7 +35,19 @@ class AuthController extends Controller
                 ]);
             }
 
-            return redirect()->intended(Auth::user()->isAdmin() ? route('admin.dashboard') : route('home'));
+            // Role-based dashboard redirection
+            $user = Auth::user();
+            if ($user->isAdmin()) {
+                return redirect()->intended(route('admin.dashboard'));
+            } elseif ($user->isListener()) {
+                return redirect()->intended(route('dashboard.listener'));
+            } elseif ($user->isArtist()) {
+                return redirect()->intended(route('dashboard.artist'));
+            } elseif ($user->isRecordLabel()) {
+                return redirect()->intended(route('dashboard.record-label'));
+            }
+            
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([

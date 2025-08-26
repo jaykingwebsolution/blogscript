@@ -24,7 +24,15 @@ class User extends Authenticatable
         'profile_picture',
         'social_links',
         'artist_stage_name',
-        'artist_genre'
+        'artist_genre',
+        'distribution_paid',
+        'distribution_paid_at',
+        'distribution_payment_reference',
+        'distribution_amount_paid',
+        'subscription_status',
+        'subscription_plan_id',
+        'subscription_paid_at',
+        'subscription_expires_at'
     ];
 
     protected $hidden = [
@@ -37,17 +45,16 @@ class User extends Authenticatable
         'approved_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'social_links' => 'array'
+        'social_links' => 'array',
+        'distribution_paid' => 'boolean',
+        'distribution_paid_at' => 'datetime',
+        'subscription_paid_at' => 'datetime',
+        'subscription_expires_at' => 'datetime'
     ];
 
     public function isAdmin()
     {
         return $this->role === 'admin';
-    }
-
-    public function isEditor()
-    {
-        return $this->role === 'editor';
     }
 
     public function isArtist()
@@ -135,10 +142,6 @@ class User extends Authenticatable
         return $this->hasMany(UserNotification::class);
     }
 
-    public function hasActiveSubscription()
-    {
-        return $this->subscription && $this->subscription->isActive();
-    }
 
     public function isVerified()
     {
@@ -155,6 +158,26 @@ class User extends Authenticatable
         return AdminNotification::getActiveForUser($this)->count();
     }
 
+    public function hasDistributionAccess()
+    {
+        return $this->distribution_paid || $this->isAdmin();
+    }
+
+    public function canSubmitDistribution()
+    {
+        return ($this->isArtist() || $this->isRecordLabel()) && $this->hasDistributionAccess();
+    }
+
+    public function markDistributionAsPaid($amount, $reference = null)
+    {
+        $this->update([
+            'distribution_paid' => true,
+            'distribution_paid_at' => now(),
+            'distribution_payment_reference' => $reference,
+            'distribution_amount_paid' => $amount
+        ]);
+    }
+
     public function playlists()
     {
         return $this->hasMany(Playlist::class);
@@ -163,5 +186,57 @@ class User extends Authenticatable
     public function publicPlaylists()
     {
         return $this->hasMany(Playlist::class)->where('visibility', 'public');
+    }
+
+    public function distributionRequests()
+    {
+        return $this->hasMany(DistributionRequest::class);
+    }
+    
+    public function likedSongs()
+    {
+        return $this->belongsToMany(Music::class, 'likes', 'user_id', 'music_id')
+                    ->withTimestamps();
+    }
+
+    public function manualPayments()
+    {
+        return $this->hasMany(ManualPayment::class);
+    }
+
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(PricingPlan::class, 'subscription_plan_id');
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription_status === 'active' && 
+               $this->subscription_expires_at && 
+               $this->subscription_expires_at->isFuture();
+    }
+
+    public function isSubscriptionExpired()
+    {
+        return $this->subscription_expires_at && $this->subscription_expires_at->isPast();
+    }
+
+    public function likeSong($musicId)
+    {
+        if (!$this->likedSongs()->where('music_id', $musicId)->exists()) {
+            $this->likedSongs()->attach($musicId);
+            return true;
+        }
+        return false;
+    }
+
+    public function unlikeSong($musicId)
+    {
+        return $this->likedSongs()->detach($musicId) > 0;
+    }
+
+    public function hasLikedSong($musicId)
+    {
+        return $this->likedSongs()->where('music_id', $musicId)->exists();
     }
 }

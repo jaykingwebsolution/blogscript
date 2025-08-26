@@ -3,31 +3,22 @@
 @section('title', 'Privacy Policy')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen">
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-lg shadow-md p-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-                <p class="text-gray-600">Last updated: {{ date('F d, Y') }}</p>
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Privacy Policy</h1>
+                <p class="text-gray-600 dark:text-gray-400">Learn about how we collect, use, and protect your information</p>
             </div>
 
-            <div class="prose max-w-none text-gray-800">
-                <p class="text-lg mb-6">At BlogScript, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, and safeguard your data when you use our website and services.</p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-4 mt-8">1. Information We Collect</h2>
-                
-                <h3 class="text-xl font-semibold text-gray-900 mb-3">Personal Information</h3>
-                <p class="mb-4">When you create an account, subscribe to our newsletter, or contact us, we may collect:</p>
-                <ul class="list-disc pl-6 mb-6 space-y-2">
-                    <li>Name and email address</li>
-                    <li>Profile information and preferences</li>
-                    <li>Contact information for support requests</li>
-                    <li>Content you submit (comments, posts, music submissions)</li>
-                </ul>
-
-                <h3 class="text-xl font-semibold text-gray-900 mb-3">Usage Information</h3>
-                <p class="mb-4">We automatically collect information about how you use our website:</p>
+            <div class="prose prose-lg dark:prose-invert max-w-none">
+                {!! $content !!}
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
                 <ul class="list-disc pl-6 mb-6 space-y-2">
                     <li>IP address and browser information</li>
                     <li>Pages visited and time spent on our site</li>

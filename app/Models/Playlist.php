@@ -115,7 +115,7 @@ class Playlist extends Model
             return asset('storage/' . $this->cover_image);
         }
 
-        return 'https://via.placeholder.com/400x400/3B82F6/FFFFFF?text=Playlist';
+        return asset('images/default-playlist.svg');
     }
 
     public function getMusicCountAttribute()

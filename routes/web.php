@@ -21,6 +21,8 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\Auth\RoleBasedRegisterController;
 use App\Http\Controllers\Dashboard\ListenerDashboardController;
 use App\Http\Controllers\SpotifyPostController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,11 @@ use App\Http\Controllers\SpotifyPostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Preview Routes (for testing without database)
+Route::get('/admin-preview', function () {
+    return view('admin-preview');
+})->name('admin.preview');
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -74,7 +81,7 @@ Route::get('/register/{role}', [RoleBasedRegisterController::class, 'showRegiste
 Route::post('/register/{role}', [RoleBasedRegisterController::class, 'register'])->name('register.role.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Playlist Routes
+// Playlist Routes (public routes)
 Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlists.index');
 Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
 
@@ -87,9 +94,9 @@ Route::middleware('auth')->group(function () {
         if ($user->isListener()) {
             return app(ListenerDashboardController::class)->index();
         } elseif ($user->isArtist()) {
-            return redirect()->route('artist.dashboard');
+            return redirect()->route('dashboard.artist');
         } elseif ($user->isRecordLabel()) {
-            return redirect()->route('label.dashboard');
+            return redirect()->route('dashboard.record-label');
         } elseif ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
@@ -97,13 +104,37 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.index');
     })->name('dashboard');
     
-    // Playlist Management
-    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
+    // Role-based Dashboard Routes
+    Route::get('/dashboard/listener', [ListenerDashboardController::class, 'index'])->name('dashboard.listener');
+    Route::get('/dashboard/artist', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'index'])->name('dashboard.artist');
+    Route::get('/dashboard/record-label', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'index'])->name('dashboard.record-label');
+    
+    // Artist Dashboard Routes
+    Route::prefix('dashboard/artist')->name('dashboard.artist.')->middleware('auth')->group(function () {
+        Route::get('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitSong'])->name('submit-song');
+        Route::post('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitSong'])->name('submit-song.store');
+        Route::get('/submit-trending-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitTrendingSong'])->name('submit-trending-song');
+        Route::post('/submit-trending-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitTrendingSong'])->name('submit-trending-song.store');
+        Route::get('/submit-trending-mixtape', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitTrendingMixtape'])->name('submit-trending-mixtape');
+        Route::post('/submit-trending-mixtape', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitTrendingMixtape'])->name('submit-trending-mixtape.store');
+    });
+    
+    // Record Label Dashboard Routes
+    Route::prefix('dashboard/record-label')->name('dashboard.record-label.')->middleware('auth')->group(function () {
+        Route::get('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showSubmitSong'])->name('submit-song');
+        Route::post('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'submitSong'])->name('submit-song.store');
+        Route::get('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showCreateArtist'])->name('create-artist');
+        Route::post('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'createArtist'])->name('create-artist.store');
+    });
+    
+    
+    // Playlist Management (moved main CRUD routes here to avoid conflicts)
     Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
     Route::post('/playlists', [PlaylistController::class, 'store'])->name('playlists.store');
     Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit'])->name('playlists.edit');
     Route::put('/playlists/{playlist}', [PlaylistController::class, 'update'])->name('playlists.update');
     Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
+    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
     Route::post('/playlists/{playlist}/music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
     Route::delete('/playlists/{playlist}/music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
     Route::put('/playlists/{playlist}/order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
@@ -114,14 +145,35 @@ Route::middleware('auth')->group(function () {
     
     // Subscription Routes
     Route::get('/dashboard/subscription', [SubscriptionController::class, 'index'])->name('dashboard.subscription');
-    Route::post('/subscription/initialize', [SubscriptionController::class, 'initializePayment'])->name('subscription.initialize');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    
+    // Library and Liked Songs Routes
+    Route::get('/dashboard/library', [App\Http\Controllers\Dashboard\DashboardController::class, 'library'])->name('dashboard.library');
+    Route::get('/dashboard/liked-songs', [App\Http\Controllers\Dashboard\DashboardController::class, 'likedSongs'])->name('dashboard.liked-songs');
+    Route::post('/music/toggle-like', [App\Http\Controllers\Dashboard\DashboardController::class, 'toggleLike'])->name('music.toggle-like');
     
     // Artist Request Routes
     Route::get('/dashboard/verification', [ArtistRequestController::class, 'verificationIndex'])->name('dashboard.verification');
     Route::post('/dashboard/verification', [ArtistRequestController::class, 'verificationStore'])->name('dashboard.verification.store');
     Route::get('/dashboard/trending', [ArtistRequestController::class, 'trendingIndex'])->name('dashboard.trending');
     Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
+
+    // Distribution Routes
+    Route::get('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'create'])->name('distribution.create');
+    Route::post('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'store'])->name('distribution.store');
+    Route::get('/distribution/my-submissions', [App\Http\Controllers\DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
+    Route::get('/distribution/my-submissions/{distributionRequest}', [App\Http\Controllers\DistributionController::class, 'show'])->name('distribution.show');
+    
+    // Payment Routes
+    Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
+    Route::post('/payment/distribution/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeDistributionPayment'])->name('payment.distribution.initialize');
+    Route::get('/payment/distribution/callback', [\App\Http\Controllers\PaymentController::class, 'handleDistributionCallback'])->name('payment.distribution.callback');
+    Route::post('/payment/distribution/demo', [\App\Http\Controllers\PaymentController::class, 'simulatePaymentSuccess'])->name('payment.distribution.demo');
+    Route::get('/payment/plans', [\App\Http\Controllers\PaymentController::class, 'showPlans'])->name('payment.plans');
+    Route::get('/payment/subscription', [\App\Http\Controllers\PaymentController::class, 'showSubscriptionPayment'])->name('payment.subscription');
+    Route::post('/payment/subscription/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeSubscriptionPayment'])->name('payment.subscription.initialize');
+    Route::get('/payment/subscription/callback', [\App\Http\Controllers\PaymentController::class, 'handleSubscriptionCallback'])->name('payment.subscription.callback');
+    Route::post('/payment/manual', [\App\Http\Controllers\PaymentController::class, 'submitManualPayment'])->name('payment.manual.submit');
 });
 
 // Artist Routes (Authenticated Artists and Record Labels)
@@ -181,6 +233,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/music/{music}', [AdminController::class, 'musicDestroy'])->name('music.destroy');
     Route::post('/music/{music}/approve', [AdminController::class, 'musicApprove'])->name('music.approve');
     Route::post('/music/{music}/reject', [AdminController::class, 'musicReject'])->name('music.reject');
+    Route::post('/music/{music}/feature', [AdminController::class, 'musicFeature'])->name('music.feature');
+    Route::post('/music/{music}/unfeature', [AdminController::class, 'musicUnfeature'])->name('music.unfeature');
     
     // Artist Management
     Route::get('/artists', [AdminController::class, 'artistIndex'])->name('artists.index');
@@ -192,6 +246,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // User Management
     Route::get('/users', [AdminController::class, 'userIndex'])->name('users.index');
+    Route::get('/users/create', [AdminController::class, 'userCreate'])->name('users.create');
+    Route::post('/users', [AdminController::class, 'userStore'])->name('users.store');
+    Route::get('/users/{user}', [AdminController::class, 'userShow'])->name('users.show');
+    Route::get('/users/{user}/edit', [AdminController::class, 'userEdit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'userUpdate'])->name('users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'userDestroy'])->name('users.destroy');
     Route::post('/users/{user}/approve', [AdminController::class, 'userApprove'])->name('users.approve');
     Route::post('/users/{user}/suspend', [AdminController::class, 'userSuspend'])->name('users.suspend');
     
@@ -207,6 +267,48 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/trending', [AdminController::class, 'trendingIndex'])->name('trending.index');
     Route::post('/trending/{request}/approve', [AdminController::class, 'trendingApprove'])->name('trending.approve');
     Route::post('/trending/{request}/reject', [AdminController::class, 'trendingReject'])->name('trending.reject');
+    
+    // Site Settings Management
+    Route::get('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/remove-file', [\App\Http\Controllers\Admin\SiteSettingController::class, 'removeFile'])->name('settings.remove-file');
+
+    // Distribution Management
+    Route::get('/distribution', [\App\Http\Controllers\Admin\DistributionController::class, 'index'])->name('distribution.index');
+    Route::get('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'show'])->name('distribution.show');
+    Route::post('/distribution/{distributionRequest}/approve', [\App\Http\Controllers\Admin\DistributionController::class, 'approve'])->name('distribution.approve');
+    Route::post('/distribution/{distributionRequest}/decline', [\App\Http\Controllers\Admin\DistributionController::class, 'decline'])->name('distribution.decline');
+    Route::put('/distribution/{distributionRequest}/status', [\App\Http\Controllers\Admin\DistributionController::class, 'updateStatus'])->name('distribution.update-status');
+    Route::delete('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'destroy'])->name('distribution.destroy');
+    
+    // Pricing Management
+    Route::get('/pricing', [\App\Http\Controllers\Admin\PricingController::class, 'index'])->name('pricing.index');
+    Route::get('/pricing/create', [\App\Http\Controllers\Admin\PricingController::class, 'create'])->name('pricing.create');
+    Route::post('/pricing', [\App\Http\Controllers\Admin\PricingController::class, 'store'])->name('pricing.store');
+    Route::get('/pricing/{pricingPlan}/edit', [\App\Http\Controllers\Admin\PricingController::class, 'edit'])->name('pricing.edit');
+    Route::put('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'update'])->name('pricing.update');
+    Route::delete('/pricing/{pricingPlan}', [\App\Http\Controllers\Admin\PricingController::class, 'destroy'])->name('pricing.destroy');
+    Route::post('/pricing/{pricingPlan}/toggle-status', [\App\Http\Controllers\Admin\PricingController::class, 'toggleStatus'])->name('pricing.toggle-status');
+    
+    // Manual Payment Management
+    Route::get('/manual-payments', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'index'])->name('manual-payments.index');
+    Route::get('/manual-payments/{manualPayment}', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'show'])->name('manual-payments.show');
+    Route::post('/manual-payments/{manualPayment}/approve', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'approve'])->name('manual-payments.approve');
+    Route::post('/manual-payments/{manualPayment}/reject', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'reject'])->name('manual-payments.reject');
+    Route::post('/manual-payments/bulk-approve', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'bulkApprove'])->name('manual-payments.bulk-approve');
+    Route::get('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'settings'])->name('manual-payments.settings');
+    Route::put('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'updateSettings'])->name('manual-payments.update-settings');
+    Route::get('/manual-payments/{manualPayment}/download', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'downloadProof'])->name('manual-payments.download');
+    
+    // Payment Settings Management
+    Route::get('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'index'])->name('payment-settings.index');
+    Route::put('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('payment-settings.update');
+    Route::post('/payment-settings/test', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'testConnection'])->name('payment-settings.test');
+    
+    // Page Management (DMCA / Policy Pages)
+    Route::get('/pages', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/{page}/edit', [\App\Http\Controllers\Admin\PageController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{page}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('pages.update');
 });
 
 // Notification Routes
@@ -215,6 +317,39 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-as-read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
     Route::post('/notifications/mark-all-as-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
     Route::get('/notifications/unread-count', [AdminNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+});
+
+// Payment Routes
+Route::middleware('auth')->prefix('payment')->name('payment.')->group(function () {
+    Route::get('/plans', [PaymentController::class, 'showPlans'])->name('plans');
+    Route::get('/distribution', [PaymentController::class, 'showDistributionPayment'])->name('distribution');
+    Route::get('/subscription', [PaymentController::class, 'showSubscriptionPayment'])->name('subscription');
+    
+    // Paystack Integration
+    Route::post('/distribution/initialize', [PaymentController::class, 'initializeDistributionPayment'])->name('distribution.initialize');
+    Route::post('/subscription/initialize', [PaymentController::class, 'initializeSubscriptionPayment'])->name('subscription.initialize');
+    Route::get('/distribution/callback', [PaymentController::class, 'handleDistributionCallback'])->name('distribution.callback');
+    Route::get('/subscription/callback', [PaymentController::class, 'handleSubscriptionCallback'])->name('subscription.callback');
+    
+    // Manual Payments
+    Route::post('/manual', [PaymentController::class, 'submitManualPayment'])->name('manual.submit');
+    
+    // Demo
+    Route::post('/distribution/demo', [PaymentController::class, 'simulatePaymentSuccess'])->name('distribution.demo');
+});
+
+// Like/Unlike Routes  
+Route::middleware('auth')->group(function () {
+    Route::post('/music/{music}/like', [LikeController::class, 'toggle'])->name('music.like.toggle');
+    Route::get('/music/liked', [LikeController::class, 'index'])->name('music.liked');
+    Route::delete('/music/liked/clear', [LikeController::class, 'clear'])->name('music.liked.clear');
+});
+
+// Playlist Routes (authenticated - additional actions)
+Route::middleware('auth')->group(function () {
+    Route::post('/playlists/{playlist}/add-music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music-alt');
+    Route::delete('/playlists/{playlist}/remove-music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music-alt');
+    Route::put('/playlists/{playlist}/update-order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order-alt');
 });
 
 // Spotify Routes

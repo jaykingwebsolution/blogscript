@@ -92,11 +92,11 @@
                     <div class="mt-8 pt-8 border-t">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Share this article</h3>
                         <div class="flex space-x-3">
-                            <button onclick="sharePost('{{ route('posts.show', $post->slug) }}', '{{ $post->title }}')" 
+                            <button onclick="sharePost(@json(route('posts.show', $post->slug)), @json($post->title))" 
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
                                 Share
                             </button>
-                            <button onclick="copyLink('{{ route('posts.show', $post->slug) }}')" 
+                            <button onclick="copyLink(@json(route('posts.show', $post->slug)))" 
                                     class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
                                 Copy Link
                             </button>

@@ -3,31 +3,22 @@
 @section('title', 'DMCA Policy')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen">
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-lg shadow-md p-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">DMCA Copyright Policy</h1>
-                <p class="text-gray-600">Last updated: {{ date('F d, Y') }}</p>
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">DMCA Policy</h1>
+                <p class="text-gray-600 dark:text-gray-400">Our copyright protection and takedown procedure</p>
             </div>
 
-            <div class="prose max-w-none text-gray-800">
-                <p class="text-lg mb-6">BlogScript respects the intellectual property rights of others and expects our users to do the same. This Digital Millennium Copyright Act (DMCA) Policy outlines our procedures for addressing claims of copyright infringement.</p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-4 mt-8">1. Our Commitment to Copyright Protection</h2>
-                <p class="mb-6">We take copyright infringement seriously and will respond promptly to valid DMCA takedown notices. We also respect the rights of content creators and users who believe their content was wrongly removed.</p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-4 mt-8">2. Filing a DMCA Takedown Notice</h2>
-                <p class="mb-4">If you believe that content on our website infringes your copyright, you may submit a DMCA takedown notice. Your notice must include:</p>
-                
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Required Information:</h3>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li>Your physical or electronic signature</li>
-                        <li>Identification of the copyrighted work you claim has been infringed</li>
-                        <li>Identification of the material that is claimed to be infringing (with specific URLs)</li>
-                        <li>Your contact information (name, address, telephone number, and email)</li>
+            <div class="prose prose-lg dark:prose-invert max-w-none">
+                {!! $content !!}
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
                         <li>A statement that you have a good faith belief that use of the material is not authorized</li>
                         <li>A statement that the information in the notification is accurate</li>
                         <li>A statement, under penalty of perjury, that you are authorized to act on behalf of the copyright owner</li>

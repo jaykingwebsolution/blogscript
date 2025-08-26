@@ -1,0 +1,234 @@
+@extends('layouts.app')
+
+@section('title', 'Submit Song - Record Label - MusicStream')
+
+@section('content')
+<div class="min-h-screen bg-black text-white">
+    <div class="max-w-4xl mx-auto px-8 py-8">
+        <!-- Back Button -->
+        <div class="mb-8">
+            <a href="{{ route('dashboard.record-label') }}" class="inline-flex items-center text-gray-400 hover:text-green-400 transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 12H5m7-7l-7 7 7 7"/>
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="bg-gradient-to-br from-blue-400 to-blue-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">Submit Song for Distribution</h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Submit songs for your artists and distribute them across major streaming platforms worldwide.
+            </p>
+        </div>
+
+        <!-- Distribution Platforms -->
+        <div class="bg-gray-900 rounded-xl p-8 mb-12 border border-gray-800">
+            <h2 class="text-2xl font-bold mb-6 text-center">Global Distribution Network</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">SP</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Spotify</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-gray-800 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">AM</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Apple Music</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">BP</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Boomplay</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">AU</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Audiomack</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">TI</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Tidal</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center mb-2">
+                        <span class="text-white font-bold text-sm">AM</span>
+                    </div>
+                    <span class="text-xs text-gray-300">Amazon</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submission Form -->
+        <div class="bg-gray-900 rounded-xl p-8 border border-gray-800">
+            @if($errors->any())
+                <div class="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded-lg mb-6">
+                    <ul class="list-disc list-inside space-y-1">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('dashboard.record-label.submit-song.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+
+                <!-- Artist Selection -->
+                <div>
+                    <label for="artist_name" class="block text-sm font-medium text-gray-300 mb-2">Artist Name*</label>
+                    <input type="text" id="artist_name" name="artist_name" value="{{ old('artist_name') }}" required
+                           class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                           placeholder="Enter artist name">
+                    
+                    @if(isset($artists) && $artists->count() > 0)
+                    <div class="mt-2">
+                        <select onchange="if(this.value) document.getElementById('artist_name').value = this.value"
+                                class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Or select from your artists</option>
+                            @foreach($artists as $artist)
+                                <option value="{{ $artist->name }}">{{ $artist->name }} ({{ $artist->genre }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Song Title -->
+                <div>
+                    <label for="song_title" class="block text-sm font-medium text-gray-300 mb-2">Song Title*</label>
+                    <input type="text" id="song_title" name="song_title" value="{{ old('song_title') }}" required
+                           class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                </div>
+
+                <!-- Genre -->
+                <div>
+                    <label for="genre" class="block text-sm font-medium text-gray-300 mb-2">Genre*</label>
+                    <select id="genre" name="genre" required
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                        <option value="">Select Genre</option>
+                        <option value="Afrobeats" {{ old('genre') == 'Afrobeats' ? 'selected' : '' }}>Afrobeats</option>
+                        <option value="Hip Hop" {{ old('genre') == 'Hip Hop' ? 'selected' : '' }}>Hip Hop</option>
+                        <option value="R&B" {{ old('genre') == 'R&B' ? 'selected' : '' }}>R&B</option>
+                        <option value="Gospel" {{ old('genre') == 'Gospel' ? 'selected' : '' }}>Gospel</option>
+                        <option value="Pop" {{ old('genre') == 'Pop' ? 'selected' : '' }}>Pop</option>
+                        <option value="Reggae" {{ old('genre') == 'Reggae' ? 'selected' : '' }}>Reggae</option>
+                        <option value="Jazz" {{ old('genre') == 'Jazz' ? 'selected' : '' }}>Jazz</option>
+                        <option value="Classical" {{ old('genre') == 'Classical' ? 'selected' : '' }}>Classical</option>
+                        <option value="Electronic" {{ old('genre') == 'Electronic' ? 'selected' : '' }}>Electronic</option>
+                        <option value="Country" {{ old('genre') == 'Country' ? 'selected' : '' }}>Country</option>
+                        <option value="Rock" {{ old('genre') == 'Rock' ? 'selected' : '' }}>Rock</option>
+                        <option value="Alternative" {{ old('genre') == 'Alternative' ? 'selected' : '' }}>Alternative</option>
+                        <option value="Blues" {{ old('genre') == 'Blues' ? 'selected' : '' }}>Blues</option>
+                        <option value="Folk" {{ old('genre') == 'Folk' ? 'selected' : '' }}>Folk</option>
+                        <option value="World" {{ old('genre') == 'World' ? 'selected' : '' }}>World Music</option>
+                        <option value="Other" {{ old('genre') == 'Other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                </div>
+
+                <!-- Release Date -->
+                <div>
+                    <label for="release_date" class="block text-sm font-medium text-gray-300 mb-2">Release Date*</label>
+                    <input type="date" id="release_date" name="release_date" value="{{ old('release_date') }}" min="{{ date('Y-m-d') }}" required
+                           class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                    <p class="text-gray-500 text-xs mt-1">Songs can be scheduled for future release</p>
+                </div>
+
+                <!-- File Uploads -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cover Image -->
+                    <div>
+                        <label for="cover_image" class="block text-sm font-medium text-gray-300 mb-2">Cover Image* (Max: 5MB)</label>
+                        <div class="relative">
+                            <input type="file" id="cover_image" name="cover_image" accept="image/jpeg,image/png,image/jpg" required
+                                   class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <p class="text-gray-500 text-xs mt-1">Recommended: 3000x3000px, JPEG/PNG format</p>
+                    </div>
+
+                    <!-- Audio File -->
+                    <div>
+                        <label for="audio_file" class="block text-sm font-medium text-gray-300 mb-2">Audio File* (Max: 50MB)</label>
+                        <div class="relative">
+                            <input type="file" id="audio_file" name="audio_file" accept="audio/mp3,audio/wav" required
+                                   class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <p class="text-gray-500 text-xs mt-1">High quality: WAV/MP3, minimum 320kbps recommended</p>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-300 mb-2">Song Description / Additional Info</label>
+                    <textarea id="description" name="description" rows="4" 
+                              placeholder="Provide details about the song, production credits, marketing plans, special requirements, or any other relevant information..."
+                              class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">{{ old('description') }}</textarea>
+                </div>
+
+                <!-- Label Information -->
+                <div class="bg-blue-900/20 rounded-lg p-6 border border-blue-700/50">
+                    <h3 class="font-semibold mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                        Record Label Benefits
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+                        <div>
+                            <h4 class="text-blue-300 font-medium mb-2">Distribution Advantages:</h4>
+                            <ul class="space-y-1 text-gray-400">
+                                <li>• Priority processing for submissions</li>
+                                <li>• Bulk submission capabilities</li>
+                                <li>• Advanced analytics and reporting</li>
+                                <li>• Dedicated label support team</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-blue-300 font-medium mb-2">Promotional Support:</h4>
+                            <ul class="space-y-1 text-gray-400">
+                                <li>• Featured placement opportunities</li>
+                                <li>• Cross-promotion with other artists</li>
+                                <li>• Social media campaign support</li>
+                                <li>• Playlist pitch assistance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
+                    <h3 class="font-semibold mb-3">Distribution Terms & Conditions</h3>
+                    <div class="text-sm text-gray-400 space-y-2">
+                        <p>• Label submissions receive priority review within 2-3 business days</p>
+                        <p>• Ensure proper rights clearance and artist agreements are in place</p>
+                        <p>• Distribution begins within 7-14 days after approval</p>
+                        <p>• Revenue sharing according to your label agreement</p>
+                        <p>• Comprehensive reporting and analytics provided</p>
+                        <p>• International distribution to 150+ platforms and territories</p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-center pt-6">
+                    <button type="submit" 
+                            class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-full transition-all transform hover:scale-105 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900">
+                        Submit Song for Distribution
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection

@@ -46,6 +46,11 @@ class Music extends Model
         return $query->where('status', 'published');
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 'draft');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -103,5 +108,29 @@ class Music extends Model
         }
 
         return $slug;
+    }
+    
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'music_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function likedBy()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'music_id', 'user_id')
+                    ->withTimestamps();
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+    public function isLikedBy($user)
+    {
+        if (!$user) return false;
+        
+        return $this->likes()->where('user_id', $user->id)->exists();
     }
 }

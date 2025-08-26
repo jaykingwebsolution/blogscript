@@ -6,7 +6,7 @@
             <!-- Currently Playing Info -->
             <div class="flex items-center space-x-4 min-w-0 flex-1">
                 <img id="current-track-cover" 
-                     src="https://via.placeholder.com/60x60/3B82F6/FFFFFF?text=♪" 
+                     src="{{ asset("images/default-music.svg") }}" 
                      alt="Current Track" 
                      class="w-14 h-14 rounded-lg object-cover shadow-lg">
                 <div class="min-w-0 flex-1">
@@ -95,7 +95,7 @@
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center space-x-3 min-w-0 flex-1">
                     <img id="current-track-cover-mobile" 
-                         src="https://via.placeholder.com/50x50/3B82F6/FFFFFF?text=♪" 
+                         src="{{ asset("images/default-music.svg") }}" 
                          alt="Current Track" 
                          class="w-12 h-12 rounded-lg object-cover">
                     <div class="min-w-0 flex-1">
