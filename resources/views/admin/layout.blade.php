@@ -47,7 +47,7 @@
         }
     </style>
 </head>
-<body class="bg-spotify-dark-gray text-white font-sans antialiased">
+<body class="bg-spotify-black text-white font-sans antialiased">
     <div x-data="{ sidebarOpen: false }" class="min-h-screen flex">
         
         <!-- Mobile sidebar overlay -->
@@ -294,7 +294,7 @@
             </header>
 
             <!-- Main Content Area -->
-            <main class="flex-1 p-6 bg-gradient-to-br from-spotify-dark-gray via-spotify-gray to-spotify-dark-gray overflow-y-auto">
+            <main class="flex-1 p-6 bg-spotify-black overflow-y-auto">
                 <!-- Success/Error Messages -->
                 @if(session('success'))
                     <div class="bg-spotify-green bg-opacity-20 border border-spotify-green text-spotify-green-light px-6 py-4 rounded-lg mb-6 flex items-center">

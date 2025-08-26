@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Media;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 
 class AdminController extends Controller
@@ -90,8 +91,10 @@ class AdminController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+            'audio_file' => 'required_without:music_url|file|mimes:mp3,wav,ogg,m4a|max:51200', // 50MB max
             'image_url' => 'nullable|url',
-            'music_url' => 'nullable|url',
+            'music_url' => 'required_without:audio_file|url',
             'download_url' => 'nullable|url',
             'duration' => 'nullable|string|max:10',
             'genre' => 'nullable|string|max:100',
@@ -103,12 +106,31 @@ class AdminController extends Controller
         $validated['slug'] = \Str::slug($validated['title']);
         $validated['created_by'] = Auth::id();
 
+        // Handle file uploads
+        if ($request->hasFile('cover_image')) {
+            $coverImagePath = $request->file('cover_image')->store('music/covers', 'public');
+            $validated['image_url'] = Storage::url($coverImagePath);
+        }
+
+        if ($request->hasFile('audio_file')) {
+            $audioPath = $request->file('audio_file')->store('music/audio', 'public');
+            $validated['music_url'] = Storage::url($audioPath);
+            
+            // Also set download URL to the same file if not provided
+            if (!$validated['download_url']) {
+                $validated['download_url'] = Storage::url($audioPath);
+            }
+        }
+
         // Ensure is_featured is false if not checked
         $validated['is_featured'] = $request->has('is_featured');
 
+        // Remove file fields from validated array since they're not database columns
+        unset($validated['cover_image'], $validated['audio_file']);
+
         Music::create($validated);
 
-        return redirect()->route('admin.music.index')->with('success', 'Music added successfully!');
+        return redirect()->route('admin.music.index')->with('success', 'Music uploaded successfully!');
     }
 
     public function musicEdit(Music $music)
