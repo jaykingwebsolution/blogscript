@@ -21,6 +21,8 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\Auth\RoleBasedRegisterController;
 use App\Http\Controllers\Dashboard\ListenerDashboardController;
 use App\Http\Controllers\SpotifyPostController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
