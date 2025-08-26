@@ -58,7 +58,7 @@ class SubscriptionController extends Controller
         );
 
         // Initialize Paystack payment
-        $response = Http::withToken($this->getPaystackSecretKey())
+        $response = $this->getPaystackHttpClient()
             ->post('https://api.paystack.co/transaction/initialize', [
                 'email' => $user->email,
                 'amount' => $planDetails['amount'], // Amount in kobo
@@ -95,7 +95,7 @@ class SubscriptionController extends Controller
         }
 
         // Verify payment with Paystack
-        $response = Http::withToken($this->getPaystackSecretKey())
+        $response = $this->getPaystackHttpClient()
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->successful()) {
@@ -171,8 +171,7 @@ class SubscriptionController extends Controller
 
             // Initialize Paystack payment
             try {
-                $response = Http::withToken($this->getPaystackSecretKey())
-                    ->timeout(10)
+                $response = $this->getPaystackHttpClient()
                     ->post('https://api.paystack.co/transaction/initialize', [
                         'email' => $request->email,
                         'amount' => $amount, // Amount in kobo
@@ -256,8 +255,7 @@ class SubscriptionController extends Controller
         try {
             // Verify payment with Paystack
             try {
-                $response = Http::withToken($this->getPaystackSecretKey())
-                    ->timeout(10)
+                $response = $this->getPaystackHttpClient()
                     ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
                 if ($response->successful()) {
@@ -396,6 +394,28 @@ class SubscriptionController extends Controller
     {
         $key = SiteSetting::get('paystack_secret_key');
         return $key ?: env('PAYSTACK_SECRET_KEY', 'sk_test_demo_key_replace_with_yours');
+    }
+
+    /**
+     * Get HTTP client with SSL configuration for Paystack
+     */
+    private function getPaystackHttpClient()
+    {
+        $client = Http::withToken($this->getPaystackSecretKey())
+            ->timeout(10);
+            
+        // For production, use proper SSL verification
+        if (env('APP_ENV') === 'production') {
+            // In production, ensure SSL certificates are properly configured
+            return $client;
+        } else {
+            // For development/testing, you may need to disable SSL verification
+            // Only use this for testing environments with PAYSTACK_VERIFY_SSL=false
+            if (env('PAYSTACK_VERIFY_SSL', true) === false) {
+                return $client->withOptions(['verify' => false]);
+            }
+            return $client;
+        }
     }
 
     /**
