@@ -40,7 +40,7 @@
             <!-- Left Column - Request Details -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- User Information -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">User Information</h2>
                     </div>
@@ -80,7 +80,7 @@
                 </div>
 
                 <!-- Request Details -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Request Details</h2>
                     </div>
@@ -128,7 +128,7 @@
                 </div>
 
                 <!-- Files Section -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Submitted Files</h2>
                     </div>
@@ -186,7 +186,7 @@
                 </div>
 
                 <!-- Admin Notes Section -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Admin Notes</h2>
                     </div>
@@ -211,7 +211,7 @@
                                         Add Notes (Optional)
                                     </label>
                                     <textarea id="notes" name="notes" rows="3" 
-                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 text-gray-900 dark:text-white"
                                               placeholder="Add approval notes or feedback for the user...">{{ old('notes') }}</textarea>
                                 </div>
                                 <div class="flex gap-3">
@@ -233,7 +233,7 @@
             <!-- Right Column - Status & Info -->
             <div class="lg:col-span-1">
                 <!-- Status Card -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Request Status</h2>
                     </div>
@@ -261,7 +261,7 @@
                                         Change Status
                                     </label>
                                     <select id="status" name="status" 
-                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 text-gray-900 dark:text-white">
                                         <option value="pending" {{ $distributionRequest->status === 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="approved" {{ $distributionRequest->status === 'approved' ? 'selected' : '' }}>Approved</option>
                                         <option value="declined" {{ $distributionRequest->status === 'declined' ? 'selected' : '' }}>Declined</option>
@@ -272,7 +272,7 @@
                                         Update Notes
                                     </label>
                                     <textarea id="status_notes" name="notes" rows="3" 
-                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 text-gray-900 dark:text-white"
                                               placeholder="Add notes about this status change...">{{ $distributionRequest->notes }}</textarea>
                                 </div>
                                 <button type="submit" 
@@ -285,7 +285,7 @@
                 </div>
 
                 <!-- Distribution Platforms -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Distribution Platforms</h2>
                     </div>
@@ -325,13 +325,13 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-white">Actions</h2>
                     </div>
                     <div class="p-6 space-y-3">
                         <a href="mailto:{{ $distributionRequest->user->email }}" 
-                           class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                           class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                             <i class="fas fa-envelope mr-2"></i>Email User
                         </a>
                         
@@ -340,7 +340,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-red-300 dark:border-red-600 rounded-lg text-sm font-medium text-red-700 dark:text-red-300 bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                    class="w-full inline-flex items-center justify-center px-4 py-2 border border-red-300 dark:border-red-600 rounded-lg text-sm font-medium text-red-700 dark:text-red-300 bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <i class="fas fa-trash mr-2"></i>Delete Request
                             </button>
                         </form>
@@ -354,7 +354,7 @@
 <!-- Decline Modal -->
 <div id="declineModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+        <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Decline Distribution Request</h3>
                 <form action="{{ route('admin.distribution.decline', $distributionRequest) }}" method="POST">
@@ -364,12 +364,12 @@
                             Reason for declining <span class="text-red-500">*</span>
                         </label>
                         <textarea id="decline_notes" name="notes" rows="4" required
-                                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 text-gray-900 dark:text-white"
                                   placeholder="Please provide a detailed reason for declining this request..."></textarea>
                     </div>
                     <div class="flex justify-end gap-3">
                         <button type="button" onclick="closeDeclineModal()" 
-                                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
+                                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
                             Cancel
                         </button>
                         <button type="submit" 

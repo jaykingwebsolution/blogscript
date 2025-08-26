@@ -7,7 +7,7 @@
 <!-- Enhanced Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Content Statistics -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -66,7 +66,7 @@
 
 <!-- Signup Statistics -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center justify-between">
                 <div>
@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center justify-between">
                 <div>
@@ -92,7 +92,7 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
         <div class="p-5">
             <div class="flex items-center justify-between">
                 <div>
@@ -110,7 +110,7 @@
     <!-- Pending Items -->
     <div class="lg:col-span-2">
         <!-- Pending Approvals -->
-        <div class="bg-white shadow rounded-lg mb-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg mb-6">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Pending Approvals</h3>
             </div>
@@ -164,7 +164,7 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white shadow rounded-lg">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
             </div>
@@ -218,7 +218,7 @@
 
     <!-- Quick Actions -->
     <div class="space-y-6">
-        <div class="bg-white shadow rounded-lg">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
             </div>
@@ -242,7 +242,7 @@
 
         <!-- User Role Distribution -->
         @if(isset($userRoleStats) && !empty($userRoleStats))
-        <div class="bg-white shadow rounded-lg">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">User Distribution</h3>
             </div>
@@ -270,7 +270,7 @@
 </div>
 
 <!-- Content Overview -->
-<div class="bg-white shadow rounded-lg">
+<div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
     <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-medium text-gray-900">Content Overview</h3>
     </div>

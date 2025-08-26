@@ -18,7 +18,7 @@
 
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Total Payments</p>
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Pending Review</p>
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Approved</p>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-600">Rejected</p>
@@ -88,7 +88,7 @@
     @endif
 
     <!-- Payments Table -->
-    <div class="bg-white shadow-sm rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Recent Manual Payments</h2>
         </div>
@@ -109,7 +109,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200">
                         @foreach($payments as $payment)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -209,7 +209,7 @@
 
 <!-- Reject Modal -->
 <div id="reject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-50 dark:bg-gray-900">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Payment</h3>
             <form id="reject-form" method="POST">

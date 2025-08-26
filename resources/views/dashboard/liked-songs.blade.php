@@ -54,7 +54,7 @@
                     <p class="text-sm font-medium uppercase tracking-wider">Playlist</p>
                     <h1 class="text-4xl lg:text-6xl font-bold mb-4">Liked Songs</h1>
                     <div class="flex items-center text-sm">
-                        <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : 'asset("images/default-artist.svg") }}" alt="Profile" class="w-6 h-6 rounded-full mr-2">
+                        <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('images/default-artist.svg') }}" alt="Profile" class="w-6 h-6 rounded-full mr-2">
                         <span class="font-semibold">{{ auth()->user()->name }}</span>
                         <span class="mx-2">•</span>
                         <span>{{ $likedSongs->total() }} songs</span>
@@ -129,7 +129,7 @@
                 </div>
                 
                 <div class="col-span-6 flex items-center space-x-3">
-                    <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : 'asset("images/default-music.svg")' }}" 
+                    <img src="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : asset('images/default-music.svg') }}" 
                          alt="{{ $song->title }}" 
                          class="w-12 h-12 rounded object-cover">
                     <div class="min-w-0">

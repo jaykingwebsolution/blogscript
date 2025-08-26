@@ -254,6 +254,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/users/{user}', [AdminController::class, 'userDestroy'])->name('users.destroy');
     Route::post('/users/{user}/approve', [AdminController::class, 'userApprove'])->name('users.approve');
     Route::post('/users/{user}/suspend', [AdminController::class, 'userSuspend'])->name('users.suspend');
+    // New enhanced user management routes
+    Route::post('/users/{user}/unsuspend', [AdminController::class, 'userUnsuspend'])->name('users.unsuspend');
+    Route::post('/users/{user}/unapprove', [AdminController::class, 'userUnapprove'])->name('users.unapprove');
+    Route::post('/users/{user}/verify', [AdminController::class, 'userVerify'])->name('users.verify');
+    Route::post('/users/{user}/unverify', [AdminController::class, 'userUnverify'])->name('users.unverify');
+    Route::post('/users/{user}/assign-plan', [AdminController::class, 'userAssignPlan'])->name('users.assign-plan');
     
     // Subscription Management
     Route::get('/subscriptions', [AdminController::class, 'subscriptionIndex'])->name('subscriptions.index');
@@ -336,6 +342,7 @@ Route::middleware('auth')->prefix('payment')->name('payment.')->group(function (
     
     // Demo
     Route::post('/distribution/demo', [PaymentController::class, 'simulatePaymentSuccess'])->name('distribution.demo');
+    Route::post('/subscription/demo', [PaymentController::class, 'simulateSubscriptionSuccess'])->name('subscription.demo');
 });
 
 // Like/Unlike Routes  

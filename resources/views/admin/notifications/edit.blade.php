@@ -32,7 +32,7 @@
         @csrf
         @method('PUT')
         
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Notification Details</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -94,7 +94,7 @@
             </div>
         </div>
         
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Targeting Options</h2>
             
             <div class="space-y-4">

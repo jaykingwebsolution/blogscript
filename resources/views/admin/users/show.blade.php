@@ -34,7 +34,7 @@
     <!-- User Info -->
     <div class="lg:col-span-2 space-y-6">
         <!-- Basic Information -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -103,7 +103,7 @@
 
         <!-- Recent Activity -->
         @if($user->createdMusic && $user->createdMusic->count() > 0)
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Music</h3>
             <div class="space-y-3">
                 @foreach($user->createdMusic->take(5) as $music)
@@ -125,7 +125,7 @@
     <!-- Stats and Actions -->
     <div class="space-y-6">
         <!-- Statistics -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Statistics</h3>
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
@@ -149,7 +149,7 @@
 
         <!-- Quick Actions -->
         @if($user->id !== Auth::id())
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
             <div class="space-y-3">
                 @if($user->status === 'pending')
@@ -185,7 +185,7 @@
 
         <!-- Subscription Info -->
         @if($user->subscription)
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Subscription</h3>
             <div class="space-y-2">
                 <div class="flex items-center justify-between">

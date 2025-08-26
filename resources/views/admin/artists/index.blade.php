@@ -15,7 +15,7 @@
 </div>
 
 <!-- Search and Filter Bar -->
-<div class="bg-white shadow rounded-lg mb-6 p-4">
+<div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg mb-6 p-4">
     <form method="GET" action="{{ route('admin.artists.index') }}" class="flex flex-wrap gap-4">
         <div class="flex-1 min-w-64">
             <input type="text" name="search" value="{{ request('search') }}" 
@@ -55,7 +55,7 @@
     </form>
 </div>
 
-<div class="bg-white shadow rounded-lg overflow-hidden">
+<div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg overflow-hidden">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
             <tr>
@@ -69,7 +69,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200">
             @forelse($artists as $artist)
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -153,7 +153,7 @@
     </table>
 
     @if($artists->hasPages())
-        <div class="px-6 py-4 bg-white border-t border-gray-200">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200">
             {{ $artists->appends(request()->query())->links() }}
         </div>
     @endif

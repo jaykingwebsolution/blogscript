@@ -30,7 +30,7 @@
 
 <!-- Pending Media Tab -->
 <div id="pending-content" class="tab-content">
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 bg-yellow-50">
             <h3 class="text-lg font-medium text-gray-900">
                 <i class="fas fa-clock text-yellow-600 mr-2"></i>
@@ -148,7 +148,7 @@
 
 <!-- All Media Tab -->
 <div id="all-content" class="tab-content hidden">
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -161,7 +161,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200">
                     @forelse($allMedia as $media)
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -254,7 +254,7 @@
 
 <!-- Rejection Modal -->
 <div id="reject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-50 dark:bg-gray-900">
         <div class="mt-3 text-center">
             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
                 <i class="fas fa-times text-red-600"></i>
