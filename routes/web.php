@@ -171,6 +171,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/distribution/callback', [\App\Http\Controllers\PaymentController::class, 'handleDistributionCallback'])->name('payment.distribution.callback');
     Route::post('/payment/distribution/demo', [\App\Http\Controllers\PaymentController::class, 'simulatePaymentSuccess'])->name('payment.distribution.demo');
     Route::get('/payment/plans', [\App\Http\Controllers\PaymentController::class, 'showPlans'])->name('payment.plans');
+    Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
+    Route::get('/payment/distribution/plan/{distributionPricing}', [\App\Http\Controllers\PaymentController::class, 'showDistributionPlan'])->name('payment.distribution-plan');
     Route::get('/payment/subscription', [\App\Http\Controllers\PaymentController::class, 'showSubscriptionPayment'])->name('payment.subscription');
     Route::post('/payment/subscription/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeSubscriptionPayment'])->name('payment.subscription.initialize');
     Route::get('/payment/subscription/callback', [\App\Http\Controllers\PaymentController::class, 'handleSubscriptionCallback'])->name('payment.subscription.callback');
@@ -316,6 +318,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pages', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('pages.index');
     Route::get('/pages/{page}/edit', [\App\Http\Controllers\Admin\PageController::class, 'edit'])->name('pages.edit');
     Route::put('/pages/{page}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('pages.update');
+    
+    // Distribution Pricing Management
+    Route::get('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'index'])->name('distribution-pricing.index');
+    Route::get('/distribution-pricing/create', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'create'])->name('distribution-pricing.create');
+    Route::post('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'store'])->name('distribution-pricing.store');
+    Route::get('/distribution-pricing/{distributionPricing}/edit', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'edit'])->name('distribution-pricing.edit');
+    Route::put('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'update'])->name('distribution-pricing.update');
+    Route::delete('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'destroy'])->name('distribution-pricing.destroy');
+    
+    // Spotify Import Management
+    Route::get('/spotify-import', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'index'])->name('spotify-import.index');
+    Route::post('/spotify-import/search', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'search'])->name('spotify-import.search');
+    Route::post('/spotify-import/import', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'importArtist'])->name('spotify-import.import');
+    Route::post('/spotify-import/{spotifyArtist}/sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'syncArtist'])->name('spotify-import.sync');
+    Route::post('/spotify-import/bulk-sync', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'bulkSync'])->name('spotify-import.bulk-sync');
+    Route::delete('/spotify-import/{spotifyArtist}', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'deleteArtist'])->name('spotify-import.delete');
 });
 
 // Notification Routes

@@ -23,7 +23,7 @@ class DashboardController extends Controller
         // If user is artist/record label, show their uploaded music
         $uploadedMusic = collect();
         if ($user->isArtist() || $user->isRecordLabel()) {
-            $uploadedMusic = Music::where('user_id', $user->id)
+            $uploadedMusic = Music::where('created_by', $user->id)
                 ->with(['user', 'artist'])
                 ->latest()
                 ->get();

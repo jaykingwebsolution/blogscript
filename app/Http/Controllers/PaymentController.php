@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PricingPlan;
+use App\Models\DistributionPricing;
 use App\Models\User;
 use App\Models\ManualPayment;
 use App\Models\SiteSetting;
@@ -22,10 +22,10 @@ class PaymentController extends Controller
     public function showPlans()
     {
         $user = auth()->user();
-        $distributionPlan = PricingPlan::getDistributionFee();
+        $distributionPlans = DistributionPricing::getOrderedPlans();
         $subscriptionPlans = PricingPlan::getActiveSubscriptions();
         
-        return view('payment.plans', compact('distributionPlan', 'subscriptionPlans', 'user'));
+        return view('payment.plans', compact('distributionPlans', 'subscriptionPlans', 'user'));
     }
 
     public function showDistributionPayment()
@@ -42,14 +42,33 @@ class PaymentController extends Controller
             return redirect()->route('distribution.create');
         }
 
-        $distributionPlan = PricingPlan::getDistributionFee();
+        $distributionPlans = DistributionPricing::getOrderedPlans();
         $bankDetails = $this->getBankDetails();
         
-        if (!$distributionPlan) {
+        if (!DistributionPricing::hasPlans()) {
             return back()->with('error', 'Distribution pricing is not configured. Please contact support.');
         }
 
-        return view('payment.distribution', compact('distributionPlan', 'bankDetails'));
+        return view('payment.distribution', compact('distributionPlans', 'bankDetails'));
+    }
+
+    public function showDistributionPlan(DistributionPricing $distributionPricing)
+    {
+        $user = auth()->user();
+        
+        // Only artists and record labels can access this
+        if (!$user->isArtist() && !$user->isRecordLabel()) {
+            abort(403, 'Only artists and record labels can access distribution services.');
+        }
+
+        // If already paid, redirect to distribution form
+        if ($user->hasDistributionAccess()) {
+            return redirect()->route('distribution.create');
+        }
+
+        $bankDetails = $this->getBankDetails();
+        
+        return view('payment.distribution-plan', compact('distributionPricing', 'bankDetails'));
     }
 
     public function showSubscriptionPayment(Request $request)
@@ -80,10 +99,16 @@ class PaymentController extends Controller
             return redirect()->route('distribution.create')->with('success', 'You already have distribution access.');
         }
 
-        $distributionPlan = PricingPlan::getDistributionFee();
+        // Get the selected plan from request
+        $planId = $request->input('plan_id');
+        if (!$planId) {
+            return back()->with('error', 'Please select a distribution plan.');
+        }
+
+        $distributionPlan = DistributionPricing::find($planId);
         
         if (!$distributionPlan) {
-            return back()->with('error', 'Distribution pricing is not configured.');
+            return back()->with('error', 'Selected distribution plan not found.');
         }
 
         // Generate reference
@@ -93,14 +118,16 @@ class PaymentController extends Controller
         $response = Http::withToken($this->getPaystackSecretKey())
             ->post('https://api.paystack.co/transaction/initialize', [
                 'email' => $user->email,
-                'amount' => $distributionPlan->amount * 100, // Convert to kobo
-                'currency' => $distributionPlan->currency,
+                'amount' => $distributionPlan->price * 100, // Convert to kobo
+                'currency' => 'NGN',
                 'reference' => $reference,
                 'callback_url' => route('payment.distribution.callback'),
                 'metadata' => [
                     'user_id' => $user->id,
                     'payment_type' => 'distribution',
-                    'plan_id' => $distributionPlan->id
+                    'plan_id' => $distributionPlan->id,
+                    'plan_name' => $distributionPlan->name,
+                    'plan_duration' => $distributionPlan->duration
                 ]
             ]);
 
@@ -108,7 +135,7 @@ class PaymentController extends Controller
             $data = $response->json()['data'];
             
             // Store payment reference in session for verification
-            session(['payment_reference' => $reference, 'payment_type' => 'distribution']);
+            session(['payment_reference' => $reference, 'payment_type' => 'distribution', 'distribution_plan_id' => $distributionPlan->id]);
             
             return redirect($data['authorization_url']);
         }
@@ -182,20 +209,28 @@ class PaymentController extends Controller
 
             if ($data['status'] === 'success') {
                 $user = auth()->user();
-                $distributionPlan = PricingPlan::getDistributionFee();
+                $planId = session('distribution_plan_id');
+                $distributionPlan = null;
+                
+                if ($planId) {
+                    $distributionPlan = DistributionPricing::find($planId);
+                }
                 
                 // Mark user as having paid for distribution
-                $user->markDistributionAsPaid($distributionPlan->amount, $reference);
+                $amount = $distributionPlan ? $distributionPlan->price : ($data['amount'] / 100);
+                $user->markDistributionAsPaid($amount, $reference);
                 
                 // Log the payment
                 Log::info("Distribution payment successful", [
                     'user_id' => $user->id,
                     'reference' => $reference,
-                    'amount' => $distributionPlan->amount
+                    'amount' => $amount,
+                    'plan_id' => $planId,
+                    'plan_name' => $distributionPlan ? $distributionPlan->name : 'Unknown',
                 ]);
 
                 // Clear session
-                session()->forget(['payment_reference', 'payment_type']);
+                session()->forget(['payment_reference', 'payment_type', 'distribution_plan_id']);
 
                 return redirect()->route('distribution.create')->with('success', 'Payment successful! You can now submit your music for distribution.');
             }
@@ -257,13 +292,19 @@ class PaymentController extends Controller
     {
         $request->validate([
             'payment_type' => 'required|in:distribution,subscription',
-            'plan_id' => 'required|exists:pricing_plans,id',
+            'plan_id' => 'required|integer',
             'transaction_reference' => 'required|string|max:255',
             'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240', // 10MB max
         ]);
 
         $user = auth()->user();
-        $plan = PricingPlan::findOrFail($request->plan_id);
+        
+        // Handle both distribution and subscription plans
+        if ($request->payment_type === 'distribution') {
+            $plan = DistributionPricing::findOrFail($request->plan_id);
+        } else {
+            $plan = PricingPlan::findOrFail($request->plan_id);
+        }
         
         // Store the payment proof
         $proofPath = $request->file('payment_proof')->store('manual_payments', 'public');
@@ -275,8 +316,8 @@ class PaymentController extends Controller
             'payment_type' => $request->payment_type,
             'transaction_reference' => $request->transaction_reference,
             'payment_proof' => $proofPath,
-            'amount' => $plan->amount,
-            'currency' => $plan->currency,
+            'amount' => $plan->price ?? $plan->amount,
+            'currency' => 'NGN', // Default to NGN for distribution pricing
             'status' => 'pending',
         ]);
 
@@ -298,10 +339,24 @@ class PaymentController extends Controller
     public function simulatePaymentSuccess(Request $request)
     {
         $user = auth()->user();
-        $distributionPlan = PricingPlan::getDistributionFee();
+        $planId = $request->input('plan_id');
+        $distributionPlan = null;
         $reference = 'DEMO_' . strtoupper(Str::random(10)) . '_' . $user->id;
 
-        $user->markDistributionAsPaid($distributionPlan->amount, $reference);
+        if ($planId) {
+            $distributionPlan = DistributionPricing::find($planId);
+        }
+        
+        if (!$distributionPlan) {
+            // Fallback to any distribution plan if none specified
+            $distributionPlan = DistributionPricing::first();
+        }
+        
+        if (!$distributionPlan) {
+            return redirect()->back()->with('error', 'No distribution plan found.');
+        }
+
+        $user->markDistributionAsPaid($distributionPlan->price, $reference);
 
         return redirect()->route('distribution.create')->with('success', 'Demo payment successful! You can now submit your music for distribution.');
     }

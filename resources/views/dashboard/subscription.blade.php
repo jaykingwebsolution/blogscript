@@ -149,6 +149,89 @@
                 </div>
                 @endif
 
+                <!-- Distribution Pricing Section (for Artists and Record Labels) -->
+                @if($distributionPricingPlans && ($distributionPricingPlans->count() > 0) && (auth()->user()->isArtist() || auth()->user()->isRecordLabel()))
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                        </svg>
+                        Distribution Pricing Plans
+                    </h3>
+                    
+                    @if(auth()->user()->hasDistributionAccess())
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                You already have distribution access! You can submit your music for distribution.
+                            </div>
+                            <a href="{{ route('distribution.create') }}" class="inline-flex items-center mt-2 text-green-800 hover:text-green-900 font-medium">
+                                Go to Distribution Form →
+                            </a>
+                        </div>
+                    @else
+                        <p class="text-gray-600 mb-6">Choose a distribution plan to get your music on major streaming platforms like Spotify, Apple Music, and more.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($distributionPricingPlans as $plan)
+                            <div class="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-purple-500 transition-colors">
+                                <div class="text-center">
+                                    <h4 class="text-lg font-bold text-gray-900 mb-2">{{ $plan->name }}</h4>
+                                    <div class="text-2xl font-bold text-purple-600 mb-3">
+                                        {{ $plan->formatted_price }}
+                                    </div>
+                                    <div class="mb-4">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                                            @if(str_contains(strtolower($plan->duration), '6 month')) bg-blue-100 text-blue-800
+                                            @elseif(str_contains(strtolower($plan->duration), '1 year') || str_contains(strtolower($plan->duration), '12 month')) bg-purple-100 text-purple-800
+                                            @elseif(str_contains(strtolower($plan->duration), 'lifetime')) bg-green-100 text-green-800
+                                            @else bg-gray-100 text-gray-800
+                                            @endif">
+                                            {{ $plan->duration }}
+                                        </span>
+                                    </div>
+                                    
+                                    <ul class="text-left text-sm text-gray-600 mb-6 space-y-2">
+                                        <li class="flex items-center">
+                                            <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            Distribute to all major platforms
+                                        </li>
+                                        <li class="flex items-center">
+                                            <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            Keep 100% of your royalties
+                                        </li>
+                                        <li class="flex items-center">
+                                            <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            Unlimited uploads
+                                        </li>
+                                        <li class="flex items-center">
+                                            <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                            Analytics & reporting
+                                        </li>
+                                    </ul>
+
+                                    <a href="{{ route('payment.distribution-plan', $plan->id) }}" 
+                                       class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-4 rounded transition-colors inline-block text-center font-medium">
+                                        Choose This Plan
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                @endif
+
                 <!-- Benefits Section -->
                 <div class="mt-8">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Why Upgrade?</h3>
