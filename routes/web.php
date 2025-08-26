@@ -168,6 +168,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/distribution/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeDistributionPayment'])->name('payment.distribution.initialize');
     Route::get('/payment/distribution/callback', [\App\Http\Controllers\PaymentController::class, 'handleDistributionCallback'])->name('payment.distribution.callback');
     Route::post('/payment/distribution/demo', [\App\Http\Controllers\PaymentController::class, 'simulatePaymentSuccess'])->name('payment.distribution.demo');
+    Route::get('/payment/plans', [\App\Http\Controllers\PaymentController::class, 'showPlans'])->name('payment.plans');
+    Route::get('/payment/subscription', [\App\Http\Controllers\PaymentController::class, 'showSubscriptionPayment'])->name('payment.subscription');
+    Route::post('/payment/subscription/initialize', [\App\Http\Controllers\PaymentController::class, 'initializeSubscriptionPayment'])->name('payment.subscription.initialize');
+    Route::get('/payment/subscription/callback', [\App\Http\Controllers\PaymentController::class, 'handleSubscriptionCallback'])->name('payment.subscription.callback');
+    Route::post('/payment/manual', [\App\Http\Controllers\PaymentController::class, 'submitManualPayment'])->name('payment.manual.submit');
 });
 
 // Artist Routes (Authenticated Artists and Record Labels)
@@ -293,6 +298,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'settings'])->name('manual-payments.settings');
     Route::put('/manual-payments-settings', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'updateSettings'])->name('manual-payments.update-settings');
     Route::get('/manual-payments/{manualPayment}/download', [\App\Http\Controllers\Admin\ManualPaymentController::class, 'downloadProof'])->name('manual-payments.download');
+    
+    // Payment Settings Management
+    Route::get('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'index'])->name('payment-settings.index');
+    Route::put('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('payment-settings.update');
+    Route::post('/payment-settings/test', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'testConnection'])->name('payment-settings.test');
 });
 
 // Notification Routes

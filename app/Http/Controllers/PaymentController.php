@@ -90,7 +90,7 @@ class PaymentController extends Controller
         $reference = 'DIST_' . strtoupper(Str::random(10)) . '_' . $user->id;
         
         // Initialize Paystack payment
-        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->post('https://api.paystack.co/transaction/initialize', [
                 'email' => $user->email,
                 'amount' => $distributionPlan->amount * 100, // Convert to kobo
@@ -133,7 +133,7 @@ class PaymentController extends Controller
         $reference = 'SUB_' . strtoupper(Str::random(10)) . '_' . $user->id;
         
         // Initialize Paystack payment
-        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->post('https://api.paystack.co/transaction/initialize', [
                 'email' => $user->email,
                 'amount' => $plan->amount * 100, // Convert to kobo
@@ -174,7 +174,7 @@ class PaymentController extends Controller
         }
 
         // Verify payment with Paystack
-        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->successful()) {
@@ -213,7 +213,7 @@ class PaymentController extends Controller
         }
 
         // Verify payment with Paystack
-        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->successful()) {
@@ -304,5 +304,23 @@ class PaymentController extends Controller
         $user->markDistributionAsPaid($distributionPlan->amount, $reference);
 
         return redirect()->route('distribution.create')->with('success', 'Demo payment successful! You can now submit your music for distribution.');
+    }
+
+    /**
+     * Get Paystack secret key from admin settings or fallback to env
+     */
+    private function getPaystackSecretKey()
+    {
+        $key = SiteSetting::get('paystack_secret_key');
+        return $key ?: env('PAYSTACK_SECRET_KEY', 'sk_test_demo_key_replace_with_yours');
+    }
+
+    /**
+     * Get Paystack public key from admin settings or fallback to env
+     */
+    private function getPaystackPublicKey()
+    {
+        $key = SiteSetting::get('paystack_public_key');
+        return $key ?: env('PAYSTACK_PUBLIC_KEY', 'pk_test_demo_key_replace_with_yours');
     }
 }
