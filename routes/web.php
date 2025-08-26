@@ -316,6 +316,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pages', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('pages.index');
     Route::get('/pages/{page}/edit', [\App\Http\Controllers\Admin\PageController::class, 'edit'])->name('pages.edit');
     Route::put('/pages/{page}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('pages.update');
+    
+    // Distribution Pricing Management
+    Route::get('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'index'])->name('distribution-pricing.index');
+    Route::get('/distribution-pricing/create', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'create'])->name('distribution-pricing.create');
+    Route::post('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'store'])->name('distribution-pricing.store');
+    Route::get('/distribution-pricing/{distributionPricing}/edit', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'edit'])->name('distribution-pricing.edit');
+    Route::put('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'update'])->name('distribution-pricing.update');
+    Route::delete('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'destroy'])->name('distribution-pricing.destroy');
 });
 
 // Notification Routes
