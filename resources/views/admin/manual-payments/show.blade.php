@@ -32,7 +32,7 @@
         <!-- Main Details -->
         <div class="lg:col-span-2 space-y-6">
             <!-- Payment Information -->
-            <div class="bg-white shadow-sm rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-medium text-gray-900">Payment Information</h2>
                 </div>
@@ -68,7 +68,7 @@
             </div>
 
             <!-- User Information -->
-            <div class="bg-white shadow-sm rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-medium text-gray-900">User Information</h2>
                 </div>
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Payment Proof -->
-            <div class="bg-white shadow-sm rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                     <h2 class="text-lg font-medium text-gray-900">Payment Proof</h2>
                     @if($manualPayment->payment_proof)
@@ -128,7 +128,7 @@
 
             <!-- Admin Notes (if reviewed) -->
             @if($manualPayment->admin_notes)
-                <div class="bg-white shadow-sm rounded-lg">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h2 class="text-lg font-medium text-gray-900">Admin Notes</h2>
                     </div>
@@ -152,7 +152,7 @@
         <!-- Sidebar -->
         <div class="space-y-6">
             <!-- Status Card -->
-            <div class="bg-white shadow-sm rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-medium text-gray-900">Status</h2>
                 </div>
@@ -188,7 +188,7 @@
 
             <!-- Actions -->
             @if($manualPayment->isPending())
-                <div class="bg-white shadow-sm rounded-lg">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h2 class="text-lg font-medium text-gray-900">Actions</h2>
                     </div>
@@ -231,7 +231,7 @@
 <!-- Reject Modal -->
 @if($manualPayment->isPending())
 <div id="reject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-50 dark:bg-gray-900">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Payment</h3>
             <form method="POST" action="{{ route('admin.manual-payments.reject', $manualPayment) }}">

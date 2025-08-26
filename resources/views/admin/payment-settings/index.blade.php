@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-lg shadow-lg p-6">
+    <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Paystack Payment Configuration</h2>
             <button onclick="testConnection()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
@@ -135,7 +135,7 @@
     </div>
 
     <!-- Instructions Card -->
-    <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+    <div class="mt-8 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-lg p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Setup Instructions</h3>
         <div class="prose text-sm text-gray-600">
             <ol class="list-decimal list-inside space-y-2">

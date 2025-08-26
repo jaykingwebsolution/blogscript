@@ -5,8 +5,8 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+        <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
                 <h1 class="text-2xl font-bold text-gray-900 mb-6">Verification Requests</h1>
                 
                 @if(session('success'))
@@ -86,7 +86,7 @@
 
 <!-- Reject Modal -->
 <div id="rejectModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-50 dark:bg-gray-900">
         <div class="mt-3">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Verification Request</h3>
             <form id="rejectForm" method="POST">

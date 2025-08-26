@@ -13,7 +13,7 @@
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage your site's SEO, content, and appearance settings</p>
                 </div>
                 <div class="flex space-x-3">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
@@ -44,7 +44,7 @@
             @method('PUT')
 
             <!-- Basic Site Information -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Basic Site Information</h3>
                 </div>
@@ -86,7 +86,7 @@
             </div>
 
             <!-- SEO Settings -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">SEO Settings</h3>
                 </div>
@@ -115,7 +115,7 @@
             </div>
 
             <!-- Social Media Links -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Social Media Links</h3>
                 </div>
@@ -149,7 +149,7 @@
             </div>
 
             <!-- Page Content -->
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Page Content</h3>
                 </div>

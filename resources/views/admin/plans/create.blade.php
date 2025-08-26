@@ -22,7 +22,7 @@
             </div>
         @endif
 
-        <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-lg p-8">
             <form action="{{ route('admin.plans.store') }}" method="POST">
                 @csrf
                 

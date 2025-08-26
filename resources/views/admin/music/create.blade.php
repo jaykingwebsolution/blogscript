@@ -15,7 +15,7 @@
         </a>
     </div>
 
-    <form method="POST" action="{{ route('admin.music.store') }}" class="bg-white shadow rounded-lg">
+    <form method="POST" action="{{ route('admin.music.store') }}" class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
         @csrf
         
         <div class="px-6 py-4 border-b border-gray-200">

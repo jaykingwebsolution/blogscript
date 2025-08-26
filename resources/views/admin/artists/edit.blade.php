@@ -15,7 +15,7 @@
         </a>
     </div>
 
-    <form method="POST" action="{{ route('admin.artists.update', $artist) }}" class="bg-white shadow rounded-lg">
+    <form method="POST" action="{{ route('admin.artists.update', $artist) }}" class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
         @csrf
         @method('PUT')
         

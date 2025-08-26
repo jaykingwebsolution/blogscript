@@ -5,7 +5,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-100">
     <!-- Header -->
-    <header class="bg-white shadow">
+    <header class="bg-gray-50 dark:bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard Preview</h1>
@@ -20,7 +20,7 @@
         <!-- Enhanced Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Content Statistics -->
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -79,7 +79,7 @@
 
         <!-- Signup Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center justify-between">
                         <div>
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center justify-between">
                         <div>
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-gray-50 dark:bg-gray-900 overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                     <div class="flex items-center justify-between">
                         <div>
@@ -123,7 +123,7 @@
             <!-- Pending Items -->
             <div class="lg:col-span-2">
                 <!-- Pending Approvals -->
-                <div class="bg-white shadow rounded-lg mb-6">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg mb-6">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-medium text-gray-900">Pending Approvals</h3>
                     </div>
@@ -177,7 +177,7 @@
                 </div>
 
                 <!-- Sample User Management Table -->
-                <div class="bg-white shadow rounded-lg">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-medium text-gray-900">Recent User Activity</h3>
                     </div>
@@ -191,7 +191,7 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200">
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
@@ -252,7 +252,7 @@
 
             <!-- Quick Actions -->
             <div class="space-y-6">
-                <div class="bg-white shadow rounded-lg">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
                     </div>
@@ -275,7 +275,7 @@
                 </div>
 
                 <!-- User Role Distribution -->
-                <div class="bg-white shadow rounded-lg">
+                <div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-medium text-gray-900">User Distribution</h3>
                     </div>

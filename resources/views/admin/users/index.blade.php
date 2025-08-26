@@ -17,7 +17,7 @@
 </div>
 
 <!-- Filter and Search -->
-<div class="bg-white shadow rounded-lg p-4 mb-6">
+<div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg p-4 mb-6">
     <form method="GET" action="{{ route('admin.users.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search users..."
@@ -52,7 +52,7 @@
 </div>
 
 <!-- Users Table -->
-<div class="bg-white shadow rounded-lg overflow-hidden">
+<div class="bg-gray-50 dark:bg-gray-900 shadow rounded-lg overflow-hidden">
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -65,7 +65,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-gray-50 dark:bg-gray-900 divide-y divide-gray-200">
                 @forelse($users as $user)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -206,7 +206,7 @@
 
 <!-- Quick Stats -->
 <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg shadow">
         <div class="flex items-center">
             <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                 <i class="fas fa-check text-green-600"></i>
@@ -217,7 +217,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg shadow">
         <div class="flex items-center">
             <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
                 <i class="fas fa-clock text-yellow-600"></i>
@@ -228,7 +228,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg shadow">
         <div class="flex items-center">
             <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
                 <i class="fas fa-ban text-red-600"></i>
@@ -239,7 +239,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg shadow">
         <div class="flex items-center">
             <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                 <i class="fas fa-users text-blue-600"></i>

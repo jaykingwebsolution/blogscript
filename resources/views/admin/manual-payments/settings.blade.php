@@ -29,7 +29,7 @@
     @endif
 
     <!-- Settings Form -->
-    <div class="bg-white shadow-sm rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Bank Account Information</h2>
             <p class="text-sm text-gray-500">This information will be displayed to users making manual payments</p>
@@ -118,7 +118,7 @@
     </div>
 
     <!-- Preview Card -->
-    <div class="bg-white shadow-sm rounded-lg">
+    <div class="bg-gray-50 dark:bg-gray-900 shadow-sm rounded-lg">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-medium text-gray-900">Preview</h2>
             <p class="text-sm text-gray-500">How users will see the bank details</p>
