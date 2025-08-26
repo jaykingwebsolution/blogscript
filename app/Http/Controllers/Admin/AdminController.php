@@ -254,7 +254,7 @@ class AdminController extends Controller
     // User Management & Approval
     public function userIndex(Request $request)
     {
-        $query = User::with(['subscription', 'verificationRequests'])
+        $query = User::with(['subscriptionPlan'])
                      ->withCount(['createdMusic', 'media']);
 
         // Apply filters
@@ -276,8 +276,11 @@ class AdminController extends Controller
         }
 
         $users = $query->latest()->paginate(15);
+        
+        // Get all pricing plans for the assign plan dropdown
+        $pricingPlans = \App\Models\PricingPlan::active()->get();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'pricingPlans'));
     }
 
     public function userCreate()
@@ -353,15 +356,35 @@ class AdminController extends Controller
     {
         // Prevent deletion of current user
         if ($user->id === Auth::id()) {
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You cannot delete your own account.'
+                ]);
+            }
             return redirect()->back()->with('error', 'You cannot delete your own account.');
         }
 
         // Prevent deletion of other admins unless you're a super admin
-        if ($user->isAdmin() && !Auth::user()->isAdmin()) {
+        if ($user->isAdmin() && (!Auth::user() || !Auth::user()->isAdmin())) {
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You cannot delete admin accounts.'
+                ]);
+            }
             return redirect()->back()->with('error', 'You cannot delete admin accounts.');
         }
 
         $user->delete();
+
+        // Return JSON for AJAX requests
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User deleted successfully!'
+            ]);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully!');
     }
@@ -374,6 +397,15 @@ class AdminController extends Controller
             'approved_by' => Auth::id()
         ]);
 
+        // Return JSON for AJAX requests
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User approved successfully!',
+                'status' => 'approved'
+            ]);
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'User approved successfully!');
     }
 
@@ -385,7 +417,112 @@ class AdminController extends Controller
             'approved_by' => null
         ]);
 
+        // Return JSON for AJAX requests
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User suspended successfully!',
+                'status' => 'suspended'
+            ]);
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'User suspended successfully!');
+    }
+
+    // New enhanced user management methods
+    public function userUnsuspend(User $user)
+    {
+        $user->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User reactivated successfully!',
+            'status' => 'approved'
+        ]);
+    }
+
+    public function userUnapprove(User $user)
+    {
+        $user->update([
+            'status' => 'pending',
+            'approved_at' => null,
+            'approved_by' => null
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User marked as unapproved successfully!',
+            'status' => 'pending'
+        ]);
+    }
+
+    public function userVerify(User $user)
+    {
+        $user->update([
+            'verification_status' => 'verified',
+            'active_since' => now() // Override the 30-day rule
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User verified successfully! (30-day rule overridden)',
+            'verification_status' => 'verified'
+        ]);
+    }
+
+    public function userUnverify(User $user)
+    {
+        $user->update([
+            'verification_status' => 'unverified',
+            'active_since' => null
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User verification removed successfully!',
+            'verification_status' => 'unverified'
+        ]);
+    }
+
+    public function userAssignPlan(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'plan_id' => 'nullable|exists:pricing_plans,id'
+        ]);
+
+        $planId = $validated['plan_id'] ?? null;
+        
+        // Update subscription details
+        $updateData = [
+            'subscription_plan_id' => $planId,
+        ];
+
+        if ($planId) {
+            $plan = \App\Models\PricingPlan::find($planId);
+            $updateData['subscription_status'] = 'active';
+            $updateData['subscription_paid_at'] = now();
+            $updateData['subscription_expires_at'] = now()->addMonth(); // 1 month subscription
+        } else {
+            $updateData['subscription_status'] = 'inactive';
+            $updateData['subscription_paid_at'] = null;
+            $updateData['subscription_expires_at'] = null;
+        }
+
+        $user->update($updateData);
+        
+        $planName = $planId ? \App\Models\PricingPlan::find($planId)->name : 'No Plan';
+
+        return response()->json([
+            'success' => true,
+            'message' => "Subscription plan updated to: {$planName}",
+            'plan_id' => $planId,
+            'plan_name' => $planName,
+            'subscription_status' => $updateData['subscription_status']
+        ]);
     }
 
     // Subscription Management
