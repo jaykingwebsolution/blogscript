@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\Subscription;
 use App\Models\SiteSetting;
-use Carbon\Carbon;
+use App\Models\DistributionPricing;
 
 class SubscriptionController extends Controller
 {
@@ -26,7 +26,13 @@ class SubscriptionController extends Controller
             'premium' => Subscription::getPlanDetails('premium'),
         ];
 
-        return view('dashboard.subscription', compact('currentSubscription', 'plans'));
+        // Get distribution pricing plans for artists and record labels
+        $distributionPricingPlans = null;
+        if ($user->isArtist() || $user->isRecordLabel()) {
+            $distributionPricingPlans = DistributionPricing::getOrderedPlans();
+        }
+
+        return view('dashboard.subscription', compact('currentSubscription', 'plans', 'distributionPricingPlans'));
     }
 
     public function initialize(Request $request)
