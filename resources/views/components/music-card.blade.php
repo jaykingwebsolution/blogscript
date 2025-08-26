@@ -7,7 +7,12 @@
              alt="{{ $music->title }}" 
              class="w-full h-48 object-cover">
         <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-            <button onclick="playMusic(@json($music->audio_url))" class="bg-spotify-green text-white p-3 rounded-full opacity-0 hover:opacity-100 transition-all">
+            <button class="play-track-btn bg-spotify-green text-white p-3 rounded-full opacity-0 hover:opacity-100 transition-all"
+                    data-id="{{ $music->id }}"
+                    data-title="{{ $music->title }}"
+                    data-artist="{{ $music->artist ? $music->artist->name : $music->artist_name }}"
+                    data-cover="{{ $music->image_url ?? '/images/default-music.jpg' }}"
+                    data-url="{{ $music->audio_url }}">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                 </svg>

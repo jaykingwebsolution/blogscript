@@ -36,7 +36,7 @@
                     <div>
                         <h2 class="text-2xl font-bold text-white mb-2">🎵 Music Distribution Required</h2>
                         <p class="text-gray-300 mb-4">Distribute your music to 50+ streaming platforms worldwide</p>
-                        <div class="text-3xl font-bold text-spotify-green">{{ $distributionPlan->formatted_amount }}</div>
+                        <div class="text-3xl font-bold text-spotify-green">{{ $distributionPlan->formatted_price }}</div>
                         <div class="text-gray-400">One-time payment</div>
                     </div>
                     <div class="flex flex-col space-y-3">

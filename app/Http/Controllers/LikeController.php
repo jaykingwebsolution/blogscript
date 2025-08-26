@@ -13,6 +13,16 @@ class LikeController extends Controller
         $this->middleware('auth');
     }
 
+    public function status(Music $music)
+    {
+        $user = Auth::user();
+        $isLiked = $user->hasLikedSong($music->id);
+        
+        return response()->json([
+            'liked' => $isLiked
+        ]);
+    }
+
     public function toggle(Request $request, Music $music)
     {
         $user = Auth::user();

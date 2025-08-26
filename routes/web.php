@@ -367,6 +367,7 @@ Route::middleware('auth')->prefix('payment')->name('payment.')->group(function (
 // Like/Unlike Routes  
 Route::middleware('auth')->group(function () {
     Route::post('/music/{music}/like', [LikeController::class, 'toggle'])->name('music.like.toggle');
+    Route::get('/music/{music}/like-status', [LikeController::class, 'status'])->name('music.like.status');
     Route::get('/music/liked', [LikeController::class, 'index'])->name('music.liked');
     Route::delete('/music/liked/clear', [LikeController::class, 'clear'])->name('music.liked.clear');
 });
