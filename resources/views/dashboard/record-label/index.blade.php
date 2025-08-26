@@ -82,7 +82,7 @@
         </div>
 
         <!-- Action Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <!-- Submit Song -->
             <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
                 <div class="text-center">
@@ -112,6 +112,48 @@
                     <a href="{{ route('dashboard.record-label.create-artist') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
                         Create Artist
                     </a>
+                </div>
+            </div>
+
+            <!-- Record Label Verification Request -->
+            <div class="bg-gradient-to-br from-purple-900/50 to-purple-700/50 rounded-xl p-8 border border-purple-700/50">
+                <div class="text-center">
+                    <div class="bg-purple-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        @php 
+                            $currentVerificationRequest = Auth::user()->verificationRequests()->where('status', 'pending')->first();
+                            $hasApprovedVerification = Auth::user()->verificationRequests()->where('status', 'approved')->exists();
+                        @endphp
+                        
+                        @if($hasApprovedVerification)
+                            <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        @else
+                            <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z"/>
+                            </svg>
+                        @endif
+                    </div>
+                    
+                    @if($hasApprovedVerification)
+                        <h3 class="text-xl font-bold mb-2 text-purple-400">✓ Verified Label</h3>
+                        <p class="text-gray-300 text-sm mb-6">Your record label has been verified! Enjoy enhanced credibility and exclusive features.</p>
+                        <div class="bg-purple-500/20 text-purple-400 font-semibold py-3 px-6 rounded-full inline-block">
+                            Verified Status
+                        </div>
+                    @elseif($currentVerificationRequest)
+                        <h3 class="text-xl font-bold mb-2">Verification Pending</h3>
+                        <p class="text-gray-300 text-sm mb-6">Your verification request is currently being reviewed. You'll be notified once processed.</p>
+                        <div class="bg-yellow-500/20 text-yellow-400 font-semibold py-3 px-6 rounded-full inline-block">
+                            Request Pending
+                        </div>
+                    @else
+                        <h3 class="text-xl font-bold mb-2">Request Verification</h3>
+                        <p class="text-gray-300 text-sm mb-6">Get your record label verified to gain credibility and access to enhanced distribution features.</p>
+                        <a href="{{ route('dashboard.verification') }}" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                            Request Verification
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

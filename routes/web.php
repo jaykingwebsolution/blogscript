@@ -81,7 +81,7 @@ Route::get('/register/{role}', [RoleBasedRegisterController::class, 'showRegiste
 Route::post('/register/{role}', [RoleBasedRegisterController::class, 'register'])->name('register.role.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Playlist Routes
+// Playlist Routes (public routes)
 Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlists.index');
 Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
 
@@ -128,13 +128,13 @@ Route::middleware('auth')->group(function () {
     });
     
     
-    // Playlist Management
-    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
+    // Playlist Management (moved main CRUD routes here to avoid conflicts)
     Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
     Route::post('/playlists', [PlaylistController::class, 'store'])->name('playlists.store');
     Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit'])->name('playlists.edit');
     Route::put('/playlists/{playlist}', [PlaylistController::class, 'update'])->name('playlists.update');
     Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy'])->name('playlists.destroy');
+    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my-playlists');
     Route::post('/playlists/{playlist}/music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
     Route::delete('/playlists/{playlist}/music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
     Route::put('/playlists/{playlist}/order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
@@ -145,7 +145,6 @@ Route::middleware('auth')->group(function () {
     
     // Subscription Routes
     Route::get('/dashboard/subscription', [SubscriptionController::class, 'index'])->name('dashboard.subscription');
-    Route::post('/subscription/initialize', [SubscriptionController::class, 'initializePayment'])->name('subscription.initialize');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     
     // Library and Liked Songs Routes
@@ -341,15 +340,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/music/liked/clear', [LikeController::class, 'clear'])->name('music.liked.clear');
 });
 
-// Playlist Routes
+// Playlist Routes (authenticated - additional actions)
 Route::middleware('auth')->group(function () {
-    Route::get('/my-playlists', [PlaylistController::class, 'myPlaylists'])->name('playlists.my');
-    Route::post('/playlists/{playlist}/add-music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music');
-    Route::delete('/playlists/{playlist}/remove-music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
-    Route::put('/playlists/{playlist}/update-order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
+    Route::post('/playlists/{playlist}/add-music', [PlaylistController::class, 'addMusic'])->name('playlists.add-music-alt');
+    Route::delete('/playlists/{playlist}/remove-music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music-alt');
+    Route::put('/playlists/{playlist}/update-order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order-alt');
 });
-
-Route::resource('playlists', PlaylistController::class);
 
 // Spotify Routes
 Route::prefix('spotify')->name('spotify.')->group(function () {

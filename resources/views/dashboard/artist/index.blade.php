@@ -82,7 +82,7 @@
         </div>
 
         <!-- Action Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8 mb-12">
             <!-- Submit Song for Distribution -->
             <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
                 <div class="text-center">
@@ -128,6 +128,48 @@
                     <a href="{{ route('dashboard.artist.submit-trending-mixtape') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
                         Submit Mixtape
                     </a>
+                </div>
+            </div>
+
+            <!-- Artist Verification Request -->
+            <div class="bg-gradient-to-br from-blue-900/50 to-blue-700/50 rounded-xl p-8 border border-blue-700/50">
+                <div class="text-center">
+                    <div class="bg-blue-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        @php 
+                            $currentVerificationRequest = Auth::user()->verificationRequests()->where('status', 'pending')->first();
+                            $hasApprovedVerification = Auth::user()->verificationRequests()->where('status', 'approved')->exists();
+                        @endphp
+                        
+                        @if($hasApprovedVerification)
+                            <svg class="w-8 h-8 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        @else
+                            <svg class="w-8 h-8 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m5.414-4.414a2 2 0 00-2.828 0L10 11.172l-2.586-2.586a2 2 0 00-2.828 2.828l4 4a2 2 0 002.828 0l8-8a2 2 0 000-2.828z"/>
+                            </svg>
+                        @endif
+                    </div>
+                    
+                    @if($hasApprovedVerification)
+                        <h3 class="text-xl font-bold mb-2 text-blue-400">✓ Verified Artist</h3>
+                        <p class="text-gray-300 text-sm mb-6">Your artist account has been verified! Enjoy enhanced features and credibility.</p>
+                        <div class="bg-blue-500/20 text-blue-400 font-semibold py-3 px-6 rounded-full inline-block">
+                            Verified Status
+                        </div>
+                    @elseif($currentVerificationRequest)
+                        <h3 class="text-xl font-bold mb-2">Verification Pending</h3>
+                        <p class="text-gray-300 text-sm mb-6">Your verification request is currently being reviewed. You'll be notified once processed.</p>
+                        <div class="bg-yellow-500/20 text-yellow-400 font-semibold py-3 px-6 rounded-full inline-block">
+                            Request Pending
+                        </div>
+                    @else
+                        <h3 class="text-xl font-bold mb-2">Request Verification</h3>
+                        <p class="text-gray-300 text-sm mb-6">Get your artist profile verified to gain credibility and access to exclusive features.</p>
+                        <a href="{{ route('dashboard.verification') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                            Request Verification
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
