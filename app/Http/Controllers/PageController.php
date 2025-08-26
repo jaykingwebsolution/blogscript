@@ -9,25 +9,25 @@ class PageController extends Controller
 {
     public function contact()
     {
-        $content = SiteSetting::getValue('contact_content', '<p>Contact us for any questions or feedback.</p>');
+        $content = SiteSetting::get('contact_content', '<p>Contact us for any questions or feedback.</p>');
         return view('pages.contact', compact('content'));
     }
 
     public function about()
     {
-        $content = SiteSetting::getValue('about_content', '<p>Learn more about our platform.</p>');
+        $content = SiteSetting::get('about_content', '<p>Learn more about our platform.</p>');
         return view('pages.about', compact('content'));
     }
 
     public function privacyPolicy()
     {
-        $content = SiteSetting::getValue('privacy_policy_content', '<p>Privacy policy content goes here.</p>');
+        $content = SiteSetting::get('privacy_policy_content', '<p>Privacy policy content goes here.</p>');
         return view('pages.privacy-policy', compact('content'));
     }
 
     public function dmca()
     {
-        $content = SiteSetting::getValue('dmca_policy_content', '<p>DMCA policy content goes here.</p>');
+        $content = SiteSetting::get('dmca_policy_content', '<p>DMCA policy content goes here.</p>');
         return view('pages.dmca', compact('content'));
     }
 
