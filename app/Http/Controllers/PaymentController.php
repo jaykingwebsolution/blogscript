@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DistributionPricing;
+use App\Models\PricingPlan;
 use App\Models\User;
 use App\Models\ManualPayment;
 use App\Models\SiteSetting;
@@ -23,9 +24,10 @@ class PaymentController extends Controller
     {
         $user = auth()->user();
         $distributionPlans = DistributionPricing::getOrderedPlans();
+        $distributionPlan = $distributionPlans->first(); // Get the first distribution plan for single plan display
         $subscriptionPlans = PricingPlan::getActiveSubscriptions();
         
-        return view('payment.plans', compact('distributionPlans', 'subscriptionPlans', 'user'));
+        return view('payment.plans', compact('distributionPlans', 'distributionPlan', 'subscriptionPlans', 'user'));
     }
 
     public function showDistributionPayment()

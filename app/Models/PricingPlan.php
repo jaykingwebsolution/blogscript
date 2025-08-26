@@ -47,4 +47,9 @@ class PricingPlan extends Model
     {
         return self::active()->where('slug', 'distribution-fee')->first();
     }
+
+    public static function getActiveSubscriptions()
+    {
+        return self::active()->where('type', 'subscription')->get();
+    }
 }
