@@ -145,6 +145,7 @@ Route::middleware('auth')->group(function () {
     
     // Subscription Routes
     Route::get('/dashboard/subscription', [SubscriptionController::class, 'index'])->name('dashboard.subscription');
+    Route::post('/subscription/initialize', [SubscriptionController::class, 'initialize'])->name('subscription.initialize');
     Route::post('/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     
     // Library and Liked Songs Routes
