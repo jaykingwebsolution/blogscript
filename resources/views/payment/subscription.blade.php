@@ -43,6 +43,23 @@
                             Pay {{ $plan->formatted_amount }} with Card
                         </button>
                     </form>
+                    
+                    @if(config('app.env') !== 'production')
+                        <div class="mt-4">
+                            <p class="text-orange-300 text-sm mb-2">Demo Mode (Test Environment)</p>
+                            <form method="POST" action="{{ route('payment.subscription.demo') }}" class="inline">
+                                @csrf
+                                <input type="hidden" name="plan_id" value="{{ $plan->id }}">
+                                <button type="submit" 
+                                        class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors flex items-center justify-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    Test Payment Success
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Manual Payment -->

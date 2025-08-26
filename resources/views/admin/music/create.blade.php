@@ -25,7 +25,7 @@
 
         <div class="px-6 py-4 space-y-6">
             <!-- Basic Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="title" class="block text-sm font-medium text-white mb-2">Track Title *</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}" required
@@ -56,7 +56,7 @@
             </div>
 
             <!-- Track Details -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-grid grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label for="genre" class="block text-sm font-medium text-gray-700 mb-2">Genre</label>
                     <select name="genre" id="genre"

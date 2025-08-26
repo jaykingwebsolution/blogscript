@@ -342,6 +342,7 @@ Route::middleware('auth')->prefix('payment')->name('payment.')->group(function (
     
     // Demo
     Route::post('/distribution/demo', [PaymentController::class, 'simulatePaymentSuccess'])->name('distribution.demo');
+    Route::post('/subscription/demo', [PaymentController::class, 'simulateSubscriptionSuccess'])->name('subscription.demo');
 });
 
 // Like/Unlike Routes  

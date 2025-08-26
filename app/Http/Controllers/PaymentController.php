@@ -306,6 +306,38 @@ class PaymentController extends Controller
         return redirect()->route('distribution.create')->with('success', 'Demo payment successful! You can now submit your music for distribution.');
     }
 
+    // For demo purposes - simulate subscription success
+    public function simulateSubscriptionSuccess(Request $request)
+    {
+        $user = auth()->user();
+        $planId = $request->input('plan_id');
+        $plan = PricingPlan::find($planId);
+        
+        if (!$plan) {
+            return redirect()->back()->with('error', 'Plan not found.');
+        }
+        
+        $reference = 'DEMO_SUB_' . strtoupper(Str::random(10)) . '_' . $user->id;
+        
+        // Update user subscription status
+        $user->update([
+            'subscription_status' => 'active',
+            'subscription_plan_id' => $plan->id,
+            'subscription_paid_at' => now(),
+            'subscription_expires_at' => now()->addDays($plan->billing_interval === 'monthly' ? 30 : 365)
+        ]);
+        
+        // Log the demo payment
+        Log::info("Demo subscription payment successful", [
+            'user_id' => $user->id,
+            'reference' => $reference,
+            'plan_id' => $plan->id,
+            'amount' => $plan->amount
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Demo subscription activated successfully!');
+    }
+
     /**
      * Get Paystack secret key from admin settings or fallback to env
      */

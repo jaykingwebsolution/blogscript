@@ -45,6 +45,37 @@
         .nav-item.active svg {
             color: #ffffff;
         }
+        
+        /* Mobile responsive improvements */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .table-responsive {
+                overflow-x: auto;
+            }
+            .mobile-hidden {
+                display: none;
+            }
+        }
+        
+        /* Custom scrollbar for Spotify theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1db954;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1ed760;
+        }
     </style>
 </head>
 <body class="bg-spotify-black text-white font-sans antialiased">
