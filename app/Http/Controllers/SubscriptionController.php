@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\Subscription;
+use App\Models\SiteSetting;
 use Carbon\Carbon;
 
 class SubscriptionController extends Controller
@@ -26,6 +27,11 @@ class SubscriptionController extends Controller
         ];
 
         return view('dashboard.subscription', compact('currentSubscription', 'plans'));
+    }
+
+    public function initialize(Request $request)
+    {
+        return $this->initializePayment($request);
     }
 
     public function initializePayment(Request $request)
@@ -52,7 +58,7 @@ class SubscriptionController extends Controller
         );
 
         // Initialize Paystack payment
-        $response = Http::withToken(config('paystack.secret_key'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->post('https://api.paystack.co/transaction/initialize', [
                 'email' => $user->email,
                 'amount' => $planDetails['amount'], // Amount in kobo
@@ -89,7 +95,7 @@ class SubscriptionController extends Controller
         }
 
         // Verify payment with Paystack
-        $response = Http::withToken(config('paystack.secret_key'))
+        $response = Http::withToken($this->getPaystackSecretKey())
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->successful()) {
@@ -135,5 +141,23 @@ class SubscriptionController extends Controller
         }
 
         return back()->with('error', 'No active subscription to cancel.');
+    }
+
+    /**
+     * Get Paystack secret key from admin settings or fallback to env
+     */
+    private function getPaystackSecretKey()
+    {
+        $key = SiteSetting::get('paystack_secret_key');
+        return $key ?: env('PAYSTACK_SECRET_KEY', 'sk_test_demo_key_replace_with_yours');
+    }
+
+    /**
+     * Get Paystack public key from admin settings or fallback to env
+     */
+    private function getPaystackPublicKey()
+    {
+        $key = SiteSetting::get('paystack_public_key');
+        return $key ?: env('PAYSTACK_PUBLIC_KEY', 'pk_test_demo_key_replace_with_yours');
     }
 }
