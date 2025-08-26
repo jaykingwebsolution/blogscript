@@ -150,28 +150,106 @@
             <section>
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Popular Artists</h2>
-                    <a href="{{ route('artists.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm">Show all</a>
+                    <a href="{{ route('spotify.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm">Show all</a>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-                    @for($i = 1; $i <= 6; $i++)
-                    <div class="group text-center cursor-pointer">
-                        <div class="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 sm:mb-4">
-                            <img src="{{ asset('images/default-artist.svg') }}" 
-                                 alt="Artist {{ $i }}" 
-                                 class="w-full h-full object-cover rounded-full shadow-lg group-hover:shadow-xl transition-shadow">
-                            <button class="play-btn absolute bottom-1 sm:bottom-2 right-1 sm:right-2 w-8 h-8 sm:w-10 sm:h-10 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                                <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M8 5v10l7-5z"/>
-                                </svg>
-                            </button>
+                    @if($spotifyArtists && $spotifyArtists->count() > 0)
+                        @foreach($spotifyArtists as $artist)
+                        <div class="group text-center cursor-pointer" onclick="window.location='{{ route('spotify.index', ['artist' => $artist->id]) }}'">
+                            <div class="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 sm:mb-4">
+                                <img src="{{ $artist->image_url ?: asset('images/default-artist.svg') }}" 
+                                     alt="{{ $artist->name }}" 
+                                     class="w-full h-full object-cover rounded-full shadow-lg group-hover:shadow-xl transition-shadow">
+                                @if($artist->getSpotifyUrl())
+                                    <a href="{{ $artist->getSpotifyUrl() }}" target="_blank" onclick="event.stopPropagation()" 
+                                       class="play-btn absolute bottom-1 sm:bottom-2 right-1 sm:right-2 w-8 h-8 sm:w-10 sm:h-10 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                        <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.48.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base truncate">{{ $artist->name }}</h3>
+                            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                                @if($artist->followers > 0)
+                                    {{ number_format($artist->followers) }} followers
+                                @else
+                                    Artist
+                                @endif
+                            </p>
                         </div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">Artist {{ $i }}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Artist</p>
-                    </div>
-                    @endfor
+                        @endforeach
+                    @else
+                        @for($i = 1; $i <= 6; $i++)
+                        <div class="group text-center cursor-pointer">
+                            <div class="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 sm:mb-4">
+                                <img src="{{ asset('images/default-artist.svg') }}" 
+                                     alt="Artist {{ $i }}" 
+                                     class="w-full h-full object-cover rounded-full shadow-lg group-hover:shadow-xl transition-shadow">
+                                <button class="play-btn absolute bottom-1 sm:bottom-2 right-1 sm:right-2 w-8 h-8 sm:w-10 sm:h-10 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M8 5v10l7-5z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white mb-1 text-sm sm:text-base">Artist {{ $i }}</h3>
+                            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Artist</p>
+                        </div>
+                        @endfor
+                    @endif
                 </div>
             </section>
+
+            <!-- From Spotify -->
+            @if($spotifyHighlights && $spotifyHighlights->count() > 0)
+            <section>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-spotify-green rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.48.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">From Spotify</h2>
+                    </div>
+                    <a href="{{ route('spotify.featured') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm">Show all</a>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+                    @foreach($spotifyHighlights as $highlight)
+                    <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer" 
+                         onclick="window.location='{{ route('spotify.show', $highlight) }}'">
+                        <div class="relative mb-3 sm:mb-4">
+                            <img src="{{ $highlight->image_url_or_default }}" 
+                                 alt="{{ $highlight->title }}" 
+                                 class="w-full aspect-square object-cover rounded-lg shadow-md">
+                            
+                            @if($highlight->is_featured)
+                                <div class="absolute top-2 left-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black text-xs font-bold px-2 py-1 rounded-full">
+                                    ★
+                                </div>
+                            @endif
+                            
+                            @if($highlight->preview_url)
+                                <button onclick="event.stopPropagation(); playSpotifyPreview('{{ $highlight->preview_url }}', '{{ $highlight->title }}', '{{ $highlight->artist_names }}')" 
+                                        class="play-btn absolute bottom-2 right-2 w-10 h-10 sm:w-12 sm:h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M8 5v10l7-5z"/>
+                                    </svg>
+                                </button>
+                            @endif
+                        </div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1 truncate text-sm sm:text-base">{{ $highlight->title }}</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">{{ $highlight->artist_names }}</p>
+                        @if($highlight->popularity)
+                            <p class="text-xs text-spotify-green mt-1">{{ $highlight->popularity }}% popular</p>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </section>
+            @endif
 
             <!-- Made for You -->
             <section>
@@ -273,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const musicPlayer = document.getElementById('music-player');
     const playPauseBtn = document.getElementById('play-pause-btn');
     let isPlaying = false;
+    let currentSpotifyAudio = null;
 
     // Show music player when play button is clicked
     document.addEventListener('click', function(e) {
@@ -298,5 +377,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Spotify preview functionality
+function playSpotifyPreview(url, title, artist) {
+    if (currentSpotifyAudio) {
+        currentSpotifyAudio.pause();
+    }
+    
+    currentSpotifyAudio = new Audio(url);
+    currentSpotifyAudio.volume = 0.7;
+    
+    currentSpotifyAudio.play().then(() => {
+        console.log(`Playing: ${title} by ${artist}`);
+        
+        // Update the main music player with track info if visible
+        const musicPlayer = document.getElementById('music-player');
+        if (musicPlayer && !musicPlayer.classList.contains('hidden')) {
+            const trackTitle = musicPlayer.querySelector('h4');
+            const trackArtist = musicPlayer.querySelector('p');
+            if (trackTitle) trackTitle.textContent = title;
+            if (trackArtist) trackArtist.textContent = artist;
+        }
+    }).catch(error => {
+        console.error('Error playing preview:', error);
+        alert('Unable to play preview. This track may not have a preview available.');
+    });
+    
+    currentSpotifyAudio.onended = () => {
+        console.log('Preview ended');
+    };
+}
 </script>
 @endpush

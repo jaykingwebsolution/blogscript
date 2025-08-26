@@ -383,5 +383,6 @@ Route::middleware('auth')->group(function () {
 Route::prefix('spotify')->name('spotify.')->group(function () {
     Route::get('/', [SpotifyPostController::class, 'index'])->name('index');
     Route::get('/featured', [SpotifyPostController::class, 'featured'])->name('featured');
+    Route::get('/artist/{artistId}', [SpotifyPostController::class, 'byArtist'])->name('artist');
     Route::get('/{spotifyPost}', [SpotifyPostController::class, 'show'])->name('show');
 });
