@@ -304,6 +304,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'index'])->name('payment-settings.index');
     Route::put('/payment-settings', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'update'])->name('payment-settings.update');
     Route::post('/payment-settings/test', [\App\Http\Controllers\Admin\PaymentSettingController::class, 'testConnection'])->name('payment-settings.test');
+    
+    // Page Management (DMCA / Policy Pages)
+    Route::get('/pages', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/{page}/edit', [\App\Http\Controllers\Admin\PageController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{page}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('pages.update');
 });
 
 // Notification Routes
