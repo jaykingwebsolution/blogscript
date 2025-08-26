@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Paystack API routes for subscription payments
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/paystack/initialize', [App\Http\Controllers\SubscriptionController::class, 'initializeApi']);
+    Route::get('/paystack/callback', [App\Http\Controllers\SubscriptionController::class, 'callbackApi']);
+});
