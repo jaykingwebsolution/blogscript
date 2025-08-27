@@ -23,7 +23,7 @@
             <div class="bg-distro-gray rounded-3xl p-8">
                 <h2 class="text-2xl font-bold text-white mb-6">Send us a Message</h2>
                 
-                <form class="space-y-6" method="POST" action="{{ route('contact.submit') }}">
+                <form class="space-y-6" method="POST" action="{{ route('contact') }}">
                     @csrf
                     <input type="hidden" name="source" value="distribution">
                     
