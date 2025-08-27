@@ -201,7 +201,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-white font-medium">{{ $label->total_music ?? 0 }}</div>
+                                <div class="text-white font-medium">{{ $label->music_count ?? 0 }}</div>
                                 <div class="text-spotify-light-gray text-sm">tracks</div>
                             </td>
                             <td class="px-6 py-4">

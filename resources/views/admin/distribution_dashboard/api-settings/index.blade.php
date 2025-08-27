@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin-distribution')
 
 @section('title', 'API Settings Management')
 

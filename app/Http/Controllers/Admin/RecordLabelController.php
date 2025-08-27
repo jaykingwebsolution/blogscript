@@ -29,7 +29,7 @@ class RecordLabelController extends Controller
     public function index(Request $request)
     {
         $query = User::where('role', 'record_label')
-                    ->withCount(['music as total_music'])
+                    ->withCount('music')
                     ->latest();
 
         // Apply search filter
@@ -118,7 +118,7 @@ class RecordLabelController extends Controller
             abort(404);
         }
         
-        $recordLabel->loadCount(['music as total_music']);
+        $recordLabel->loadCount('music');
         
         return view('admin.record-labels.show', compact('recordLabel'));
     }
