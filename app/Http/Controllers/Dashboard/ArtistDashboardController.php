@@ -283,6 +283,8 @@ class ArtistDashboardController extends Controller
         // Handle file uploads
         $imageUrl = null;
         $audioUrl = null;
+        $coverPath = null;
+        $audioPath = null;
 
         if ($request->hasFile('cover_image')) {
             $coverPath = $request->file('cover_image')->store('music/covers', 'public');
