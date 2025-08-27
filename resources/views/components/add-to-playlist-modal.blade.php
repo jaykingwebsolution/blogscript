@@ -193,9 +193,7 @@ function showNotification(type, message) {
     
     // Remove after 3 seconds
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
+        notification.remove();
     }, 3000);
 }
 </script>
