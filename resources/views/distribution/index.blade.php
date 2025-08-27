@@ -223,7 +223,12 @@
                 <h2 class="text-3xl font-bold text-white mb-4">Simple, Transparent Pricing</h2>
                 <p class="text-gray-400 mb-8">Choose the perfect plan for your distribution needs</p>
                 
-                <div class="grid md:grid-cols-{{ min($distributionPlans->count(), 3) }} gap-6 max-w-4xl mx-auto mb-8">
+                <div class="grid 
+                    @if($distributionPlans->count() === 1) md:grid-cols-1
+                    @elseif($distributionPlans->count() === 2) md:grid-cols-2
+                    @else md:grid-cols-3
+                    @endif
+                    gap-6 max-w-4xl mx-auto mb-8">
                     @foreach($distributionPlans->take(3) as $plan)
                         <div class="bg-distro-dark rounded-xl p-6 border border-distro-border {{ $plan->isPopular() ? 'border-spotify-green' : '' }}">
                             @if($plan->isPopular())
