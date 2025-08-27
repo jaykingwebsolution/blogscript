@@ -664,8 +664,7 @@ class NigerianArtistSeeder extends Seeder
                         'image_url' => $artistData['profile_picture'], // Use artist profile as song image
                         'is_featured' => rand(0, 2) == 2, // 1/3 chance of being featured
                         'status' => 'published',
-                        'created_by' => $user->id,
-                        'release_date' => Carbon::now()->subDays(rand(30, 365))
+                        'created_by' => $user->id
                     ]
                 );
             }

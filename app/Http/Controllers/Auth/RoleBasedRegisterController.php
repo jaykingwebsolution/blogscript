@@ -176,7 +176,7 @@ class RoleBasedRegisterController extends Controller
         ];
 
         // Check if email is in reserved list
-        if (in_array(strtolower($email), array_map('strtolower', $seededEmails))) {
+        if ($email && in_array(strtolower($email), array_map('strtolower', $seededEmails))) {
             return true;
         }
 
