@@ -32,8 +32,7 @@ class UpdateReleaseStatuses extends Command
     {
         $this->info('Updating release statuses from aggregators...');
 
-        $query = DistributionRequest::whereNotNull('aggregator_release_id')
-            ->where('dsp_delivery_status', '!=', 'delivered'); // Don't update delivered releases
+            ->where('dsp_delivery_status', '!=', self::STATUS_DELIVERED); // Don't update delivered releases
 
         if ($this->option('only-processing')) {
             $query->where('dsp_delivery_status', 'processing');
