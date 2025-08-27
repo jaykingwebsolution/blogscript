@@ -57,10 +57,29 @@ abstract class BaseAggregatorService implements AggregatorServiceInterface
                 'data_keys' => array_keys($data)
             ]);
 
-            $response = Http::withHeaders($this->authHeaders)
-                ->timeout(30)
-                ->{strtolower($method)}($url, $data);
+            $http = Http::withHeaders($this->authHeaders)
+                ->timeout(30);
 
+            // Whitelist allowed HTTP methods
+            switch (strtoupper($method)) {
+                case 'GET':
+                    $response = $http->get($url, $data);
+                    break;
+                case 'POST':
+                    $response = $http->post($url, $data);
+                    break;
+                case 'PUT':
+                    $response = $http->put($url, $data);
+                    break;
+                case 'DELETE':
+                    $response = $http->delete($url, $data);
+                    break;
+                case 'PATCH':
+                    $response = $http->patch($url, $data);
+                    break;
+                default:
+                    throw new \InvalidArgumentException("Unsupported HTTP method: {$method}");
+            }
             if (!$response->successful()) {
                 throw new \Exception("HTTP {$response->status()}: {$response->body()}");
             }
