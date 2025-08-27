@@ -85,20 +85,20 @@ class DistributionDashboardController extends Controller
 
         $requests = $query->orderBy('created_at', 'desc')->paginate(15);
         
-        // Get counts for each status (only for paid users)
+        // Get counts for each status (only for paid users) with a single query
+        $baseQuery = DistributionRequest::whereHas('user', function ($q) {
+            $q->where('distribution_paid', true);
+        });
+        $statusCountsRaw = $baseQuery
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
         $statusCounts = [
-            'all' => DistributionRequest::whereHas('user', function ($q) {
-                $q->where('distribution_paid', true);
-            })->count(),
-            'pending' => DistributionRequest::where('status', 'pending')->whereHas('user', function ($q) {
-                $q->where('distribution_paid', true);
-            })->count(),
-            'approved' => DistributionRequest::where('status', 'approved')->whereHas('user', function ($q) {
-                $q->where('distribution_paid', true);
-            })->count(),
-            'declined' => DistributionRequest::where('status', 'declined')->whereHas('user', function ($q) {
-                $q->where('distribution_paid', true);
-            })->count(),
+            'all' => $baseQuery->count(),
+            'pending' => isset($statusCountsRaw['pending']) ? $statusCountsRaw['pending'] : 0,
+            'approved' => isset($statusCountsRaw['approved']) ? $statusCountsRaw['approved'] : 0,
+            'declined' => isset($statusCountsRaw['declined']) ? $statusCountsRaw['declined'] : 0,
         ];
 
         return view('admin.distribution_dashboard.requests.index', compact('requests', 'statusCounts'));
