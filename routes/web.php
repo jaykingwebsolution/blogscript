@@ -239,10 +239,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
 
     // Distribution Routes
+    Route::get('/distribution', [App\Http\Controllers\DistributionController::class, 'index'])->name('distribution.index');
+    Route::get('/distribution/pricing', [App\Http\Controllers\DistributionController::class, 'pricing'])->name('distribution.pricing');
     Route::get('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'create'])->name('distribution.create');
     Route::post('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'store'])->name('distribution.store');
     Route::get('/distribution/my-submissions', [App\Http\Controllers\DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
     Route::get('/distribution/my-submissions/{distributionRequest}', [App\Http\Controllers\DistributionController::class, 'show'])->name('distribution.show');
+    Route::get('/distribution/earnings', [App\Http\Controllers\DistributionController::class, 'earnings'])->name('distribution.earnings');
+    Route::get('/distribution/payouts', [App\Http\Controllers\DistributionController::class, 'payouts'])->name('distribution.payouts');
+    Route::post('/distribution/payouts', [App\Http\Controllers\DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
     
     // Payment Routes
     Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
