@@ -14,14 +14,15 @@ class DistributionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Only require auth and role checking for submission-related routes
+        $this->middleware('auth')->except(['index', 'pricing', 'about', 'contact', 'howItWorks']);
         $this->middleware(function ($request, $next) {
             $user = Auth::user();
-            if (!$user->isArtist() && !$user->isRecordLabel()) {
+            if ($user && !$user->isArtist() && !$user->isRecordLabel()) {
                 abort(403, 'Access denied. Only artists and record labels can submit music for distribution.');
             }
             return $next($request);
-        });
+        })->except(['index', 'pricing', 'about', 'contact', 'howItWorks']);
     }
 
     /**
@@ -268,5 +269,29 @@ class DistributionController extends Controller
         }
 
         return view('distribution.show', compact('distributionRequest'));
+    }
+
+    /**
+     * Show the about page
+     */
+    public function about()
+    {
+        return view('distribution.about');
+    }
+
+    /**
+     * Show the contact page
+     */
+    public function contact()
+    {
+        return view('distribution.contact');
+    }
+
+    /**
+     * Show the how it works page
+     */
+    public function howItWorks()
+    {
+        return view('distribution.how-it-works');
     }
 }

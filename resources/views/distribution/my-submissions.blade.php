@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.distribution')
 
 @section('title', 'My Distribution Submissions')
 

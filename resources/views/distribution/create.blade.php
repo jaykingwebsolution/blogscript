@@ -1,12 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.distribution')
 
 @section('title', 'Submit Music for Distribution')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+<div class="min-h-screen py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+        <div class="bg-distro-gray rounded-2xl p-6 mb-8">
             <div class="flex items-center gap-4">
                 <div class="p-3 bg-spotify-green/10 rounded-full">
                     <i class="fas fa-music text-spotify-green text-xl"></i>
