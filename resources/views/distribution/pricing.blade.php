@@ -1,17 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.distribution')
 
 @section('title', 'Distribution Pricing Plans')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+<div class="min-h-screen py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                Distribution Pricing
+            <div class="inline-flex items-center justify-center w-20 h-20 distro-gradient rounded-full mb-6">
+                <i class="fas fa-dollar-sign text-white text-2xl"></i>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Distribution <span class="text-spotify-green">Pricing</span>
             </h1>
-            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                Choose the perfect plan for your music distribution needs. All plans include worldwide distribution to 150+ digital stores.
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                Choose the perfect plan for your music distribution needs. All plans include worldwide distribution to 150+ digital stores and you keep 100% of your royalties.
             </p>
         </div>
 
@@ -19,7 +22,7 @@
         @if($distributionPlans->count() > 0)
             <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 @foreach($distributionPlans as $plan)
-                    <div class="relative bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 {{ $plan->isPopular() ? 'ring-2 ring-spotify-green shadow-xl transform scale-105' : 'shadow-lg' }}">
+                    <div class="relative bg-distro-gray rounded-2xl border border-distro-border {{ $plan->isPopular() ? 'ring-2 ring-spotify-green shadow-xl transform scale-105' : 'shadow-lg' }}">
                         @if($plan->isPopular())
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
                                 <span class="bg-spotify-green text-white px-4 py-1 rounded-full text-sm font-medium">
@@ -30,18 +33,18 @@
                         
                         <div class="p-8">
                             <div class="text-center mb-8">
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                <h3 class="text-2xl font-bold text-white mb-2">
                                     {{ $plan->type_display_name }}
                                 </h3>
                                 <div class="mb-4">
-                                    <span class="text-4xl font-bold text-gray-900 dark:text-white">
+                                    <span class="text-4xl font-bold text-white">
                                         {{ $plan->formatted_price }}
                                     </span>
-                                    <span class="text-gray-600 dark:text-gray-400 ml-1">
+                                    <span class="text-gray-400 ml-1">
                                         /{{ $plan->duration }}
                                     </span>
                                 </div>
-                                <p class="text-gray-600 dark:text-gray-400">
+                                <p class="text-gray-400">
                                     {{ $plan->description }}
                                 </p>
                             </div>

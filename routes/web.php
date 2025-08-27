@@ -242,6 +242,9 @@ Route::middleware('auth')->group(function () {
     // Distribution Routes
     Route::get('/distribution', [DistributionController::class, 'index'])->name('distribution.index');
     Route::get('/distribution/pricing', [DistributionController::class, 'pricing'])->name('distribution.pricing');
+    Route::get('/distribution/about', [DistributionController::class, 'about'])->name('distribution.about');
+    Route::get('/distribution/contact', [DistributionController::class, 'contact'])->name('distribution.contact');
+    Route::get('/distribution/how-it-works', [DistributionController::class, 'howItWorks'])->name('distribution.how-it-works');
     Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
     Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
     Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
@@ -403,6 +406,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{apiSetting}/test', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'testConnection'])->name('test');
             Route::delete('/{apiSetting}', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'destroy'])->name('destroy');
         });
+
+        // Content Management Routes
+        Route::prefix('content')->name('content.')->group(function () {
+            Route::get('/about', [\App\Http\Controllers\Admin\Distribution\ContentController::class, 'aboutIndex'])->name('about');
+            Route::post('/about', [\App\Http\Controllers\Admin\Distribution\ContentController::class, 'aboutUpdate'])->name('about.update');
+            Route::get('/contact', [\App\Http\Controllers\Admin\Distribution\ContentController::class, 'contactIndex'])->name('contact');
+            Route::post('/contact', [\App\Http\Controllers\Admin\Distribution\ContentController::class, 'contactUpdate'])->name('contact.update');
+        });
+
+        // Analytics Routes
+        Route::get('/analytics', [\App\Http\Controllers\Admin\Distribution\AnalyticsController::class, 'index'])->name('analytics');
 
         // Aggregator Settings Management  
         Route::prefix('aggregator-settings')->name('aggregator-settings.')->group(function () {
