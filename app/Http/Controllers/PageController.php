@@ -21,13 +21,17 @@ class PageController extends Controller
 
     public function privacyPolicy()
     {
-        $content = SiteSetting::get('privacy_policy_content', '<p>Privacy policy content goes here.</p>');
+        // Get content from site settings - this maintains existing functionality 
+        // while allowing admin management through the dedicated DMCA/Policy Pages section
+        $content = SiteSetting::get('privacy_policy_content', '<h1>Privacy Policy</h1><p>Privacy policy content goes here.</p>');
         return view('pages.privacy-policy', compact('content'));
     }
 
     public function dmca()
     {
-        $content = SiteSetting::get('dmca_policy_content', '<p>DMCA policy content goes here.</p>');
+        // Get content from site settings - this maintains existing functionality 
+        // while allowing admin management through the dedicated DMCA/Policy Pages section
+        $content = SiteSetting::get('dmca_policy_content', '<h1>DMCA Policy</h1><p>DMCA policy content goes here.</p>');
         return view('pages.dmca', compact('content'));
     }
 
