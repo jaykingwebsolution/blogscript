@@ -259,14 +259,17 @@ Route::get('/distribution/pricing', [DistributionController::class, 'pricing'])-
 Route::get('/distribution/about', [DistributionController::class, 'about'])->name('distribution.about');
 Route::get('/distribution/contact', [DistributionController::class, 'contact'])->name('distribution.contact');
 Route::get('/distribution/how-it-works', [DistributionController::class, 'howItWorks'])->name('distribution.how-it-works');
-Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
-Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
-Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
-Route::get('/distribution/my-submissions/{distributionRequest}', [DistributionController::class, 'show'])->name('distribution.show');
-Route::get('/distribution/earnings', [DistributionController::class, 'earnings'])->name('distribution.earnings');
-Route::get('/distribution/payouts', [DistributionController::class, 'payouts'])->name('distribution.payouts');
-Route::post('/distribution/payouts', [DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
 
+// Protected Distribution Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
+    Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
+    Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
+    Route::get('/distribution/my-submissions/{distributionRequest}', [DistributionController::class, 'show'])->name('distribution.show');
+    Route::get('/distribution/earnings', [DistributionController::class, 'earnings'])->name('distribution.earnings');
+    Route::get('/distribution/payouts', [DistributionController::class, 'payouts'])->name('distribution.payouts');
+    Route::post('/distribution/payouts', [DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
+});
 // Artist Routes (Authenticated Artists and Record Labels)
 Route::prefix('artist')->name('artist.')->middleware('auth')->group(function () {
     Route::get('/music', [\App\Http\Controllers\Artist\MusicController::class, 'index'])->name('music.index');
