@@ -29,6 +29,7 @@ class User extends Authenticatable
         'distribution_paid_at',
         'distribution_payment_reference',
         'distribution_amount_paid',
+        'distribution_price',
         'subscription_status',
         'subscription_plan_id',
         'subscription_paid_at',
@@ -48,6 +49,7 @@ class User extends Authenticatable
         'social_links' => 'array',
         'distribution_paid' => 'boolean',
         'distribution_paid_at' => 'datetime',
+        'distribution_price' => 'decimal:2',
         'subscription_paid_at' => 'datetime',
         'subscription_expires_at' => 'datetime'
     ];
