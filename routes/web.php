@@ -387,6 +387,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'update'])->name('update');
             Route::delete('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'destroy'])->name('destroy');
         });
+
+        // Distribution API Settings Management
+        Route::prefix('api-settings')->name('api-settings.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'index'])->name('index');
+            Route::get('/form', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'createOrEdit'])->name('form');
+            Route::post('/', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'store'])->name('store');
+            Route::post('/{apiSetting}/toggle', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'toggleStatus'])->name('toggle');
+            Route::post('/{apiSetting}/test', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'testConnection'])->name('test');
+            Route::delete('/{apiSetting}', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'destroy'])->name('destroy');
+        });
     });
     
     // Pricing Management
