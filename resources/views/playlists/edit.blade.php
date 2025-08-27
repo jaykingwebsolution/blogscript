@@ -203,7 +203,7 @@
 function removeSong(musicId) {
     if (!confirm('Remove this song from the playlist?')) return;
     
-    fetch(`/playlists/{{ $playlist->id }}/music/${musicId}`, {
+    fetch(`/playlists/${@json($playlist->id)}/music/${musicId}`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
