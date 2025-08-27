@@ -332,8 +332,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // Artist Management
     Route::get('/artists', [AdminController::class, 'artistIndex'])->name('artists.index');
-    Route::get('/artists/create', [AdminController::class, 'artistCreate'])->name('artists.create');
-    Route::post('/artists', [AdminController::class, 'artistStore'])->name('artists.store');
     Route::get('/artists/{artist}/edit', [AdminController::class, 'artistEdit'])->name('artists.edit');
     Route::put('/artists/{artist}', [AdminController::class, 'artistUpdate'])->name('artists.update');
     Route::delete('/artists/{artist}', [AdminController::class, 'artistDestroy'])->name('artists.destroy');

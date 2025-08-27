@@ -27,6 +27,8 @@ class User extends Authenticatable
         'social_links',
         'artist_stage_name',
         'artist_genre',
+        'country',
+        'state',
         'distribution_paid',
         'distribution_paid_at',
         'distribution_payment_reference',

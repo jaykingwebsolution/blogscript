@@ -148,13 +148,6 @@
                 <!-- Artist Management Section -->
                 <div class="pt-4">
                     <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Artist Management</h3>
-                    <a href="{{ route('admin.artists.create') }}" 
-                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.artists.create') ? 'active' : 'text-spotify-light-gray' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        Add Artist
-                    </a>
                     <a href="{{ route('admin.artists.index') }}" 
                        class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.artists.index') || request()->routeIs('admin.artists.edit') ? 'active' : 'text-spotify-light-gray' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

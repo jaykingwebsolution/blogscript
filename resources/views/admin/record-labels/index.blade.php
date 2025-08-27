@@ -90,49 +90,38 @@
         </div>
     </div>
 
-    <!-- TODO Notice -->
-    <div class="bg-yellow-900 bg-opacity-20 border border-yellow-500 text-yellow-400 px-6 py-4 rounded-lg mb-6">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-            </svg>
-            <div>
-                <p class="font-semibold">TODO: Implementation Required</p>
-                <p class="text-sm">This record labels management section requires full implementation including database integration, CRUD operations, and business logic.</p>
-            </div>
-        </div>
-    </div>
-
     <!-- Search and Filters -->
     <div class="bg-spotify-gray rounded-xl p-6 border border-spotify-gray mb-6">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <div class="relative">
-                    <input type="text" placeholder="Search record labels..." 
-                           class="bg-spotify-black border border-spotify-light-gray text-white px-4 py-2 rounded-lg pl-10 w-full sm:w-64">
-                    <svg class="w-4 h-4 text-spotify-light-gray absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+        <form method="GET" action="{{ route('admin.record-labels.index') }}">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <div class="relative">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search record labels..." 
+                               class="bg-spotify-black border border-spotify-light-gray text-white px-4 py-2 rounded-lg pl-10 w-full sm:w-64">
+                        <svg class="w-4 h-4 text-spotify-light-gray absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <select name="status" class="bg-spotify-black border border-spotify-light-gray text-white px-4 py-2 rounded-lg">
+                        <option value="">All Statuses</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                    </select>
                 </div>
-                <select class="bg-spotify-black border border-spotify-light-gray text-white px-4 py-2 rounded-lg">
-                    <option value="">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="pending">Pending</option>
-                    <option value="suspended">Suspended</option>
-                </select>
+                <div class="flex space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
+                        </svg>
+                        Filter
+                    </button>
+                    <a href="{{ route('admin.record-labels.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        Clear
+                    </a>
+                </div>
             </div>
-            <div class="flex space-x-2">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                    <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
-                    </svg>
-                    Filter
-                </button>
-                <button class="bg-spotify-green text-white px-4 py-2 rounded-lg hover:bg-spotify-green-light transition-colors">
-                    Export
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
 
     <!-- Record Labels Table -->
@@ -158,65 +147,132 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-spotify-light-gray">
-                    <!-- TODO: Replace with dynamic data -->
-                    <tr class="hover:bg-spotify-black transition-colors">
-                        <td class="px-6 py-4">
-                            <input type="checkbox" class="rounded border-spotify-light-gray">
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
-                                    <span class="text-white font-semibold text-sm">SL</span>
+                    @forelse($recordLabels as $label)
+                        <tr class="hover:bg-spotify-black transition-colors">
+                            <td class="px-6 py-4">
+                                <input type="checkbox" class="rounded border-spotify-light-gray" value="{{ $label->id }}">
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+                                        @if($label->profile_picture)
+                                            <img src="{{ asset('storage/' . $label->profile_picture) }}" alt="{{ $label->name }}" class="w-full h-full rounded-lg object-cover">
+                                        @else
+                                            <span class="text-white font-semibold text-sm">{{ strtoupper(substr($label->name, 0, 2)) }}</span>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="text-white font-medium">{{ $label->name }}</div>
+                                        <div class="text-spotify-light-gray text-sm">Est. {{ $label->created_at->format('Y') }}</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="text-white font-medium">Sample Label Records</div>
-                                    <div class="text-spotify-light-gray text-sm">Est. 2020</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-white">{{ $label->email }}</div>
+                                @if($label->social_links && isset($label->social_links['website']))
+                                    <div class="text-spotify-light-gray text-sm">
+                                        <a href="{{ $label->social_links['website'] }}" target="_blank" class="hover:text-spotify-green">
+                                            Website
+                                        </a>
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-white font-medium">{{ $label->total_music ?? 0 }}</div>
+                                <div class="text-spotify-light-gray text-sm">tracks</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @php
+                                    $statusColors = [
+                                        'approved' => 'bg-spotify-green bg-opacity-20 text-spotify-green',
+                                        'pending' => 'bg-yellow-500 bg-opacity-20 text-yellow-400',
+                                        'suspended' => 'bg-red-500 bg-opacity-20 text-red-400'
+                                    ];
+                                @endphp
+                                <span class="px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$label->status] ?? 'bg-gray-500 bg-opacity-20 text-gray-400' }}">
+                                    {{ ucfirst($label->status) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-spotify-light-gray">
+                                {{ $label->created_at->format('M d, Y') }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('admin.record-labels.show', $label) }}" class="text-blue-400 hover:text-blue-300" title="View Details">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="{{ route('admin.record-labels.edit', $label) }}" class="text-yellow-400 hover:text-yellow-300" title="Edit">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </a>
+                                    @if($label->status === 'pending')
+                                        <form method="POST" action="{{ route('admin.record-labels.approve', $label->id) }}" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="text-green-400 hover:text-green-300" title="Approve">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @elseif($label->status === 'approved')
+                                        <form method="POST" action="{{ route('admin.record-labels.suspend', $label->id) }}" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="text-orange-400 hover:text-orange-300" title="Suspend">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <form method="POST" action="{{ route('admin.record-labels.destroy', $label) }}" style="display: inline;" 
+                                          onsubmit="return confirm('Are you sure you want to delete this record label?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-400 hover:text-red-300" title="Delete">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-white">contact@samplelabel.com</div>
-                            <div class="text-spotify-light-gray text-sm">+1 234 567 8900</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-white font-medium">24</div>
-                            <div class="text-spotify-light-gray text-sm">125 tracks</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs font-medium bg-spotify-green bg-opacity-20 text-spotify-green rounded-full">
-                                Active
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-spotify-light-gray">
-                            Jan 15, 2024
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex space-x-2">
-                                <a href="{{ route('admin.record-labels.show', 1) }}" class="text-blue-400 hover:text-blue-300">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center">
+                                <div class="text-spotify-light-gray">
+                                    <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                </a>
-                                <a href="{{ route('admin.record-labels.edit', 1) }}" class="text-yellow-400 hover:text-yellow-300">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                    </svg>
-                                </a>
-                                <button class="text-red-400 hover:text-red-300">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                                    <p class="text-lg font-medium mb-2">No record labels found</p>
+                                    <p class="text-sm">
+                                        @if(request('search') || request('status'))
+                                            Try adjusting your search criteria or <a href="{{ route('admin.record-labels.index') }}" class="text-spotify-green hover:underline">clear filters</a>.
+                                        @else
+                                            Get started by <a href="{{ route('admin.record-labels.create') }}" class="text-spotify-green hover:underline">adding your first record label</a>.
+                                        @endif
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
         
         <div class="px-6 py-4 border-t border-spotify-light-gray">
-            <p class="text-spotify-light-gray text-sm">Showing 1 of 1 record labels (TODO: Implement pagination)</p>
+            <div class="flex items-center justify-between">
+                <div class="text-spotify-light-gray text-sm">
+                    Showing {{ $recordLabels->firstItem() ?? 0 }} to {{ $recordLabels->lastItem() ?? 0 }} of {{ $recordLabels->total() }} record labels
+                </div>
+                <div class="flex items-center space-x-2">
+                    {{ $recordLabels->links() }}
+                </div>
+            </div>
         </div>
     </div>
 </div>

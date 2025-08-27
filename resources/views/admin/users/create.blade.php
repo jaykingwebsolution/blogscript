@@ -78,6 +78,28 @@
                     <option value="suspended" {{ old('status') == 'suspended' ? 'selected' : '' }}>Suspended</option>
                 </select>
             </div>
+
+            <div>
+                <label for="country" class="block text-sm font-medium text-white mb-2">Country</label>
+                <select id="country" name="country"
+                        class="w-full bg-spotify-black border border-spotify-light-gray text-white px-4 py-3 rounded-lg focus:border-spotify-green focus:outline-none">
+                    <option value="">Select Country</option>
+                    @foreach(config('countries.countries') as $code => $country)
+                        <option value="{{ $code }}" {{ old('country') == $code ? 'selected' : '' }}>
+                            {{ $country['name'] }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label for="state" class="block text-sm font-medium text-white mb-2">State/Province</label>
+                <select id="state" name="state"
+                        class="w-full bg-spotify-black border border-spotify-light-gray text-white px-4 py-3 rounded-lg focus:border-spotify-green focus:outline-none"
+                        disabled>
+                    <option value="">Select State/Province</option>
+                </select>
+            </div>
         </div>
 
         <!-- Artist-specific fields -->
@@ -116,6 +138,9 @@
 </div>
 
 <script>
+// Country and State data
+const countryStates = @json(config('countries.countries'));
+
 document.getElementById('role').addEventListener('change', function() {
     const artistFields = document.getElementById('artist-fields');
     if (this.value === 'artist' || this.value === 'record_label') {
@@ -125,11 +150,53 @@ document.getElementById('role').addEventListener('change', function() {
     }
 });
 
+document.getElementById('country').addEventListener('change', function() {
+    const stateSelect = document.getElementById('state');
+    const selectedCountry = this.value;
+    
+    // Clear existing options
+    stateSelect.innerHTML = '<option value="">Select State/Province</option>';
+    
+    if (selectedCountry && countryStates[selectedCountry] && countryStates[selectedCountry].states) {
+        const states = countryStates[selectedCountry].states;
+        
+        if (Object.keys(states).length > 0) {
+            // Enable the state dropdown and populate it
+            stateSelect.disabled = false;
+            
+            for (const [code, name] of Object.entries(states)) {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = name;
+                stateSelect.appendChild(option);
+            }
+        } else {
+            // No states available for this country
+            stateSelect.disabled = true;
+        }
+    } else {
+        // No country selected or no states
+        stateSelect.disabled = true;
+    }
+    
+    // Restore selected state if editing
+    const oldState = '{{ old('state') }}';
+    if (oldState) {
+        stateSelect.value = oldState;
+    }
+});
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     const role = document.getElementById('role').value;
     if (role === 'artist' || role === 'record_label') {
         document.getElementById('artist-fields').style.display = 'block';
+    }
+    
+    // Trigger country change to populate states if country was selected
+    const country = document.getElementById('country').value;
+    if (country) {
+        document.getElementById('country').dispatchEvent(new Event('change'));
     }
 });
 </script>
