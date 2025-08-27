@@ -141,6 +141,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Playlist Routes (public routes)
 Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlists.index');
+Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create')->middleware('auth');
 Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
 
 // Dashboard and Profile Routes (Authenticated Users)
@@ -203,8 +204,7 @@ Route::middleware('auth')->group(function () {
     });
     
     
-    // Playlist Management (moved main CRUD routes here to avoid conflicts)
-    Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create');
+    // Playlist Management (moved main CRUD routes here to avoid conflicts)  
     Route::post('/playlists', [PlaylistController::class, 'store'])->name('playlists.store');
     Route::get('/playlists/{playlist}/edit', [PlaylistController::class, 'edit'])->name('playlists.edit');
     Route::put('/playlists/{playlist}', [PlaylistController::class, 'update'])->name('playlists.update');
