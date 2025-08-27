@@ -17,8 +17,20 @@ class AnalyticsController extends Controller
      */
     public function index()
     {
-        // Placeholder analytics data - in a real app this would query the database
-        $analytics = [
+        $analytics = $this->getPlaceholderAnalyticsData();
+        
+        return view('admin.distribution_dashboard.analytics.index', compact('analytics'));
+    }
+    
+    /**
+     * Get placeholder analytics data for demonstration purposes
+     * TODO: Replace with actual database queries in production
+     * 
+     * @return array
+     */
+    private function getPlaceholderAnalyticsData()
+    {
+        return [
             'monthly_submissions' => [
                 'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                 'data' => [45, 52, 38, 67, 71, 83]
@@ -36,7 +48,5 @@ class AnalyticsController extends Controller
                 'active_artists' => 247
             ]
         ];
-
-        return view('admin.distribution_dashboard.analytics.index', compact('analytics'));
     }
 }

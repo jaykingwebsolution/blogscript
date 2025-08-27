@@ -6,39 +6,30 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Distribution Admin | MusicStream')</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Tailwind CSS (compiled locally) -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        spotify: {
-                            green: '#1db954',
-                            'green-light': '#1ed760',
-                            'green-dark': '#1aa34a',
-                            black: '#191414',
-                            'dark-gray': '#121212',
-                            gray: '#282828',
-                            'light-gray': '#b3b3b3'
-                        },
-                        'distro-admin': {
-                            'bg': '#0A0E27',
-                            'sidebar': '#0F1629', 
-                            'card': '#141B2D',
-                            'border': '#1E293B',
-                            'text': '#F1F5F9',
-                            'accent': '#6366F1'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Alpine.js (local) -->
+    <script defer src="{{ asset('js/alpine.min.js') }}"></script>
     
     <style>
+        /* Custom color variables for admin distribution */
+        :root {
+            --distro-admin-bg: #0A0E27;
+            --distro-admin-sidebar: #0F1629;
+            --distro-admin-card: #141B2D;
+            --distro-admin-border: #1E293B;
+            --distro-admin-text: #F1F5F9;
+            --distro-admin-accent: #6366F1;
+            --spotify-green: #1db954;
+            --spotify-green-light: #1ed760;
+            --spotify-green-dark: #1aa34a;
+            --spotify-black: #191414;
+            --spotify-dark-gray: #121212;
+            --spotify-gray: #282828;
+            --spotify-light-gray: #b3b3b3;
+        }
+        
         .sidebar-transition {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -76,6 +67,15 @@
         .gradient-bg {
             background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
         }
+        
+        /* Admin distribution theme classes */
+        .bg-distro-admin-bg { background-color: var(--distro-admin-bg); }
+        .bg-distro-admin-sidebar { background-color: var(--distro-admin-sidebar); }
+        .bg-distro-admin-card { background-color: var(--distro-admin-card); }
+        .border-distro-admin-border { border-color: var(--distro-admin-border); }
+        .text-distro-admin-text { color: var(--distro-admin-text); }
+        .text-distro-admin-accent { color: var(--distro-admin-accent); }
+        .bg-distro-admin-accent { background-color: var(--distro-admin-accent); }
     </style>
 
     @stack('styles')
