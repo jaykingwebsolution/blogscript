@@ -125,11 +125,16 @@ class DistributionPricingController extends Controller
         $randomName = $availableNames[array_rand($availableNames)];
         $randomDuration = $durations[array_rand($durations)];
 
-        DistributionPricing::create([
-            'name' => $randomName,
-            'duration' => $randomDuration,
-            'price' => $price,
-        ]);
+        try {
+            DistributionPricing::create([
+                'name' => $randomName,
+                'duration' => $randomDuration,
+                'price' => $price,
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.distribution-pricing.create')
+                ->with('error', 'Failed to create random distribution plan. Please try again. Error: ' . $e->getMessage());
+        }
 
         return redirect()->route('admin.distribution-pricing.create')
             ->with('success', "Random distribution plan created successfully: {$randomName} ({$randomDuration}) - ₦".number_format($price, 2));
