@@ -276,7 +276,7 @@
 </div>
 
 <script>
-    let contributorIndex = {{ old('contributors') ? count(old('contributors')) : 1 }};
+    let contributorIndex = @json(is_array(old('contributors')) ? count(old('contributors')) : 1);
 
     // File upload preview functionality
     document.addEventListener('DOMContentLoaded', function() {
