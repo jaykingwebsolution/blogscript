@@ -23,6 +23,7 @@ use App\Http\Controllers\Dashboard\ListenerDashboardController;
 use App\Http\Controllers\SpotifyPostController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DistributionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -401,6 +402,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{apiSetting}/toggle', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'toggleStatus'])->name('toggle');
             Route::post('/{apiSetting}/test', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'testConnection'])->name('test');
             Route::delete('/{apiSetting}', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'destroy'])->name('destroy');
+        });
+
+        // Aggregator Settings Management  
+        Route::prefix('aggregator-settings')->name('aggregator-settings.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'index'])->name('index');
+            Route::get('/form', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'createOrEdit'])->name('form');
+            Route::post('/', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'store'])->name('store');
+            Route::post('/{setting}/toggle', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'toggleStatus'])->name('toggle');
+            Route::post('/{setting}/test', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'testConnection'])->name('test');
+            Route::delete('/{setting}', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'destroy'])->name('destroy');
+            Route::get('/statistics', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'statistics'])->name('statistics');
+            Route::post('/test-release', [\App\Http\Controllers\Admin\AggregatorSettingsController::class, 'sendTestRelease'])->name('test-release');
         });
     });
     
