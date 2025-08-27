@@ -99,7 +99,7 @@ class DistributionPricingController extends Controller
      */
     public function generateRandom()
     {
-        $planNames = [
+        $availableNames = [
             'Basic Distribution Package',
             'Premium Music Distribution',
             'Pro Artist Package',
@@ -122,7 +122,7 @@ class DistributionPricingController extends Controller
         // Round to nearest 500 for more realistic pricing
         $price = round($price / 500) * 500;
 
-        $randomName = $planNames[array_rand($planNames)]; // Fixed variable name bug
+        $randomName = $availableNames[array_rand($availableNames)];
         $randomDuration = $durations[array_rand($durations)];
 
         try {
