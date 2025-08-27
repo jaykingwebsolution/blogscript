@@ -610,12 +610,14 @@ class NigerianArtistSeeder extends Seeder
         $this->command->info('Seeding 20 Nigerian artists with reserved usernames and emails...');
 
         foreach ($nigerianArtists as $artistData) {
+            // Generate a secure random password for the seeded artist
+            $randomPassword = Str::random(16);
             // Create User with 'artist' role
             $user = User::firstOrCreate(
                 ['email' => $artistData['email']],
                 [
                     'name' => $artistData['name'],
-                    'password' => Hash::make('seeded_artist_' . $artistData['username']),
+                    'password' => Hash::make($randomPassword),
                     'role' => 'artist',
                     'status' => 'approved',
                     'approved_at' => Carbon::now(),
