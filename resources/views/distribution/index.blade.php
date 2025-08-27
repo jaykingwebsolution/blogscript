@@ -153,7 +153,8 @@
                                 @endforeach
                             </ul>
 
-                            <a href="{{ route('payment.distribution-plan', $plan) }}" 
+                            {{-- TODO: Update the route name below if 'distribution.purchase' is not correct --}}
+                            <a href="{{ route('distribution.purchase', $plan) }}" 
                                class="w-full px-4 py-3 {{ $plan->isPopular() ? 'bg-spotify-green hover:bg-spotify-green/90' : 'bg-gray-900 hover:bg-gray-800' }} text-white rounded-lg transition-colors font-medium text-center block">
                                 Get Started
                             </a>
