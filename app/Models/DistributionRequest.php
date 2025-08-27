@@ -32,6 +32,9 @@ class DistributionRequest extends Model
         'dsp_platforms',
         'delivered_at',
         'distribution_fee',
+        'aggregator_provider',
+        'aggregator_release_id',
+        'aggregator_response',
     ];
 
     protected $casts = [
@@ -44,6 +47,7 @@ class DistributionRequest extends Model
         'dsp_platforms' => 'array',
         'delivered_at' => 'datetime',
         'distribution_fee' => 'decimal:2',
+        'aggregator_response' => 'array',
     ];
 
     /**

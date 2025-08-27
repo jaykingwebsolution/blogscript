@@ -36,6 +36,27 @@ class Kernel extends ConsoleKernel
                  ->sundays()
                  ->at('06:00')
                  ->description('Weekly full sync of all Spotify artists');
+
+        // Distribution system scheduled tasks
+        
+        // Update release statuses every 2 hours during business hours
+        $schedule->command('distribution:update-statuses --only-processing')
+                 ->hourlyAt([0, 15, 30, 45]) // Every 15 minutes
+                 ->between('08:00', '20:00')
+                 ->description('Update processing release statuses from aggregators');
+
+        // Process automatic payouts daily at 10 AM
+        $schedule->command('distribution:process-payouts')
+                 ->daily()
+                 ->at('10:00')
+                 ->description('Process automatic payouts for eligible users');
+
+        // Update all release statuses (including delivered) weekly
+        $schedule->command('distribution:update-statuses --batch-size=100')
+                 ->weekly()
+                 ->mondays()
+                 ->at('03:00')
+                 ->description('Weekly status update for all releases');
     }
 
     /**
