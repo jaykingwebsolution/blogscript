@@ -145,7 +145,15 @@
             <div class="bg-spotify-gray rounded-lg border border-spotify-dark-gray">
                 <div class="px-6 py-4 border-b border-spotify-dark-gray">
                     <h3 class="text-lg leading-6 font-medium text-white">Basic Page Content</h3>
-                    <p class="text-sm text-spotify-light-gray mt-1">Manage About and Contact page content. Legal pages are managed in <a href="{{ route('admin.pages.index') }}" class="text-spotify-green hover:text-spotify-green-light underline">DMCA / Policy Pages</a> section.</p>
+                    <p class="text-sm text-spotify-light-gray mt-1">
+                        Manage About and Contact page content. Legal pages are managed in
+                        @if (Route::has('admin.pages.index'))
+                            <a href="{{ route('admin.pages.index') }}" class="text-spotify-green hover:text-spotify-green-light underline">DMCA / Policy Pages</a>
+                        @else
+                            DMCA / Policy Pages
+                        @endif
+                        section.
+                    </p>
                 </div>
                 <div class="px-6 py-4 space-y-6">
                     <div>
