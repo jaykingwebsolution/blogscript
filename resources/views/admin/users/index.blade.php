@@ -61,6 +61,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Plan</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Distribution Price</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Verified</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
@@ -112,6 +113,21 @@
                                         {{ ucfirst($user->subscription_status) }}
                                     </span>
                                 @endif
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap" id="distribution-price-{{ $user->id }}">
+                            <div class="flex items-center space-x-2">
+                                <div class="relative">
+                                    <span class="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">$</span>
+                                    <input type="number" 
+                                           value="{{ $user->distribution_price ?? '' }}" 
+                                           placeholder="0.00"
+                                           step="0.01"
+                                           min="0"
+                                           max="999999.99"
+                                           onchange="updateDistributionPrice({{ $user->id }}, this.value)"
+                                           class="pl-6 pr-2 py-1 text-xs w-20 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded focus:outline-none focus:ring-1 focus:ring-spotify-green">
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap" id="status-{{ $user->id }}">
@@ -206,7 +222,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center">
+                        <td colspan="{{ $userTableColumnCount }}" class="px-6 py-8 text-center">
                             <div class="text-gray-500 dark:text-gray-400">
                                 <i class="fas fa-users text-3xl mb-2"></i>
                                 <p>No users found.</p>
@@ -408,6 +424,15 @@
         
         makeRequest(`/admin/users/${userId}/assign-plan`, 'POST', (data) => {
             showToast(`Subscription plan updated to: ${data.plan_name}`);
+        }, formData);
+    }
+
+    function updateDistributionPrice(userId, price) {
+        const formData = new FormData();
+        formData.append('distribution_price', price);
+        
+        makeRequest(`/admin/users/${userId}/update-distribution-price`, 'POST', (data) => {
+            showToast(`Distribution price updated: $${data.distribution_price || '0.00'}`);
         }, formData);
     }
 

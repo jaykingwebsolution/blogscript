@@ -547,6 +547,25 @@ class AdminController extends Controller
         ]);
     }
 
+    public function userUpdateDistributionPrice(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'distribution_price' => 'nullable|numeric|min:0|max:999999.99'
+        ]);
+
+        $distributionPrice = $validated['distribution_price'] ?? null;
+        
+        $user->update([
+            'distribution_price' => $distributionPrice
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Distribution price updated successfully',
+            'distribution_price' => $distributionPrice
+        ]);
+    }
+
     // Subscription Management
     public function subscriptionIndex()
     {

@@ -40,6 +40,64 @@ Route::get('/admin-preview', function () {
     return view('admin-preview');
 })->name('admin.preview');
 
+Route::get('/admin-users-preview', function () {
+    $users = collect([
+        (object)[
+            'id' => 1,
+            'name' => 'Test Artist',
+            'email' => 'artist@test.com',
+            'role' => 'artist',
+            'status' => 'approved',
+            'verification_status' => 'unverified',
+            'artist_stage_name' => 'Test Artist',
+            'distribution_price' => 29.99,
+            'subscription_plan_id' => null,
+            'subscription_status' => 'inactive',
+            'subscriptionPlan' => null,
+            'approved_at' => now(),
+            'created_at' => now(),
+        ],
+        (object)[
+            'id' => 2,
+            'name' => 'Test Label',
+            'email' => 'label@test.com',
+            'role' => 'record_label',
+            'status' => 'pending',
+            'verification_status' => 'verified',
+            'artist_stage_name' => null,
+            'distribution_price' => 49.99,
+            'subscription_plan_id' => 1,
+            'subscription_status' => 'active',
+            'subscriptionPlan' => (object)['name' => 'Premium', 'amount' => 9.99],
+            'approved_at' => null,
+            'created_at' => now(),
+        ],
+        (object)[
+            'id' => 3,
+            'name' => 'Test Listener',
+            'email' => 'listener@test.com',
+            'role' => 'listener',
+            'status' => 'suspended',
+            'verification_status' => 'unverified',
+            'artist_stage_name' => null,
+            'distribution_price' => null,
+            'subscription_plan_id' => null,
+            'subscription_status' => 'inactive',
+            'subscriptionPlan' => null,
+            'approved_at' => now(),
+            'created_at' => now(),
+        ]
+    ]);
+    
+    $pricingPlans = collect([
+        (object)['id' => 1, 'name' => 'Basic', 'amount' => 9.99],
+        (object)['id' => 2, 'name' => 'Pro', 'amount' => 19.99],
+        (object)['id' => 3, 'name' => 'Enterprise', 'amount' => 49.99],
+    ]);
+    
+    return view('users-preview', compact('users', 'pricingPlans'));
+})->name('admin.users.preview');
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
@@ -280,6 +338,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/users/{user}/verify', [AdminController::class, 'userVerify'])->name('users.verify');
     Route::post('/users/{user}/unverify', [AdminController::class, 'userUnverify'])->name('users.unverify');
     Route::post('/users/{user}/assign-plan', [AdminController::class, 'userAssignPlan'])->name('users.assign-plan');
+    Route::post('/users/{user}/update-distribution-price', [AdminController::class, 'userUpdateDistributionPrice'])->name('users.update-distribution-price');
     
     // Subscription Management
     Route::get('/subscriptions', [AdminController::class, 'subscriptionIndex'])->name('subscriptions.index');
