@@ -122,7 +122,7 @@ class DistributionPricingController extends Controller
         // Round to nearest 500 for more realistic pricing
         $price = round($price / 500) * 500;
 
-        $randomName = $planNames[array_rand($planNames)];
+        $randomName = $availableNames[array_rand($availableNames)];
         $randomDuration = $durations[array_rand($durations)];
 
         DistributionPricing::create([
