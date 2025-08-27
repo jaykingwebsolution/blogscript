@@ -562,7 +562,7 @@ class AdminController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Distribution price updated successfully',
-            'distribution_price' => $distributionPrice ? number_format($distributionPrice, 2) : null
+            'distribution_price' => $distributionPrice
         ]);
     }
 
