@@ -9,6 +9,7 @@ use App\Models\Artist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;
 
 class LabelDashboardController extends Controller
 {
@@ -142,9 +143,95 @@ class LabelDashboardController extends Controller
     }
 
     /**
+     * Show add music form (simplified upload without distribution)
+     */
+    public function showAddMusic()
+    {
+        $user = Auth::user();
+
+        if (!$user->isRecordLabel()) {
+            return redirect()->route('dashboard');
+        }
+
+        return view('dashboard.record-label.add-music');
+    }
+
+    /**
+     * Add music to platform (simplified upload without distribution)
+     */
+    public function addMusic(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'artist_name' => 'required|string|max:255',
+            'genre' => 'required|string|max:100',
+            'release_date' => 'required|date',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'audio_file' => 'required|file|mimes:mp3,wav|max:51200',
+            'description' => 'nullable|string|max:1000'
+        ]);
+
+        // Handle file uploads
+        $imageUrl = null;
+        $audioUrl = null;
+
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('music/covers', 'public');
+            $imageUrl = Storage::url($coverPath);
+        }
+
+        if ($request->hasFile('audio_file')) {
+            $audioPath = $request->file('audio_file')->store('music/audio', 'public');
+            $audioUrl = Storage::url($audioPath);
+        }
+
+        // Create music entry
+        Music::create([
+            'title' => $request->title,
+            'artist_name' => $request->artist_name,
+            'genre' => $request->genre,
+            'description' => $request->description,
+            'image_url' => $imageUrl,
+            'audio_url' => $audioUrl,
+            'release_date' => $request->release_date,
+            'status' => 'pending',
+            'created_by' => Auth::id(),
+        ]);
+
+    /**
      * Create new artist
      */
     public function createArtist(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'bio' => 'nullable|string|max:2000',
+            'genre' => 'required|string|max:100',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'social_links' => 'nullable|array',
+            'social_links.*' => 'nullable|url'
+        ]);
+
+        $profilePicture = null;
+        if ($request->hasFile('profile_picture')) {
+            $profilePicture = $request->file('profile_picture')->store('artists/profiles', 'public');
+        }
+
+        Artist::create([
+            'name' => $request->name,
+            'slug' => \Str::slug($request->name),
+            'bio' => $request->bio,
+            'genre' => $request->genre,
+            'profile_picture' => $profilePicture,
+            'social_links' => $request->social_links ?? [],
+            'created_by' => Auth::id(),
+            'status' => 'pending'
+        ]);
+
+        return redirect()->route('dashboard.record-label')
+            ->with('success', 'Artist created successfully! Pending admin approval.');
+    }
+}
     {
         $request->validate([
             'name' => 'required|string|max:255',

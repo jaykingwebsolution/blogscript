@@ -200,6 +200,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard/record-label')->name('dashboard.record-label.')->middleware(['auth', 'role:record_label'])->group(function () {
         Route::get('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showSubmitSong'])->name('submit-song');
         Route::post('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'submitSong'])->name('submit-song.store');
+        Route::get('/add-music', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showAddMusic'])->name('add-music');
+        Route::post('/add-music', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'addMusic'])->name('add-music.store');
         Route::get('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showCreateArtist'])->name('create-artist');
         Route::post('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'createArtist'])->name('create-artist.store');
     });
