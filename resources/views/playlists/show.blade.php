@@ -304,13 +304,7 @@ function removeSong(musicId) {
 function playSongFromPlaylist(songId) {
     const songElement = document.querySelector(`[data-id="${songId}"]`);
     if (songElement && window.musicPlayer) {
-        const trackData = {
-            id: songElement.dataset.id,
-            title: songElement.dataset.title,
-            artist: songElement.dataset.artist,
-            cover: songElement.dataset.cover,
-            url: songElement.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        };
+        const trackData = extractTrackDataFromElement(songElement);
         window.musicPlayer.playTrack(trackData);
     } else {
         console.log('Playing song:', songId);
@@ -318,16 +312,7 @@ function playSongFromPlaylist(songId) {
 }
 
 function playAllPlaylistSongs() {
-    const playlistSongs = [];
-    document.querySelectorAll('.play-track-btn').forEach(btn => {
-        playlistSongs.push({
-            id: btn.dataset.id,
-            title: btn.dataset.title,
-            artist: btn.dataset.artist,
-            cover: btn.dataset.cover,
-            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        });
-    });
+    const playlistSongs = getAllTrackData('.play-track-btn');
     
     if (playlistSongs.length > 0 && window.musicPlayer) {
         window.musicPlayer.playTrack(playlistSongs[0]);
@@ -336,16 +321,7 @@ function playAllPlaylistSongs() {
 }
 
 function shufflePlaylistSongs() {
-    const playlistSongs = [];
-    document.querySelectorAll('.play-track-btn').forEach(btn => {
-        playlistSongs.push({
-            id: btn.dataset.id,
-            title: btn.dataset.title,
-            artist: btn.dataset.artist,
-            cover: btn.dataset.cover,
-            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        });
-    });
+    const playlistSongs = getAllTrackData('.play-track-btn');
     
     // Shuffle the array
     for (let i = playlistSongs.length - 1; i > 0; i--) {

@@ -165,13 +165,7 @@
 function playSong(songId) {
     const songElement = document.querySelector(`[data-id="${songId}"]`);
     if (songElement && window.musicPlayer) {
-        const trackData = {
-            id: songElement.dataset.id,
-            title: songElement.dataset.title,
-            artist: songElement.dataset.artist,
-            cover: songElement.dataset.cover,
-            url: songElement.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        };
+        const trackData = extractTrackDataFromElement(songElement);
         window.musicPlayer.playTrack(trackData);
     } else {
         console.log('Playing song:', songId);
@@ -179,16 +173,7 @@ function playSong(songId) {
 }
 
 function playAllLikedSongs() {
-    const likedSongs = [];
-    document.querySelectorAll('.play-track-btn').forEach(btn => {
-        likedSongs.push({
-            id: btn.dataset.id,
-            title: btn.dataset.title,
-            artist: btn.dataset.artist,
-            cover: btn.dataset.cover,
-            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        });
-    });
+    const likedSongs = getAllTrackData('.play-track-btn');
     
     if (likedSongs.length > 0 && window.musicPlayer) {
         window.musicPlayer.playTrack(likedSongs[0]);
@@ -197,16 +182,7 @@ function playAllLikedSongs() {
 }
 
 function shufflePlayLikedSongs() {
-    const likedSongs = [];
-    document.querySelectorAll('.play-track-btn').forEach(btn => {
-        likedSongs.push({
-            id: btn.dataset.id,
-            title: btn.dataset.title,
-            artist: btn.dataset.artist,
-            cover: btn.dataset.cover,
-            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        });
-    });
+    const likedSongs = getAllTrackData('.play-track-btn');
     
     // Shuffle the array
     for (let i = likedSongs.length - 1; i > 0; i--) {
