@@ -359,9 +359,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // Playlists Management
     Route::resource('playlists', \App\Http\Controllers\Admin\PlaylistController::class);
-    Route::post('/playlists/{id}/feature', [\App\Http\Controllers\Admin\PlaylistController::class, 'feature'])->name('playlists.feature');
-    Route::post('/playlists/{id}/unfeature', [\App\Http\Controllers\Admin\PlaylistController::class, 'unfeature'])->name('playlists.unfeature');
-    Route::post('/playlists/{id}/moderate/{action}', [\App\Http\Controllers\Admin\PlaylistController::class, 'moderate'])->name('playlists.moderate');
+    Route::post('/playlists/{playlist}/feature', [\App\Http\Controllers\Admin\PlaylistController::class, 'feature'])->name('playlists.feature');
+    Route::post('/playlists/{playlist}/unfeature', [\App\Http\Controllers\Admin\PlaylistController::class, 'unfeature'])->name('playlists.unfeature');
+    Route::post('/playlists/{playlist}/moderate/{action}', [\App\Http\Controllers\Admin\PlaylistController::class, 'moderate'])->name('playlists.moderate');
     Route::post('/playlists/bulk-action', [\App\Http\Controllers\Admin\PlaylistController::class, 'bulkAction'])->name('playlists.bulk-action');
     
     // Content Moderation Management

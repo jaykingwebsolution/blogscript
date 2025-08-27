@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex space-x-3">
                     <a href="{{ route('admin.playlists.edit', $playlist) }}" 
-                       class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+                       class="bg-spotify-green text-white px-4 py-2 rounded-lg hover:bg-spotify-green-light transition-colors">
                         <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
@@ -40,7 +40,7 @@
                     @else
                         <form method="POST" action="{{ route('admin.playlists.feature', $playlist) }}" style="display: inline;">
                             @csrf
-                            <button type="submit" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                            <button type="submit" class="bg-spotify-dark-gray text-white px-4 py-2 rounded-lg hover:bg-spotify-gray transition-colors border border-spotify-light-gray">
                                 <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                                 </svg>
@@ -199,7 +199,7 @@
                                         <!-- Actions -->
                                         <div class="flex space-x-1">
                                             <a href="{{ route('admin.music.show', $track) }}" 
-                                               class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                                               class="w-8 h-8 bg-spotify-green rounded-full flex items-center justify-center hover:bg-spotify-green-light transition-colors"
                                                title="View Track">
                                                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -207,7 +207,7 @@
                                                 </svg>
                                             </a>
                                             <a href="{{ route('admin.music.edit', $track) }}" 
-                                               class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center hover:bg-yellow-700 transition-colors"
+                                               class="w-8 h-8 bg-spotify-dark-gray border border-spotify-light-gray rounded-full flex items-center justify-center hover:bg-spotify-gray transition-colors"
                                                title="Edit Track">
                                                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -261,7 +261,7 @@
         <p class="text-spotify-light-gray mb-6">Are you sure you want to delete "{{ $playlist->title }}"? This action cannot be undone.</p>
         <div class="flex space-x-4">
             <button onclick="hideDeleteModal()" 
-                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    class="flex-1 bg-spotify-dark-gray text-white px-4 py-2 rounded-lg hover:bg-spotify-gray transition-colors border border-spotify-light-gray">
                 Cancel
             </button>
             <form method="POST" action="{{ route('admin.playlists.destroy', $playlist) }}" class="flex-1">

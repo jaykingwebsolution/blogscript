@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Music;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -65,7 +66,12 @@ class PlaylistController extends Controller
         $playlists = $query->paginate(15)->withQueryString();
         $users = User::select('id', 'name')->orderBy('name')->get();
         
-        return view('admin.playlists.index', compact('playlists', 'users'));
+        // Calculate statistics for the dashboard
+        $totalPlaylists = Playlist::count();
+        $featuredPlaylistsCount = Playlist::where('is_featured', true)->count();
+        $totalTracks = \DB::table('music_playlist')->count();
+        
+        return view('admin.playlists.index', compact('playlists', 'users', 'totalPlaylists', 'featuredPlaylistsCount', 'totalTracks'));
     }
 
     /**
