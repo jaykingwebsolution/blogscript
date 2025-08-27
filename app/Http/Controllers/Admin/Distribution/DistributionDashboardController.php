@@ -49,7 +49,38 @@ class DistributionDashboardController extends Controller
         // Get pricing plans
         $pricingPlans = DistributionPricing::getOrderedPlans();
 
-        return view('admin.distribution_dashboard.index', compact('stats', 'recentRequests', 'pricingPlans'));
+        // Get counts for each status (only for paid users) with a single query
+        $baseQuery = DistributionRequest::whereHas('user', function ($q) {
+            $q->where('distribution_paid', true);
+        });
+        $statusCountsRaw = $baseQuery
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+        $statusCounts = [
+            'all' => $baseQuery->count(),
+            'pending' => isset($statusCountsRaw['pending']) ? $statusCountsRaw['pending'] : 0,
+            'approved' => isset($statusCountsRaw['approved']) ? $statusCountsRaw['approved'] : 0,
+            'declined' => isset($statusCountsRaw['declined']) ? $statusCountsRaw['declined'] : 0,
+        ];
+
+        // Get distribution requests (if referenced by the dashboard view)
+        $requests = DistributionRequest::with('user')
+            ->whereHas('user', function ($query) {
+                $query->where('distribution_paid', true);
+            })
+            ->latest()
+            ->take(10)
+            ->get();
+
+        return view('admin.distribution_dashboard.index', compact(
+            'stats',
+            'recentRequests',
+            'pricingPlans',
+            'statusCounts',
+            'requests'
+        ));
     }
 
     /**
