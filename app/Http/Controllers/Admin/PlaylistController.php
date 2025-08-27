@@ -69,7 +69,7 @@ class PlaylistController extends Controller
         // Calculate statistics for the dashboard
         $totalPlaylists = Playlist::count();
         $featuredPlaylistsCount = Playlist::where('is_featured', true)->count();
-        $totalTracks = \DB::table('music_playlist')->count();
+        $totalTracks = \DB::table('playlist_music')->count();
         
         return view('admin.playlists.index', compact('playlists', 'users', 'totalPlaylists', 'featuredPlaylistsCount', 'totalTracks'));
     }
