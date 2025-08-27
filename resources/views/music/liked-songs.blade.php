@@ -127,7 +127,7 @@
                                     </svg>
                                 </button>
                             </form>
-                            <span class="text-white/60 text-sm">{{ $song->duration ? gmdate('i:s', $song->duration) : '0:00' }}</span>
+                            <span class="text-white/60 text-sm">{{ $song->duration && is_numeric($song->duration) ? gmdate('i:s', (int)$song->duration) : '0:00' }}</span>
                         </div>
                     </div>
                 @endforeach

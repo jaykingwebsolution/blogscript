@@ -40,11 +40,11 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         $likedSongs = $user->likedSongs()
-            ->with(['user', 'artist'])
+            ->with(['artist', 'category'])
             ->latest('likes.created_at')
             ->paginate(50);
             
-        return view('dashboard.liked-songs', compact('likedSongs'));
+        return view('music.liked-songs', compact('likedSongs'));
     }
     
     /**
