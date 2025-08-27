@@ -211,24 +211,24 @@
 <div id="reject-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-50 dark:bg-gray-900">
         <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Reject Payment</h3>
+            <h3 class="text-lg font-medium text-white mb-4">Reject Payment</h3>
             <form id="reject-form" method="POST">
                 @csrf
                 <div class="mb-4">
-                    <label for="admin_notes" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="admin_notes" class="block text-sm font-medium text-white mb-2">
                         Reason for rejection (required)
                     </label>
                     <textarea id="admin_notes" 
                               name="admin_notes" 
                               rows="4" 
                               required
-                              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              class="w-full bg-spotify-black border border-spotify-light-gray text-white px-4 py-3 rounded-lg focus:border-spotify-green focus:outline-none"
                               placeholder="Explain why this payment is being rejected..."></textarea>
                 </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" 
                             onclick="hideRejectModal()"
-                            class="px-4 py-2 text-gray-500 hover:text-gray-700">
+                            class="px-4 py-2 text-spotify-light-gray hover:text-white">
                         Cancel
                     </button>
                     <button type="submit" 
