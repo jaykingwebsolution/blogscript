@@ -37,14 +37,14 @@
         @if($likedSongs->count() > 0)
             <!-- Action Buttons -->
             <div class="flex items-center space-x-4 mb-8">
-                <button onclick="playAll()" 
+                <button onclick="playAllLikedSongs()" 
                         class="bg-spotify-green text-black rounded-full p-4 hover:scale-105 transition-transform">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z"/>
                     </svg>
                 </button>
                 
-                <button onclick="shufflePlay()" 
+                <button onclick="shufflePlayLikedSongs()" 
                         class="text-white/60 hover:text-white transition-colors">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -85,7 +85,13 @@
                     <div class="group grid grid-cols-12 gap-4 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors">
                         <div class="col-span-1 flex items-center">
                             <span class="group-hover:hidden text-white/60">{{ $likedSongs->firstItem() + $index }}</span>
-                            <button class="hidden group-hover:block text-white hover:text-spotify-green" onclick="playSong({{ $song->id }})">
+                            <button class="hidden group-hover:block text-white hover:text-spotify-green play-track-btn" 
+                                    data-id="{{ $song->id }}"
+                                    data-title="{{ $song->title }}"
+                                    data-artist="{{ $song->artist_name ?? ($song->artist->name ?? 'Unknown Artist') }}"
+                                    data-cover="{{ $song->cover_image ? asset('storage/' . $song->cover_image) : asset('images/default-music.svg') }}"
+                                    data-url="{{ $song->audio_url ?? ($song->audio_file ? asset('storage/' . $song->audio_file) : '') }}"
+                                    onclick="playSong({{ $song->id }})">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
@@ -157,18 +163,61 @@
 
 <script>
 function playSong(songId) {
-    // Implement play functionality
-    console.log('Playing song:', songId);
+    const songElement = document.querySelector(`[data-id="${songId}"]`);
+    if (songElement && window.musicPlayer) {
+        const trackData = {
+            id: songElement.dataset.id,
+            title: songElement.dataset.title,
+            artist: songElement.dataset.artist,
+            cover: songElement.dataset.cover,
+            url: songElement.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        };
+        window.musicPlayer.playTrack(trackData);
+    } else {
+        console.log('Playing song:', songId);
+    }
 }
 
-function playAll() {
-    // Implement play all functionality
-    console.log('Playing all liked songs');
+function playAllLikedSongs() {
+    const likedSongs = [];
+    document.querySelectorAll('.play-track-btn').forEach(btn => {
+        likedSongs.push({
+            id: btn.dataset.id,
+            title: btn.dataset.title,
+            artist: btn.dataset.artist,
+            cover: btn.dataset.cover,
+            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        });
+    });
+    
+    if (likedSongs.length > 0 && window.musicPlayer) {
+        window.musicPlayer.playTrack(likedSongs[0]);
+        console.log('Playing all liked songs starting with:', likedSongs[0].title);
+    }
 }
 
-function shufflePlay() {
-    // Implement shuffle play functionality
-    console.log('Shuffle playing liked songs');
+function shufflePlayLikedSongs() {
+    const likedSongs = [];
+    document.querySelectorAll('.play-track-btn').forEach(btn => {
+        likedSongs.push({
+            id: btn.dataset.id,
+            title: btn.dataset.title,
+            artist: btn.dataset.artist,
+            cover: btn.dataset.cover,
+            url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        });
+    });
+    
+    // Shuffle the array
+    for (let i = likedSongs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [likedSongs[i], likedSongs[j]] = [likedSongs[j], likedSongs[i]];
+    }
+    
+    if (likedSongs.length > 0 && window.musicPlayer) {
+        window.musicPlayer.playTrack(likedSongs[0]);
+        console.log('Shuffle playing liked songs starting with:', likedSongs[0].title);
+    }
 }
 </script>
 @endsection
