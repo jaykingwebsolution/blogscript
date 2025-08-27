@@ -38,16 +38,16 @@ Route::prefix('distribution')->name('distribution.')->group(function () {
     // Authenticated user endpoints
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/releases/{id}/status', [App\Http\Controllers\Api\Distribution\DistributionApiController::class, 'getReleaseStatus'])
-            ->name('releases.status');
+            ->name('api.releases.status');
         
         Route::get('/earnings', [App\Http\Controllers\Api\Distribution\DistributionApiController::class, 'getEarnings'])
-            ->name('earnings');
+            ->name('api.earnings');
         
         Route::get('/payouts', [App\Http\Controllers\Api\Distribution\DistributionApiController::class, 'getPayouts'])
-            ->name('payouts');
+            ->name('api.payouts');
         
         Route::post('/payouts', [App\Http\Controllers\Api\Distribution\DistributionApiController::class, 'requestPayout'])
             ->middleware('throttle:10,1') // Limit payout requests to 10 per minute
-            ->name('payouts.request');
+            ->name('api.payouts.request');
     });
 });
