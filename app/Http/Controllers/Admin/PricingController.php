@@ -35,12 +35,12 @@ class PricingController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'amount' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+            'amount' => 'required|numeric|min:0|max:999999.99',
             'currency' => 'required|string|size:3',
             'type' => 'required|in:one_time,recurring',
-            'interval' => 'nullable|in:monthly,yearly',
-            'features' => 'nullable|string',
+            'interval' => 'nullable|required_if:type,recurring|in:monthly,yearly',
+            'features' => 'nullable|string|max:5000',
             'is_active' => 'boolean'
         ]);
 
@@ -84,12 +84,12 @@ class PricingController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'amount' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+            'amount' => 'required|numeric|min:0|max:999999.99',
             'currency' => 'required|string|size:3',
             'type' => 'required|in:one_time,recurring',
-            'interval' => 'nullable|in:monthly,yearly',
-            'features' => 'nullable|string',
+            'interval' => 'nullable|required_if:type,recurring|in:monthly,yearly',
+            'features' => 'nullable|string|max:5000',
             'is_active' => 'boolean'
         ]);
 
