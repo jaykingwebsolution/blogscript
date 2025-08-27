@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\DistributionPricing;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DistributionPricingController extends Controller
@@ -12,9 +12,10 @@ class DistributionPricingController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (!Auth::check() || !Auth::user()->isAdmin()) {
+            if (! Auth::check() || ! Auth::user()->isAdmin()) {
                 abort(403, 'Unauthorized access.');
             }
+
             return $next($request);
         });
     }
@@ -25,6 +26,7 @@ class DistributionPricingController extends Controller
     public function index()
     {
         $pricingPlans = DistributionPricing::getOrderedPlans();
+
         return view('admin.distribution-pricing.index', compact('pricingPlans'));
     }
 
@@ -57,7 +59,7 @@ class DistributionPricingController extends Controller
         ]);
 
         return redirect()->route('admin.distribution-pricing.index')
-                        ->with('success', 'Distribution pricing plan created successfully.');
+            ->with('success', 'Distribution pricing plan created successfully.');
     }
 
     /**
@@ -89,7 +91,48 @@ class DistributionPricingController extends Controller
         ]);
 
         return redirect()->route('admin.distribution-pricing.index')
-                        ->with('success', 'Distribution pricing plan updated successfully.');
+            ->with('success', 'Distribution pricing plan updated successfully.');
+    }
+
+    /**
+     * Generate a random distribution pricing plan for demo/testing purposes.
+     */
+    public function generateRandom()
+    {
+        $planNames = [
+            'Basic Distribution Package',
+            'Premium Music Distribution',
+            'Pro Artist Package',
+            'Standard Distribution Plan',
+            'Elite Music Distribution',
+            'Starter Distribution Package',
+            'Advanced Artist Plan',
+            'Complete Distribution Suite',
+            'Professional Music Package',
+            'Ultimate Distribution Plan',
+        ];
+
+        $durations = ['6 months', '1 year', 'lifetime'];
+
+        // Generate realistic random price between 5,000 and 50,000 NGN
+        $minPrice = 5000;
+        $maxPrice = 50000;
+        $price = rand($minPrice, $maxPrice);
+
+        // Round to nearest 500 for more realistic pricing
+        $price = round($price / 500) * 500;
+
+        $randomName = $planNames[array_rand($planNames)];
+        $randomDuration = $durations[array_rand($durations)];
+
+        DistributionPricing::create([
+            'name' => $randomName,
+            'duration' => $randomDuration,
+            'price' => $price,
+        ]);
+
+        return redirect()->route('admin.distribution-pricing.create')
+            ->with('success', "Random distribution plan created successfully: {$randomName} ({$randomDuration}) - ₦".number_format($price, 2));
     }
 
     /**
@@ -100,6 +143,6 @@ class DistributionPricingController extends Controller
         $distributionPricing->delete();
 
         return redirect()->route('admin.distribution-pricing.index')
-                        ->with('success', 'Distribution pricing plan deleted successfully.');
+            ->with('success', 'Distribution pricing plan deleted successfully.');
     }
 }
