@@ -239,10 +239,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
 
     // Distribution Routes
-    Route::get('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'create'])->name('distribution.create');
-    Route::post('/distribution/submit', [App\Http\Controllers\DistributionController::class, 'store'])->name('distribution.store');
-    Route::get('/distribution/my-submissions', [App\Http\Controllers\DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
-    Route::get('/distribution/my-submissions/{distributionRequest}', [App\Http\Controllers\DistributionController::class, 'show'])->name('distribution.show');
+    Route::get('/distribution', [DistributionController::class, 'index'])->name('distribution.index');
+    Route::get('/distribution/pricing', [DistributionController::class, 'pricing'])->name('distribution.pricing');
+    Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
+    Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
+    Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
+    Route::get('/distribution/my-submissions/{distributionRequest}', [DistributionController::class, 'show'])->name('distribution.show');
+    Route::get('/distribution/earnings', [DistributionController::class, 'earnings'])->name('distribution.earnings');
+    Route::get('/distribution/payouts', [DistributionController::class, 'payouts'])->name('distribution.payouts');
+    Route::post('/distribution/payouts', [DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
     
     // Payment Routes
     Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
@@ -386,6 +391,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{distributionPricing}/edit', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'edit'])->name('edit');
             Route::put('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'update'])->name('update');
             Route::delete('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'destroy'])->name('destroy');
+        });
+
+        // Distribution API Settings Management
+        Route::prefix('api-settings')->name('api-settings.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'index'])->name('index');
+            Route::get('/form', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'createOrEdit'])->name('form');
+            Route::post('/', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'store'])->name('store');
+            Route::post('/{apiSetting}/toggle', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'toggleStatus'])->name('toggle');
+            Route::post('/{apiSetting}/test', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'testConnection'])->name('test');
+            Route::delete('/{apiSetting}', [\App\Http\Controllers\Admin\Distribution\ApiSettingsController::class, 'destroy'])->name('destroy');
         });
     });
     

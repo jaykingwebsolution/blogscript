@@ -130,6 +130,92 @@
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter a custom duration (e.g., "2 years", "18 months")</p>
                 </div>
 
+                <!-- Plan Type -->
+                <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Plan Type <span class="text-red-500">*</span>
+                    </label>
+                    <select id="type" 
+                            name="type" 
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                            required>
+                        <option value="">Select Plan Type</option>
+                        <option value="standard" {{ old('type') === 'standard' ? 'selected' : '' }}>Standard (Musician)</option>
+                        <option value="premium" {{ old('type') === 'premium' ? 'selected' : '' }}>Premium (Musician Plus)</option>
+                        <option value="ultimate" {{ old('type') === 'ultimate' ? 'selected' : '' }}>Ultimate</option>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">The tier level for this plan</p>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Description <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="description" 
+                              name="description" 
+                              rows="3"
+                              placeholder="Describe what this plan offers and who it's perfect for..."
+                              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                              required>{{ old('description') }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">A brief description of what this plan includes</p>
+                </div>
+
+                <!-- Features -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Plan Features <span class="text-red-500">*</span>
+                    </label>
+                    <div id="features-container">
+                        @if(old('features'))
+                            @foreach(old('features') as $index => $feature)
+                                <div class="feature-input-group mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <input type="text" 
+                                               name="features[]" 
+                                               value="{{ $feature }}"
+                                               placeholder="Enter a feature..."
+                                               class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                                               required>
+                                        @if($index > 0)
+                                            <button type="button" onclick="removeFeature(this)" class="px-3 py-2 text-red-500 hover:text-red-700 transition-colors">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="feature-input-group mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" 
+                                           name="features[]" 
+                                           placeholder="Enter a feature..."
+                                           class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                                           required>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <button type="button" onclick="addFeature()" class="mt-2 text-spotify-green hover:text-spotify-green/80 text-sm transition-colors">
+                        <i class="fas fa-plus mr-1"></i>Add Another Feature
+                    </button>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">List the key features included in this plan</p>
+                </div>
+
+                <!-- Active Status -->
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           id="is_active" 
+                           name="is_active" 
+                           value="1"
+                           {{ old('is_active') ? 'checked' : '' }}
+                           class="h-4 w-4 text-spotify-green focus:ring-spotify-green border-gray-300 rounded">
+                    <label for="is_active" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                        Make this plan active immediately
+                    </label>
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <a href="{{ route('admin.distribution.pricing.index') }}" 
@@ -179,6 +265,35 @@ function toggleCustomDuration() {
         customDurationDiv.classList.add('hidden');
         customDurationInput.required = false;
         customDurationInput.value = '';
+    }
+}
+
+function addFeature() {
+    const container = document.getElementById('features-container');
+    const featureCount = container.children.length;
+    
+    const featureDiv = document.createElement('div');
+    featureDiv.className = 'feature-input-group mb-2';
+    featureDiv.innerHTML = `
+        <div class="flex items-center space-x-2">
+            <input type="text" 
+                   name="features[]" 
+                   placeholder="Enter a feature..."
+                   class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                   required>
+            <button type="button" onclick="removeFeature(this)" class="px-3 py-2 text-red-500 hover:text-red-700 transition-colors">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    `;
+    
+    container.appendChild(featureDiv);
+}
+
+function removeFeature(button) {
+    const container = document.getElementById('features-container');
+    if (container.children.length > 1) {
+        button.closest('.feature-input-group').remove();
     }
 }
 
