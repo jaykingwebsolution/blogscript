@@ -196,9 +196,7 @@ function showNotificationGlobal(type, message) {
     // Remove any existing notifications
     const existingNotifications = document.querySelectorAll('.playlist-notification');
     existingNotifications.forEach(notification => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
+        notification.remove();
     });
     
     // Create notification element
