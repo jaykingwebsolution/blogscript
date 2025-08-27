@@ -238,20 +238,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/verification', [ArtistRequestController::class, 'verificationStore'])->name('dashboard.verification.store');
     Route::get('/dashboard/trending', [ArtistRequestController::class, 'trendingIndex'])->name('dashboard.trending');
     Route::post('/dashboard/trending', [ArtistRequestController::class, 'trendingStore'])->name('dashboard.trending.store');
-
-    // Distribution Routes
-    Route::get('/distribution', [DistributionController::class, 'index'])->name('distribution.index');
-    Route::get('/distribution/pricing', [DistributionController::class, 'pricing'])->name('distribution.pricing');
-    Route::get('/distribution/about', [DistributionController::class, 'about'])->name('distribution.about');
-    Route::get('/distribution/contact', [DistributionController::class, 'contact'])->name('distribution.contact');
-    Route::get('/distribution/how-it-works', [DistributionController::class, 'howItWorks'])->name('distribution.how-it-works');
-    Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
-    Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
-    Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
-    Route::get('/distribution/my-submissions/{distributionRequest}', [DistributionController::class, 'show'])->name('distribution.show');
-    Route::get('/distribution/earnings', [DistributionController::class, 'earnings'])->name('distribution.earnings');
-    Route::get('/distribution/payouts', [DistributionController::class, 'payouts'])->name('distribution.payouts');
-    Route::post('/distribution/payouts', [DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
     
     // Payment Routes
     Route::get('/payment/distribution', [\App\Http\Controllers\PaymentController::class, 'showDistributionPayment'])->name('payment.distribution');
@@ -266,6 +252,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment/subscription/callback', [\App\Http\Controllers\PaymentController::class, 'handleSubscriptionCallback'])->name('payment.subscription.callback');
     Route::post('/payment/manual', [\App\Http\Controllers\PaymentController::class, 'submitManualPayment'])->name('payment.manual.submit');
 });
+
+// Distribution Routes (Public access for about, contact, how-it-works, index, pricing)
+Route::get('/distribution', [DistributionController::class, 'index'])->name('distribution.index');
+Route::get('/distribution/pricing', [DistributionController::class, 'pricing'])->name('distribution.pricing');
+Route::get('/distribution/about', [DistributionController::class, 'about'])->name('distribution.about');
+Route::get('/distribution/contact', [DistributionController::class, 'contact'])->name('distribution.contact');
+Route::get('/distribution/how-it-works', [DistributionController::class, 'howItWorks'])->name('distribution.how-it-works');
+Route::get('/distribution/submit', [DistributionController::class, 'create'])->name('distribution.create');
+Route::post('/distribution/submit', [DistributionController::class, 'store'])->name('distribution.store');
+Route::get('/distribution/my-submissions', [DistributionController::class, 'mySubmissions'])->name('distribution.my-submissions');
+Route::get('/distribution/my-submissions/{distributionRequest}', [DistributionController::class, 'show'])->name('distribution.show');
+Route::get('/distribution/earnings', [DistributionController::class, 'earnings'])->name('distribution.earnings');
+Route::get('/distribution/payouts', [DistributionController::class, 'payouts'])->name('distribution.payouts');
+Route::post('/distribution/payouts', [DistributionController::class, 'requestPayout'])->name('distribution.payout.request');
 
 // Artist Routes (Authenticated Artists and Record Labels)
 Route::prefix('artist')->name('artist.')->middleware('auth')->group(function () {
