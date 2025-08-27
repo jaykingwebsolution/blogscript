@@ -160,7 +160,7 @@
             <!-- Action Buttons -->
             <div class="flex items-center justify-between pt-6 border-t border-spotify-light-gray">
                 <a href="{{ route('admin.playlists.index') }}" 
-                   class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                   class="bg-spotify-dark-gray text-white px-6 py-3 rounded-lg hover:bg-spotify-gray transition-colors border border-spotify-light-gray">
                     Cancel
                 </a>
                 <button type="submit" 

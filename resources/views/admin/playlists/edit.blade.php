@@ -190,7 +190,7 @@
             <!-- Action Buttons -->
             <div class="flex items-center justify-between pt-6 border-t border-spotify-light-gray">
                 <a href="{{ route('admin.playlists.show', $playlist) }}" 
-                   class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                   class="bg-spotify-dark-gray text-white px-6 py-3 rounded-lg hover:bg-spotify-gray transition-colors border border-spotify-light-gray">
                     Cancel
                 </a>
                 <div class="flex space-x-3">
@@ -215,7 +215,7 @@
         <p class="text-spotify-light-gray mb-6">Are you sure you want to delete "{{ $playlist->title }}"? This action cannot be undone.</p>
         <div class="flex space-x-4">
             <button onclick="hideDeleteModal()" 
-                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    class="flex-1 bg-spotify-dark-gray text-white px-4 py-2 rounded-lg hover:bg-spotify-gray transition-colors border border-spotify-light-gray">
                 Cancel
             </button>
             <form method="POST" action="{{ route('admin.playlists.destroy', $playlist) }}" class="flex-1">

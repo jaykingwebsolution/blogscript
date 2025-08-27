@@ -7,11 +7,11 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Notifications Management</h1>
-            <p class="text-gray-600">Create and manage broadcast notifications for all users</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Notifications Management</h1>
+            <p class="text-gray-600 dark:text-gray-400">Create and manage broadcast notifications for all users</p>
         </div>
         <a href="{{ route('admin.notifications.create') }}" 
-           class="bg-spotify-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2">
+           class="bg-spotify-green text-white px-4 py-2 rounded-lg hover:bg-spotify-green-light transition-colors flex items-center space-x-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
@@ -20,7 +20,7 @@
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="bg-green-100 dark:bg-green-900/20 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-400 px-4 py-3 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
@@ -29,14 +29,14 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div class="bg-gray-50 dark:bg-gray-900 rounded-lg shadow p-6">
             <div class="flex items-center">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3-3v-4c0-5.523-4.477-10-10-10S2 4.477 2 10v4l-3 3h5m9 0a3 3 0 11-6 0m6 0H9"/>
                     </svg>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Notifications</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->total() }}</p>
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Notifications</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $notifications->total() }}</p>
                 </div>
             </div>
         </div>
