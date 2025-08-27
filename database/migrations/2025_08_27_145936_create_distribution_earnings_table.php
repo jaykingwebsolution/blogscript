@@ -27,8 +27,8 @@ return new class extends Migration
                 $table->enum('status', ['pending', 'confirmed', 'disputed'])->default('pending');
                 $table->timestamps();
                 
-                $table->index(['user_id', 'platform', 'status']);
-                $table->index(['distribution_request_id', 'period_start', 'period_end']);
+                $table->index(['user_id', 'platform', 'status'], 'dist_earnings_user_platform_status_idx');
+                $table->index(['distribution_request_id', 'period_start', 'period_end'], 'dist_earnings_reqid_start_end_idx');
             });
         }
     }
