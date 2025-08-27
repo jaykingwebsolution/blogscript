@@ -3,14 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Playlist;
+use App\Models\User;
+use App\Models\Music;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PlaylistController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        // TODO: Add admin middleware check
+        $this->middleware(function ($request, $next) {
+            if (Auth::user() && Auth::user()->role !== 'admin') {
+                abort(403, 'Unauthorized access.');
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -18,16 +29,43 @@ class PlaylistController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // TODO: Implement playlists listing
-        // - List all playlists across the platform
-        // - Show playlist statistics (tracks count, followers, plays)
-        // - Provide search and filtering options (by creator, genre, status)
-        // - Include pagination for large datasets
-        // - Add sorting options (created date, popularity, etc.)
+        $query = Playlist::with(['user', 'music'])
+                        ->withCount('music')
+                        ->latest();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Apply visibility filter
+        if ($request->filled('visibility')) {
+            $query->where('visibility', $request->visibility);
+        }
+
+        // Apply featured filter
+        if ($request->filled('featured')) {
+            $query->where('is_featured', $request->featured === '1');
+        }
+
+        // Apply creator filter
+        if ($request->filled('creator')) {
+            $query->where('user_id', $request->creator);
+        }
+
+        $playlists = $query->paginate(15)->withQueryString();
+        $users = User::select('id', 'name')->orderBy('name')->get();
         
-        return view('admin.playlists.index');
+        return view('admin.playlists.index', compact('playlists', 'users'));
     }
 
     /**
@@ -37,13 +75,10 @@ class PlaylistController extends Controller
      */
     public function create()
     {
-        // TODO: Implement playlist creation form
-        // - Create form for admin-curated playlists
-        // - Include fields for name, description, cover image
-        // - Add music selection interface
-        // - Include privacy/visibility settings
+        $users = User::select('id', 'name', 'email')->orderBy('name')->get();
+        $music = Music::select('id', 'title', 'artist_name')->where('status', 'published')->orderBy('title')->get();
         
-        return view('admin.playlists.create');
+        return view('admin.playlists.create', compact('users', 'music'));
     }
 
     /**
@@ -54,13 +89,43 @@ class PlaylistController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement playlist creation
-        // - Validate input data (name, description, tracks)
-        // - Create playlist record in database
-        // - Associate selected music tracks
-        // - Set appropriate permissions and visibility
-        // - Redirect with success message
-        
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'user_id' => 'required|exists:users,id',
+            'visibility' => 'required|in:public,private,unlisted',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'music_ids' => 'array',
+            'music_ids.*' => 'exists:music,id',
+            'is_featured' => 'boolean'
+        ]);
+
+        $validated['is_featured'] = $request->boolean('is_featured');
+
+        // Handle cover image upload
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('playlists', 'public');
+        }
+
+        // Generate unique slug
+        $validated['slug'] = Str::slug($validated['title']);
+        $originalSlug = $validated['slug'];
+        $counter = 1;
+        while (Playlist::where('slug', $validated['slug'])->exists()) {
+            $validated['slug'] = $originalSlug . '-' . $counter++;
+        }
+
+        $playlist = Playlist::create($validated);
+
+        // Attach music tracks if provided
+        if (!empty($validated['music_ids'])) {
+            $musicData = [];
+            foreach ($validated['music_ids'] as $index => $musicId) {
+                $musicData[$musicId] = ['order_in_playlist' => $index + 1];
+            }
+            $playlist->music()->attach($musicData);
+        }
+
         return redirect()->route('admin.playlists.index')
                          ->with('success', 'Playlist created successfully.');
     }
@@ -68,52 +133,89 @@ class PlaylistController extends Controller
     /**
      * Display the specified playlist.
      * 
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Playlist $playlist)
     {
-        // TODO: Implement playlist details view
-        // - Show detailed information about the playlist
-        // - Display all tracks in the playlist with order
-        // - Show analytics (total plays, likes, shares)
-        // - Include creator information and creation date
+        $playlist->load(['user', 'music.creator']);
         
-        return view('admin.playlists.show', compact('id'));
+        return view('admin.playlists.show', compact('playlist'));
     }
 
     /**
      * Show the form for editing the specified playlist.
      * 
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Playlist $playlist)
     {
-        // TODO: Implement playlist edit form
-        // - Load existing playlist data
-        // - Show editable form with current values
-        // - Include track reordering interface
-        // - Allow adding/removing tracks
+        $playlist->load('music');
+        $users = User::select('id', 'name', 'email')->orderBy('name')->get();
+        $availableMusic = Music::select('id', 'title', 'artist_name')
+                              ->where('status', 'published')
+                              ->orderBy('title')
+                              ->get();
+        $selectedMusicIds = $playlist->music->pluck('id')->toArray();
         
-        return view('admin.playlists.edit', compact('id'));
+        return view('admin.playlists.edit', compact('playlist', 'users', 'availableMusic', 'selectedMusicIds'));
     }
 
     /**
      * Update the specified playlist in storage.
      * 
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Playlist $playlist)
     {
-        // TODO: Implement playlist update
-        // - Validate updated information
-        // - Update playlist details in database
-        // - Update track associations and order
-        // - Redirect with success message
-        
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'user_id' => 'required|exists:users,id',
+            'visibility' => 'required|in:public,private,unlisted',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'music_ids' => 'array',
+            'music_ids.*' => 'exists:music,id',
+            'is_featured' => 'boolean'
+        ]);
+
+        $validated['is_featured'] = $request->boolean('is_featured');
+
+        // Handle cover image upload
+        if ($request->hasFile('cover_image')) {
+            // Delete old cover image if exists
+            if ($playlist->cover_image) {
+                Storage::disk('public')->delete($playlist->cover_image);
+            }
+            $validated['cover_image'] = $request->file('cover_image')->store('playlists', 'public');
+        }
+
+        // Update slug if title changed
+        if ($validated['title'] !== $playlist->title) {
+            $validated['slug'] = Str::slug($validated['title']);
+            $originalSlug = $validated['slug'];
+            $counter = 1;
+            while (Playlist::where('slug', $validated['slug'])->where('id', '!=', $playlist->id)->exists()) {
+                $validated['slug'] = $originalSlug . '-' . $counter++;
+            }
+        }
+
+        $playlist->update($validated);
+
+        // Update music associations
+        if (isset($validated['music_ids'])) {
+            $musicData = [];
+            foreach ($validated['music_ids'] as $index => $musicId) {
+                $musicData[$musicId] = ['order_in_playlist' => $index + 1];
+            }
+            $playlist->music()->sync($musicData);
+        } else {
+            $playlist->music()->detach();
+        }
+
         return redirect()->route('admin.playlists.index')
                          ->with('success', 'Playlist updated successfully.');
     }
@@ -121,17 +223,22 @@ class PlaylistController extends Controller
     /**
      * Remove the specified playlist from storage.
      * 
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Playlist $playlist)
     {
-        // TODO: Implement playlist deletion
-        // - Soft delete playlist to preserve user references
-        // - Remove track associations
-        // - Log the deletion for audit purposes
-        // - Redirect with success message
+        // Delete cover image if exists
+        if ($playlist->cover_image) {
+            Storage::disk('public')->delete($playlist->cover_image);
+        }
+
+        // Detach all music relationships
+        $playlist->music()->detach();
         
+        // Delete the playlist
+        $playlist->delete();
+
         return redirect()->route('admin.playlists.index')
                          ->with('success', 'Playlist deleted successfully.');
     }
@@ -139,49 +246,47 @@ class PlaylistController extends Controller
     /**
      * Feature a playlist (make it appear in featured sections).
      * 
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function feature($id)
+    public function feature(Playlist $playlist)
     {
-        // TODO: Implement playlist featuring
-        // - Update playlist to featured status
-        // - Display in featured playlist sections
-        // - Send notification to playlist creator
-        
+        $playlist->update(['is_featured' => true]);
+
         return redirect()->back()->with('success', 'Playlist featured successfully.');
     }
 
     /**
      * Unfeature a playlist.
      * 
-     * @param  int  $id
+     * @param  Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function unfeature($id)
+    public function unfeature(Playlist $playlist)
     {
-        // TODO: Implement playlist unfeaturing
-        // - Remove featured status from playlist
-        // - Remove from featured sections
-        
+        $playlist->update(['is_featured' => false]);
+
         return redirect()->back()->with('success', 'Playlist unfeatured successfully.');
     }
 
     /**
      * Moderate playlist content (approve/reject).
      * 
-     * @param  int  $id
+     * @param  Request  $request
+     * @param  Playlist  $playlist
      * @param  string  $action
      * @return \Illuminate\Http\Response
      */
-    public function moderate($id, $action)
+    public function moderate(Request $request, Playlist $playlist, $action)
     {
-        // TODO: Implement playlist moderation
-        // - Approve or reject user-created playlists
-        // - Check for inappropriate content or naming
-        // - Send moderation result notification to creator
-        
-        $message = $action === 'approve' ? 'approved' : 'rejected';
+        if ($action === 'approve') {
+            $playlist->update(['visibility' => 'public']);
+            $message = 'approved';
+        } else {
+            $playlist->update(['visibility' => 'private']);
+            $message = 'rejected';
+        }
+
         return redirect()->back()->with('success', "Playlist {$message} successfully.");
     }
 
@@ -193,11 +298,47 @@ class PlaylistController extends Controller
      */
     public function bulkAction(Request $request)
     {
-        // TODO: Implement bulk actions
-        // - Support bulk delete, feature, moderate operations
-        // - Validate selected playlist IDs
-        // - Process action on all selected items
-        
-        return redirect()->back()->with('success', 'Bulk action completed successfully.');
+        $request->validate([
+            'action' => 'required|in:delete,feature,unfeature,make_public,make_private',
+            'playlist_ids' => 'required|array',
+            'playlist_ids.*' => 'exists:playlists,id'
+        ]);
+
+        $playlists = Playlist::whereIn('id', $request->playlist_ids);
+
+        switch ($request->action) {
+            case 'delete':
+                foreach ($playlists->get() as $playlist) {
+                    if ($playlist->cover_image) {
+                        Storage::disk('public')->delete($playlist->cover_image);
+                    }
+                    $playlist->music()->detach();
+                }
+                $playlists->delete();
+                $message = 'Playlists deleted successfully.';
+                break;
+            
+            case 'feature':
+                $playlists->update(['is_featured' => true]);
+                $message = 'Playlists featured successfully.';
+                break;
+                
+            case 'unfeature':
+                $playlists->update(['is_featured' => false]);
+                $message = 'Playlists unfeatured successfully.';
+                break;
+                
+            case 'make_public':
+                $playlists->update(['visibility' => 'public']);
+                $message = 'Playlists made public successfully.';
+                break;
+                
+            case 'make_private':
+                $playlists->update(['visibility' => 'private']);
+                $message = 'Playlists made private successfully.';
+                break;
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 }
