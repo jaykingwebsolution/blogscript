@@ -191,7 +191,9 @@
                                 <!-- Duration -->
                                 @if($music->duration)
                                 <div class="flex-shrink-0">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $music->duration && is_numeric($music->duration) ? gmdate('i:s', (int)$music->duration) : '0:00' }}</span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                                        <x-duration :seconds="$music->duration" />
+                                    </span>
                                 </div>
                                 @endif
                                 
