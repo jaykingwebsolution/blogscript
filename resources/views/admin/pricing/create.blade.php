@@ -74,7 +74,7 @@
                     <!-- Active Status -->
                     <div class="flex items-center">
                         <label class="flex items-center">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
+                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') == '1' ? 'checked' : '' }}
                                    class="w-4 h-4 text-spotify-green bg-spotify-black border-spotify-light-gray rounded focus:ring-spotify-green">
                             <span class="ml-2 text-sm text-white">Plan is active</span>
                         </label>
