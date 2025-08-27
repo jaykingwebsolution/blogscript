@@ -132,35 +132,7 @@
                             </div>
                         </div>
 
-                        <!-- Distribution -->
-                        <div class="pt-8">
-                            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Distribution</h3>
-                            <div class="mt-3 space-y-1">
-                                <a href="{{ route('dashboard.artist.submit-song') }}" 
-                                   class="sidebar-link {{ request()->routeIs('dashboard.artist.submit-song*') ? 'active' : '' }}">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Distribution
-                                </a>
-                                
-                                <a href="{{ route('dashboard.artist.submit-trending-song') }}" 
-                                   class="sidebar-link {{ request()->routeIs('dashboard.artist.submit-trending*') ? 'active' : '' }}">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-                                    </svg>
-                                    Submit Trending
-                                </a>
-                                
-                                <a href="{{ route('dashboard.artist.submit-trending-mixtape') }}" 
-                                   class="sidebar-link {{ request()->routeIs('dashboard.artist.submit-trending-mixtape*') ? 'active' : '' }}">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Submit Mixtape
-                                </a>
-                            </div>
-                        </div>
+
 
                         <!-- Earnings & Analytics -->
                         <div class="pt-8">

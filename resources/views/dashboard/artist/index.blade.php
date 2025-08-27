@@ -18,13 +18,6 @@
                 </svg>
                 Upload Music
             </a>
-            <a href="{{ route('distribution.index') }}" 
-               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full font-medium transition-colors flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                </svg>
-                Music Distribution
-            </a>
         </div>
     </div>
 
@@ -77,7 +70,7 @@
     </div>
 
     <!-- Quick Actions Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Upload Music -->
         <div class="bg-gradient-to-br from-purple-900/50 to-purple-700/50 rounded-xl p-8 border border-purple-700/50">
             <div class="text-center">
@@ -94,21 +87,6 @@
             </div>
         </div>
 
-        <!-- Music Distribution -->
-        <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
-            <div class="text-center">
-                <div class="bg-green-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold mb-2">Music Distribution</h3>
-                <p class="text-gray-300 text-sm mb-6">Get your music on Spotify, Apple Music, and other major platforms worldwide.</p>
-                <a href="{{ route('distribution.index') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
-                    Start Distribution
-                </a>
-            </div>
-        </div>
 
         <!-- Submit Trending Songs -->
         <div class="bg-gradient-to-br from-blue-900/50 to-blue-700/50 rounded-xl p-8 border border-blue-700/50">
@@ -128,7 +106,7 @@
     </div>
 
     <!-- Recent Activity & Performance -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 gap-8">
         <!-- Recent Music -->
         <div class="bg-gray-800 rounded-xl p-6">
             <div class="flex items-center justify-between mb-6">
@@ -178,28 +156,7 @@
             @endforelse
         </div>
 
-        <!-- Music Distribution -->
-        <div class="bg-gray-800 rounded-xl p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-white">Music Distribution</h2>
-                <a href="{{ route('distribution.index') }}" class="text-purple-400 hover:text-purple-300 text-sm font-medium">
-                    Go to Distribution
-                </a>
-            </div>
 
-            <div class="text-center py-8">
-                <div class="bg-green-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Get Your Music Everywhere</h3>
-                <p class="text-gray-400 mb-6">Distribute your music to Spotify, Apple Music, YouTube Music, and 150+ other platforms worldwide.</p>
-                <a href="{{ route('distribution.index') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
-                    Start Distribution
-                </a>
-            </div>
-        </div>
     </div>
 
     <!-- Trending Requests -->
