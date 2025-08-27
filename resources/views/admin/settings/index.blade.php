@@ -1,194 +1,176 @@
-@extends('layouts.app')
+@extends('admin.layout')
 
 @section('title', 'Site Settings - Admin Panel')
+@section('header', 'Site Settings')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Site Settings</h1>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage your site's SEO, content, and appearance settings</p>
-                </div>
-                <div class="flex space-x-3">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        Back to Dashboard
-                    </a>
-                </div>
-            </div>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-start">
+        <div>
+            <h2 class="text-3xl font-bold text-white mb-2">Site Settings</h2>
+            <p class="text-spotify-light-gray">Manage your site's SEO, logo, and appearance settings</p>
         </div>
+    </div>
 
-        @if(session('success'))
-            <div class="mb-6 bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded-md">
-                {{ session('success') }}
-            </div>
-        @endif
+    @if(session('success'))
+        <div class="bg-spotify-green bg-opacity-20 border border-spotify-green text-spotify-green-light px-6 py-4 rounded-lg flex items-center">
+            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            {{ session('success') }}
+        </div>
+    @endif
 
-        @if($errors->any())
-            <div class="mb-6 bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-md">
-                <ul class="list-disc list-inside">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    @if($errors->any())
+        <div class="bg-red-900 bg-opacity-20 border border-red-500 text-red-400 px-6 py-4 rounded-lg">
+            <ul class="list-disc list-inside">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
             <!-- Basic Site Information -->
-            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Basic Site Information</h3>
+            <div class="bg-spotify-gray rounded-lg border border-spotify-dark-gray">
+                <div class="px-6 py-4 border-b border-spotify-dark-gray">
+                    <h3 class="text-lg leading-6 font-medium text-white">Basic Site Information</h3>
                 </div>
                 <div class="px-6 py-4 space-y-6">
                     <div>
-                        <label for="site_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Site Title</label>
+                        <label for="site_title" class="block text-sm font-medium text-white">Site Title</label>
                         <input type="text" name="site_title" id="site_title" value="{{ old('site_title', $settings['site_title'] ?? '') }}" 
-                               class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500" required>
+                               class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green" required>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="site_logo" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Site Logo</label>
+                            <label for="site_logo" class="block text-sm font-medium text-white">Site Logo</label>
                             @if(isset($settings['site_logo']) && $settings['site_logo'])
                                 <div class="mt-2 mb-4">
                                     <img src="{{ asset('storage/' . $settings['site_logo']) }}" alt="Current Logo" class="h-16 w-auto">
-                                    <button type="button" onclick="removeFile('logo')" class="mt-2 text-sm text-red-600 hover:text-red-800">Remove Logo</button>
+                                    <button type="button" onclick="removeFile('logo')" class="mt-2 text-sm text-red-400 hover:text-red-300">Remove Logo</button>
                                 </div>
                             @endif
                             <input type="file" name="site_logo" id="site_logo" accept="image/*" 
-                                   class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Max 2MB, recommended size: 200x50px</p>
+                                   class="mt-1 block w-full text-sm text-spotify-light-gray file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-spotify-green file:text-white hover:file:bg-spotify-green-light">
+                            <p class="mt-1 text-xs text-spotify-light-gray">Max 2MB, recommended size: 200x50px</p>
                         </div>
 
                         <div>
-                            <label for="site_favicon" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Favicon</label>
+                            <label for="site_favicon" class="block text-sm font-medium text-white">Favicon</label>
                             @if(isset($settings['site_favicon']) && $settings['site_favicon'])
                                 <div class="mt-2 mb-4">
                                     <img src="{{ asset('storage/' . $settings['site_favicon']) }}" alt="Current Favicon" class="h-8 w-8">
-                                    <button type="button" onclick="removeFile('favicon')" class="mt-2 text-sm text-red-600 hover:text-red-800">Remove Favicon</button>
+                                    <button type="button" onclick="removeFile('favicon')" class="mt-2 text-sm text-red-400 hover:text-red-300">Remove Favicon</button>
                                 </div>
                             @endif
                             <input type="file" name="site_favicon" id="site_favicon" accept="image/*" 
-                                   class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Max 512KB, recommended size: 32x32px or 64x64px</p>
+                                   class="mt-1 block w-full text-sm text-spotify-light-gray file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-spotify-green file:text-white hover:file:bg-spotify-green-light">
+                            <p class="mt-1 text-xs text-spotify-light-gray">Max 512KB, recommended size: 32x32px or 64x64px</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- SEO Settings -->
-            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">SEO Settings</h3>
+            <div class="bg-spotify-gray rounded-lg border border-spotify-dark-gray">
+                <div class="px-6 py-4 border-b border-spotify-dark-gray">
+                    <h3 class="text-lg leading-6 font-medium text-white">SEO Settings</h3>
                 </div>
                 <div class="px-6 py-4 space-y-6">
                     <div class="flex items-center">
                         <input type="checkbox" name="seo_enabled" id="seo_enabled" 
                                {{ (old('seo_enabled', $settings['seo_enabled'] ?? false)) ? 'checked' : '' }}
-                               class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                        <label for="seo_enabled" class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Enable SEO optimization</label>
+                               class="h-4 w-4 text-spotify-green focus:ring-spotify-green border-spotify-gray rounded">
+                        <label for="seo_enabled" class="ml-3 text-sm font-medium text-white">Enable SEO optimization</label>
                     </div>
 
                     <div>
-                        <label for="site_meta_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Description</label>
+                        <label for="site_meta_description" class="block text-sm font-medium text-white">Meta Description</label>
                         <textarea name="site_meta_description" id="site_meta_description" rows="3" maxlength="160"
-                                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">{{ old('site_meta_description', $settings['site_meta_description'] ?? '') }}</textarea>
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Max 160 characters for optimal SEO</p>
+                                  class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">{{ old('site_meta_description', $settings['site_meta_description'] ?? '') }}</textarea>
+                        <p class="mt-1 text-xs text-spotify-light-gray">Max 160 characters for optimal SEO</p>
                     </div>
 
                     <div>
-                        <label for="site_keywords" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Keywords</label>
+                        <label for="site_keywords" class="block text-sm font-medium text-white">Meta Keywords</label>
                         <input type="text" name="site_keywords" id="site_keywords" value="{{ old('site_keywords', $settings['site_keywords'] ?? '') }}"
-                               class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Separate keywords with commas</p>
+                               class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
+                        <p class="mt-1 text-xs text-spotify-light-gray">Separate keywords with commas</p>
                     </div>
                 </div>
             </div>
 
             <!-- Social Media Links -->
-            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Social Media Links</h3>
+            <div class="bg-spotify-gray rounded-lg border border-spotify-dark-gray">
+                <div class="px-6 py-4 border-b border-spotify-dark-gray">
+                    <h3 class="text-lg leading-6 font-medium text-white">Social Media Links</h3>
                 </div>
                 <div class="px-6 py-4 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="social_facebook" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Facebook URL</label>
+                            <label for="social_facebook" class="block text-sm font-medium text-white">Facebook URL</label>
                             <input type="url" name="social_facebook" id="social_facebook" value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}"
-                                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                                   class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
                         </div>
                         
                         <div>
-                            <label for="social_twitter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Twitter URL</label>
+                            <label for="social_twitter" class="block text-sm font-medium text-white">Twitter URL</label>
                             <input type="url" name="social_twitter" id="social_twitter" value="{{ old('social_twitter', $settings['social_twitter'] ?? '') }}"
-                                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                                   class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
                         </div>
                         
                         <div>
-                            <label for="social_instagram" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Instagram URL</label>
+                            <label for="social_instagram" class="block text-sm font-medium text-white">Instagram URL</label>
                             <input type="url" name="social_instagram" id="social_instagram" value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}"
-                                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                                   class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
                         </div>
                         
                         <div>
-                            <label for="social_youtube" class="block text-sm font-medium text-gray-700 dark:text-gray-300">YouTube URL</label>
+                            <label for="social_youtube" class="block text-sm font-medium text-white">YouTube URL</label>
                             <input type="url" name="social_youtube" id="social_youtube" value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}"
-                                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                                   class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Page Content -->
-            <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Page Content</h3>
+            <div class="bg-spotify-gray rounded-lg border border-spotify-dark-gray">
+                <div class="px-6 py-4 border-b border-spotify-dark-gray">
+                    <h3 class="text-lg leading-6 font-medium text-white">Basic Page Content</h3>
+                    <p class="text-sm text-spotify-light-gray mt-1">Manage About and Contact page content. Legal pages are managed in <a href="{{ route('admin.pages.index') }}" class="text-spotify-green hover:text-spotify-green-light underline">DMCA / Policy Pages</a> section.</p>
                 </div>
                 <div class="px-6 py-4 space-y-6">
                     <div>
-                        <label for="about_content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">About Page Content</label>
+                        <label for="about_content" class="block text-sm font-medium text-white mb-2">About Page Content</label>
                         <textarea name="about_content" id="about_content" rows="8" 
-                                  class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">{{ old('about_content', $settings['about_content'] ?? '') }}</textarea>
+                                  class="w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">{{ old('about_content', $settings['about_content'] ?? '') }}</textarea>
                     </div>
 
                     <div>
-                        <label for="contact_content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Contact Page Content</label>
+                        <label for="contact_content" class="block text-sm font-medium text-white mb-2">Contact Page Content</label>
                         <textarea name="contact_content" id="contact_content" rows="6" 
-                                  class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">{{ old('contact_content', $settings['contact_content'] ?? '') }}</textarea>
+                                  class="w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">{{ old('contact_content', $settings['contact_content'] ?? '') }}</textarea>
                     </div>
 
                     <div>
-                        <label for="privacy_policy_content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Privacy Policy Content</label>
-                        <textarea name="privacy_policy_content" id="privacy_policy_content" rows="8" 
-                                  class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">{{ old('privacy_policy_content', $settings['privacy_policy_content'] ?? '') }}</textarea>
-                    </div>
-
-                    <div>
-                        <label for="dmca_policy_content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">DMCA Policy Content</label>
-                        <textarea name="dmca_policy_content" id="dmca_policy_content" rows="8" 
-                                  class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">{{ old('dmca_policy_content', $settings['dmca_policy_content'] ?? '') }}</textarea>
-                    </div>
-
-                    <div>
-                        <label for="footer_copyright" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Footer Copyright Text</label>
+                        <label for="footer_copyright" class="block text-sm font-medium text-white">Footer Copyright Text</label>
                         <input type="text" name="footer_copyright" id="footer_copyright" value="{{ old('footer_copyright', $settings['footer_copyright'] ?? '') }}"
-                               class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                               class="mt-1 block w-full bg-spotify-dark-gray border-spotify-gray text-white rounded-md shadow-sm focus:ring-spotify-green focus:border-spotify-green">
                     </div>
                 </div>
             </div>
 
             <!-- Save Button -->
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                <button type="submit" class="inline-flex items-center px-6 py-3 bg-spotify-green hover:bg-spotify-green-light text-white text-base font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-spotify-green transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
