@@ -167,7 +167,7 @@
                     </div>
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-2">{{ $playlist->name }}</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{{ $playlist->description ?? 'Personal playlist' }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $playlist->tracks->count() }} songs</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $playlist->music->count() }} songs</p>
                 </div>
                 @endforeach
             </div>

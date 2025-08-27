@@ -70,13 +70,7 @@
                             </form>
 
                             <!-- Add to Playlist Button -->
-                            <button onclick="showPlaylistModal()" 
-                                    class="flex items-center space-x-2 px-4 py-2 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                </svg>
-                                <span>Add to Playlist</span>
-                            </button>
+                            @include('components.add-to-playlist-button', ['musicId' => $music->id])
 
                             <!-- Share Button -->
                             <button onclick="shareMusic()" 
@@ -185,86 +179,10 @@
 
 <!-- Add to Playlist Modal -->
 @auth
-<div id="playlist-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Add to Playlist</h3>
-            
-            <div class="max-h-60 overflow-y-auto space-y-2">
-                @if(auth()->user()->playlists->count() > 0)
-                    @foreach(auth()->user()->playlists as $playlist)
-                        <button onclick="addToPlaylist({{ $playlist->id }})" 
-                                class="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors flex items-center space-x-3">
-                            <img src="{{ $playlist->cover_image_url }}" 
-                                 alt="{{ $playlist->title }}" 
-                                 class="w-10 h-10 rounded">
-                            <div>
-                                <div class="font-medium text-gray-900">{{ $playlist->title }}</div>
-                                <div class="text-sm text-gray-500">{{ $playlist->music_count }} songs</div>
-                            </div>
-                        </button>
-                    @endforeach
-                @else
-                    <div class="text-center py-4">
-                        <p class="text-gray-500 mb-4">You don't have any playlists yet.</p>
-                        <a href="{{ route('playlists.create') }}" 
-                           class="bg-spotify-green text-white px-4 py-2 rounded-lg hover:bg-green-600">
-                            Create Playlist
-                        </a>
-                    </div>
-                @endif
-            </div>
-            
-            <div class="flex justify-end space-x-3 mt-6">
-                <button onclick="hidePlaylistModal()" 
-                        class="px-4 py-2 text-gray-500 hover:text-gray-700">
-                    Cancel
-                </button>
-                <a href="{{ route('playlists.create') }}" 
-                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    New Playlist
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+@include('components.add-to-playlist-modal', ['musicId' => $music->id])
 @endauth
 
 <script>
-function showPlaylistModal() {
-    document.getElementById('playlist-modal').classList.remove('hidden');
-}
-
-function hidePlaylistModal() {
-    document.getElementById('playlist-modal').classList.add('hidden');
-}
-
-function addToPlaylist(playlistId) {
-    fetch(`/playlists/${playlistId}/add-music`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            music_id: {{ $music->id }}
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message);
-            hidePlaylistModal();
-        } else {
-            alert(data.message || 'Failed to add to playlist');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to add to playlist');
-    });
-}
-
 function shareMusic() {
     if (navigator.share) {
         navigator.share({

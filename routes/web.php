@@ -214,6 +214,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/playlists/{playlist}/music/{music}', [PlaylistController::class, 'removeMusic'])->name('playlists.remove-music');
     Route::put('/playlists/{playlist}/order', [PlaylistController::class, 'updateMusicOrder'])->name('playlists.update-order');
     
+    // AJAX routes for playlist management
+    Route::post('/playlists/create-ajax', [PlaylistController::class, 'createPlaylistAjax'])->name('playlists.create-ajax');
+    Route::get('/playlists/user-playlists', [PlaylistController::class, 'getUserPlaylists'])->name('playlists.user-playlists');
+    
     Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('dashboard.profile');
     Route::put('/dashboard/profile', [ProfileController::class, 'update'])->name('dashboard.profile.update');
     Route::put('/dashboard/password', [ProfileController::class, 'updatePassword'])->name('dashboard.password.update');
