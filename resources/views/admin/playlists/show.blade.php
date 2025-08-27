@@ -97,7 +97,24 @@
                                     <p class="text-xs text-spotify-light-gray">Tracks</p>
                                 </div>
                                 <div class="text-center p-3 bg-spotify-black rounded-lg">
-                                    <p class="text-2xl font-bold text-white">{{ $playlist->formatted_duration }}</p>
+                                    <p class="text-2xl font-bold text-white">
+                                        @php
+                                            $totalSeconds = $playlist->music->sum('duration');
+                                            $hours = floor($totalSeconds / 3600);
+                                            $minutes = floor(($totalSeconds % 3600) / 60);
+                                            $seconds = $totalSeconds % 60;
+                                            $formatted = '';
+                                            if ($hours > 0) {
+                                                $formatted .= $hours . ' hr ';
+                                            }
+                                            if ($minutes > 0 || $hours > 0) {
+                                                $formatted .= $minutes . ' min';
+                                            } else {
+                                                $formatted .= $seconds . ' sec';
+                                            }
+                                        @endphp
+                                        {{ $formatted }}
+                                    </p>
                                     <p class="text-xs text-spotify-light-gray">Duration</p>
                                 </div>
                             </div>
