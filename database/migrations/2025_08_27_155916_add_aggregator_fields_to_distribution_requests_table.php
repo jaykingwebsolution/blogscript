@@ -16,15 +16,9 @@ return new class extends Migration
         }
 
         Schema::table('distribution_requests', function (Blueprint $table) {
-            if (!Schema::hasColumn('distribution_requests', 'aggregator_provider')) {
-                $table->string('aggregator_provider')->nullable()->after('dsp_delivery_status');
-            }
-            if (!Schema::hasColumn('distribution_requests', 'aggregator_release_id')) {
-                $table->string('aggregator_release_id')->nullable()->after('aggregator_provider');
-            }
-            if (!Schema::hasColumn('distribution_requests', 'aggregator_response')) {
-                $table->json('aggregator_response')->nullable()->after('aggregator_release_id');
-            }
+            $table->string('aggregator_provider')->nullable()->after('dsp_delivery_status');
+            $table->string('aggregator_release_id')->nullable()->after('aggregator_provider');
+            $table->json('aggregator_response')->nullable()->after('aggregator_release_id');
         });
     }
 
