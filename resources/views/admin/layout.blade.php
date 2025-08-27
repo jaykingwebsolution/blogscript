@@ -197,6 +197,30 @@
                     </a>
                 </div>
 
+                <!-- Media Management Section -->
+                <div class="pt-4">
+                    <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Media Management</h3>
+                    <a href="{{ route('admin.media.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.media.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Media & Uploads
+                    </a>
+                </div>
+
+                <!-- Distribution Management Section -->
+                <div class="pt-4">
+                    <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Distribution Management</h3>
+                    <a href="{{ route('admin.distribution.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.distribution.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                        </svg>
+                        Distribution Requests
+                    </a>
+                </div>
+
                 <!-- Playlists Management Section -->
                 <div class="pt-4">
                     <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Playlists Management</h3>
@@ -243,6 +267,17 @@
                         </svg>
                         Send Notification
                     </a>
+                    <a href="{{ route('admin.notifications.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.notifications.index') || request()->routeIs('admin.notifications.edit') ? 'active' : 'text-spotify-light-gray' }}">
+                    <a href="{{ route('admin.notifications.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.notifications.index') || request()->routeIs('admin.notifications.edit') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 3h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z"/>
+                        </svg>
+                        Manage Notifications
+                    </a>
+                        Manage Notifications
+                    </a>
                 </div>
 
                 <!-- Verification & Requests Section -->
@@ -260,6 +295,13 @@
                 <!-- Financial Management Section -->
                 <div class="pt-4">
                     <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Financial Management</h3>
+                    <a href="{{ route('admin.plans.index') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.plans.*') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        Subscription Plans
+                    </a>
                     <a href="{{ route('admin.pricing.index') }}" 
                        class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.pricing.*') ? 'active' : 'text-spotify-light-gray' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
