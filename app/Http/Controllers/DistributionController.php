@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DistributionRequest;
 use App\Models\DistributionPricing;
 use App\Models\DistributionPayout;
+use App\Models\DistributionEarning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
