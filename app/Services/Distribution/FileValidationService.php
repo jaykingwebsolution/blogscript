@@ -71,16 +71,23 @@ class FileValidationService
             $tempPath = $file->store('temp/audio');
             $fullPath = Storage::path($tempPath);
 
-            // Analyze audio file with getID3
-            $getID3 = new getID3;
-            $fileInfo = $getID3->analyze($fullPath);
+            try {
+                // Analyze audio file with getID3
+                $getID3 = new getID3;
+                $fileInfo = $getID3->analyze($fullPath);
 
-            // Clean up temp file
-            Storage::delete($tempPath);
+                if (!isset($fileInfo['audio'])) {
+                    $result['errors'][] = 'Invalid audio file or corrupted';
+                    return $result;
+                }
 
-            if (!isset($fileInfo['audio'])) {
-                $result['errors'][] = 'Invalid audio file or corrupted';
-                return $result;
+                // ... (rest of the analysis and validation code)
+
+            } finally {
+                // Clean up temp file
+                if (isset($tempPath)) {
+                    Storage::delete($tempPath);
+                }
             }
 
             $audio = $fileInfo['audio'];
