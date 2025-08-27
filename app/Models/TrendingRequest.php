@@ -11,6 +11,7 @@ class TrendingRequest extends Model
 
     protected $fillable = [
         'user_id',
+        'music_id',
         'type', // 'week', 'month', 'all-time'
         'status',
         'message',
@@ -28,6 +29,11 @@ class TrendingRequest extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function music()
+    {
+        return $this->belongsTo(Music::class);
     }
 
     public function reviewer()

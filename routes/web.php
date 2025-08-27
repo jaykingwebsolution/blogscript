@@ -109,8 +109,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/artist', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'index'])->name('dashboard.artist');
     Route::get('/dashboard/record-label', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'index'])->name('dashboard.record-label');
     
+    // Listener Dashboard Routes
+    Route::prefix('dashboard/listener')->name('dashboard.listener.')->middleware(['auth', 'role:listener'])->group(function () {
+        Route::get('/browse', [ListenerDashboardController::class, 'browse'])->name('browse');
+        Route::get('/trending', [ListenerDashboardController::class, 'trending'])->name('trending');
+        Route::get('/search', [ListenerDashboardController::class, 'search'])->name('search');
+        Route::get('/history', [ListenerDashboardController::class, 'history'])->name('history');
+    });
+    
     // Artist Dashboard Routes
-    Route::prefix('dashboard/artist')->name('dashboard.artist.')->middleware('auth')->group(function () {
+    Route::prefix('dashboard/artist')->name('dashboard.artist.')->middleware(['auth', 'role:artist'])->group(function () {
+        Route::get('/analytics', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'analytics'])->name('analytics');
+        Route::get('/upload-music', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showUploadMusic'])->name('upload-music');
+        Route::post('/upload-music', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'uploadMusic'])->name('upload-music.store');
+        Route::get('/my-songs', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'mySongs'])->name('my-songs');
+        Route::get('/my-songs/{music}/edit', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'editSong'])->name('my-songs.edit');
+        Route::put('/my-songs/{music}', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'updateSong'])->name('my-songs.update');
+        Route::delete('/my-songs/{music}', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'deleteSong'])->name('my-songs.delete');
+        Route::get('/earnings', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'earnings'])->name('earnings');
+        Route::get('/distribution-history', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'distributionHistory'])->name('distribution-history');
         Route::get('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitSong'])->name('submit-song');
         Route::post('/submit-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'submitSong'])->name('submit-song.store');
         Route::get('/submit-trending-song', [\App\Http\Controllers\Dashboard\ArtistDashboardController::class, 'showSubmitTrendingSong'])->name('submit-trending-song');
@@ -120,7 +137,7 @@ Route::middleware('auth')->group(function () {
     });
     
     // Record Label Dashboard Routes
-    Route::prefix('dashboard/record-label')->name('dashboard.record-label.')->middleware('auth')->group(function () {
+    Route::prefix('dashboard/record-label')->name('dashboard.record-label.')->middleware(['auth', 'role:record_label'])->group(function () {
         Route::get('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showSubmitSong'])->name('submit-song');
         Route::post('/submit-song', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'submitSong'])->name('submit-song.store');
         Route::get('/create-artist', [\App\Http\Controllers\Dashboard\LabelDashboardController::class, 'showCreateArtist'])->name('create-artist');

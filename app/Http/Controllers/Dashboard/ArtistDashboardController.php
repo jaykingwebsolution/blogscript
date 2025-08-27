@@ -37,7 +37,9 @@ class ArtistDashboardController extends Controller
             'distribution_requests' => $user->distributionRequests()->count(),
             'pending_distribution' => $user->distributionRequests()->where('status', 'pending')->count(),
             'trending_requests' => $user->trendingRequests()->count(),
-            'active_trending' => $user->trendingRequests()->where('status', 'approved')->count()
+            'active_trending' => $user->trendingRequests()->where('status', 'approved')->where('expires_at', '>', now())->count(),
+            'total_plays' => 0, // This would come from analytics table
+            'total_likes' => $user->createdMusic()->withCount('likes')->get()->sum('likes_count'),
         ];
 
         // Get recent activity
@@ -224,5 +226,225 @@ class ArtistDashboardController extends Controller
 
         return redirect()->route('dashboard.artist')
             ->with('success', 'Trending mixtape request submitted successfully!');
+    }
+
+    /**
+     * Show analytics page
+     */
+    public function analytics()
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist()) {
+            return redirect()->route('dashboard');
+        }
+
+        // Analytics data (would typically come from analytics tables)
+        $analytics = [
+            'plays_this_month' => 0,
+            'plays_total' => 0,
+            'likes_this_month' => 0,
+            'likes_total' => $user->createdMusic()->withCount('likes')->get()->sum('likes_count'),
+            'top_tracks' => $user->createdMusic()->withCount('likes')->orderBy('likes_count', 'desc')->take(5)->get(),
+            'recent_activity' => collect(), // Would come from activity log
+        ];
+
+        return view('dashboard.artist.analytics', compact('analytics'));
+    }
+
+    /**
+     * Show upload music form
+     */
+    public function showUploadMusic()
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist()) {
+            return redirect()->route('dashboard');
+        }
+
+        return view('dashboard.artist.upload-music');
+    }
+
+    /**
+     * Handle music upload
+     */
+    public function uploadMusic(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'genre' => 'required|string|max:100',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'audio_file' => 'required|file|mimes:mp3,wav|max:51200',
+            'release_date' => 'nullable|date',
+        ]);
+
+        // Handle file uploads
+        $coverPath = null;
+        $audioPath = null;
+
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('music/covers', 'public');
+        }
+
+        if ($request->hasFile('audio_file')) {
+            $audioPath = $request->file('audio_file')->store('music/audio', 'public');
+        }
+
+        // Create music entry
+        Music::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'genre' => $request->genre,
+            'cover_image' => $coverPath,
+            'audio_file' => $audioPath,
+            'release_date' => $request->release_date ?? now(),
+            'status' => 'pending',
+            'created_by' => Auth::id(),
+            'artist_name' => Auth::user()->artist_stage_name ?? Auth::user()->name,
+        ]);
+
+        return redirect()->route('dashboard.artist')
+            ->with('success', 'Music uploaded successfully! It will be reviewed by our team.');
+    }
+
+    /**
+     * Show my songs page
+     */
+    public function mySongs()
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist()) {
+            return redirect()->route('dashboard');
+        }
+
+        $songs = $user->createdMusic()
+            ->withCount('likes')
+            ->latest()
+            ->paginate(12);
+
+        return view('dashboard.artist.my-songs', compact('songs'));
+    }
+
+    /**
+     * Show edit song form
+     */
+    public function editSong(Music $music)
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist() || $music->created_by !== $user->id) {
+            abort(403);
+        }
+
+        return view('dashboard.artist.edit-song', compact('music'));
+    }
+
+    /**
+     * Update song
+     */
+    public function updateSong(Request $request, Music $music)
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist() || $music->created_by !== $user->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'genre' => 'required|string|max:100',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'release_date' => 'nullable|date',
+        ]);
+
+        $updateData = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'genre' => $request->genre,
+            'release_date' => $request->release_date,
+        ];
+
+        // Handle cover image update
+        if ($request->hasFile('cover_image')) {
+            // Delete old cover image
+            if ($music->cover_image) {
+                Storage::disk('public')->delete($music->cover_image);
+            }
+            $updateData['cover_image'] = $request->file('cover_image')->store('music/covers', 'public');
+        }
+
+        $music->update($updateData);
+
+        return redirect()->route('dashboard.artist.my-songs')
+            ->with('success', 'Song updated successfully!');
+    }
+
+    /**
+     * Delete song
+     */
+    public function deleteSong(Music $music)
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist() || $music->created_by !== $user->id) {
+            abort(403);
+        }
+
+        // Delete associated files
+        if ($music->cover_image) {
+            Storage::disk('public')->delete($music->cover_image);
+        }
+        if ($music->audio_file) {
+            Storage::disk('public')->delete($music->audio_file);
+        }
+
+        $music->delete();
+
+        return redirect()->route('dashboard.artist.my-songs')
+            ->with('success', 'Song deleted successfully!');
+    }
+
+    /**
+     * Show earnings page
+     */
+    public function earnings()
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist()) {
+            return redirect()->route('dashboard');
+        }
+
+        // Earnings data (would typically come from earnings tables)
+        $earnings = [
+            'total_earnings' => 0,
+            'this_month' => 0,
+            'pending_payments' => 0,
+            'recent_transactions' => collect(),
+        ];
+
+        return view('dashboard.artist.earnings', compact('earnings'));
+    }
+
+    /**
+     * Show distribution history
+     */
+    public function distributionHistory()
+    {
+        $user = Auth::user();
+
+        if (!$user->isArtist()) {
+            return redirect()->route('dashboard');
+        }
+
+        $distributions = $user->distributionRequests()
+            ->latest()
+            ->paginate(10);
+
+        return view('dashboard.artist.distribution-history', compact('distributions'));
     }
 }

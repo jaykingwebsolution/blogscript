@@ -1,205 +1,258 @@
-@extends('layouts.app')
+@extends('layouts.listener-dashboard')
 
-@section('title', 'My Music Dashboard')
-
-@section('content')
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, {{ Auth::user()->name }}!</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Here's what's happening in your music world</p>
+@section('dashboard-content')
+<div class="p-6 space-y-8">
+    <!-- Welcome Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-white mb-2">Good {{ $greeting }}, {{ auth()->user()->name }}!</h1>
+            <p class="text-gray-300">Welcome back to your music dashboard</p>
         </div>
+        <div class="mt-4 md:mt-0 flex space-x-3">
+            <a href="{{ route('playlists.create') }}" 
+               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full font-medium transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                </svg>
+                Create Playlist
+            </a>
+        </div>
+    </div>
 
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $stats['total_playlists'] }}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Total Playlists</p>
-                    </div>
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold">Playlists</h3>
+                    <p class="text-3xl font-bold">{{ $stats['total_playlists'] }}</p>
                 </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $stats['total_songs'] }}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Songs in Playlists</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $stats['public_playlists'] }}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Public Playlists</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $stats['hours_listened'] }}h</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Hours Listened</p>
-                    </div>
-                </div>
+                <svg class="w-8 h-8 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                </svg>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- My Playlists -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">My Playlists</h2>
-                        <a href="{{ route('playlists.my-playlists') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a>
+        <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold">Liked Songs</h3>
+                    <p class="text-3xl font-bold">{{ $stats['liked_songs_count'] ?? 0 }}</p>
+                </div>
+                <svg class="w-8 h-8 text-purple-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold">Following</h3>
+                    <p class="text-3xl font-bold">{{ $stats['following_count'] ?? 0 }}</p>
+                </div>
+                <svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-orange-600 to-orange-700 rounded-xl p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-semibold">Hours Listened</h3>
+                    <p class="text-3xl font-bold">{{ $stats['hours_listened'] ?? 0 }}</p>
+                </div>
+                <svg class="w-8 h-8 text-orange-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.736 6.979C9.208 6.193 9.696 6 10 6s.792.193 1.264.979l1.26 2.095a1.125 1.125 0 01-.659 1.614L10 11.342 8.135 10.688a1.125 1.125 0 01-.659-1.614l1.26-2.095z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recently Played & Recommendations Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recently Played -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white">Recently Played</h2>
+                <a href="{{ route('dashboard.listener.history') }}" class="text-green-400 hover:text-green-300 text-sm font-medium">
+                    View All
+                </a>
+            </div>
+
+            <div class="space-y-3">
+                @forelse($recentlyPlayed as $track)
+                <div class="flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
+                    <div class="w-12 h-12 bg-gray-600 rounded flex-shrink-0 flex items-center justify-center">
+                        @if($track->cover_image)
+                            <img src="{{ Storage::url($track->cover_image) }}" alt="{{ $track->title }}" class="w-full h-full object-cover rounded">
+                        @else
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                            </svg>
+                        @endif
+                    </div>
+                    <div class="ml-4 flex-1 min-w-0">
+                        <h4 class="text-white font-medium truncate">{{ $track->title }}</h4>
+                        <p class="text-gray-400 text-sm truncate">{{ $track->artists->first()->name ?? 'Unknown Artist' }}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                <div class="p-6">
-                    @forelse($playlists as $playlist)
-                    <div class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                        <div class="flex items-center">
-                            <img src="{{ $playlist->cover_image_url }}" 
-                                 alt="{{ $playlist->title }}" 
-                                 class="w-12 h-12 rounded-lg object-cover">
-                            <div class="ml-4">
-                                <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{ $playlist->title }}</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-400">{{ $playlist->music_count }} songs</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                {{ $playlist->visibility === 'public' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : 
-                                   ($playlist->visibility === 'private' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : 
-                                   'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400') }}">
-                                {{ ucfirst($playlist->visibility) }}
-                            </span>
-                            <a href="{{ route('playlists.show', $playlist) }}" class="text-blue-600 hover:text-blue-800 text-sm">Play</a>
-                        </div>
+                @empty
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                    </svg>
+                    <h3 class="text-gray-400 text-lg mb-2">No recent plays</h3>
+                    <p class="text-gray-500">Start listening to see your activity here</p>
+                    <a href="{{ route('dashboard.listener.browse') }}" class="inline-block mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition-colors">
+                        Browse Music
+                    </a>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Recommended for You -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white">Recommended for You</h2>
+                <a href="{{ route('dashboard.listener.browse') }}" class="text-green-400 hover:text-green-300 text-sm font-medium">
+                    View All
+                </a>
+            </div>
+
+            <div class="space-y-3">
+                @forelse($recommendations as $track)
+                <div class="flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
+                    <div class="w-12 h-12 bg-gray-600 rounded flex-shrink-0 flex items-center justify-center">
+                        @if($track->cover_image)
+                            <img src="{{ Storage::url($track->cover_image) }}" alt="{{ $track->title }}" class="w-full h-full object-cover rounded">
+                        @else
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                            </svg>
+                        @endif
                     </div>
-                    @empty
-                    <div class="text-center py-8">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                    <div class="ml-4 flex-1 min-w-0">
+                        <h4 class="text-white font-medium truncate">{{ $track->title }}</h4>
+                        <p class="text-gray-400 text-sm truncate">{{ $track->artists->first()->name ?? 'Unknown Artist' }}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="text-gray-400 hover:text-red-400">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                @empty
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h3 class="text-gray-400 text-lg mb-2">Discovering your taste</h3>
+                    <p class="text-gray-500">Like some songs to get personalized recommendations</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Your Playlists -->
+    <div>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white">Your Playlists</h2>
+            <a href="{{ route('playlists.my-playlists') }}" class="text-green-400 hover:text-green-300 text-sm font-medium">
+                View All
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @forelse($playlists as $playlist)
+            <div class="bg-gray-800 hover:bg-gray-700 rounded-lg p-4 transition-colors cursor-pointer">
+                <div class="aspect-square bg-gradient-to-br from-green-500 to-blue-600 rounded-lg mb-4 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-medium text-lg mb-1 truncate">{{ $playlist->name }}</h3>
+                <p class="text-gray-400 text-sm">{{ $playlist->music_count }} {{ Str::plural('song', $playlist->music_count) }}</p>
+                <div class="mt-2 flex items-center justify-between">
+                    <span class="text-xs text-gray-500 capitalize">{{ $playlist->visibility }}</span>
+                    <a href="{{ route('playlists.show', $playlist) }}" class="text-green-400 hover:text-green-300 text-sm">
+                        View
+                    </a>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full text-center py-12">
+                <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                </svg>
+                <h3 class="text-gray-400 text-lg mb-2">No playlists yet</h3>
+                <p class="text-gray-500">Create your first playlist to organize your favorite songs</p>
+                <a href="{{ route('playlists.create') }}" class="inline-block mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-medium transition-colors">
+                    Create Playlist
+                </a>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Trending Now -->
+    <div>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-white">Trending Now</h2>
+            <a href="{{ route('dashboard.listener.trending') }}" class="text-green-400 hover:text-green-300 text-sm font-medium">
+                View All
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            @forelse($trendingTracks->take(5) as $index => $track)
+            <div class="bg-gray-800 hover:bg-gray-700 rounded-lg p-4 transition-colors cursor-pointer">
+                <div class="relative aspect-square bg-gray-600 rounded-lg mb-3 flex items-center justify-center">
+                    @if($track->cover_image)
+                        <img src="{{ Storage::url($track->cover_image) }}" alt="{{ $track->title }}" class="w-full h-full object-cover rounded-lg">
+                    @else
+                        <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.367 4.367 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
                         </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No playlists yet</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating your first playlist.</p>
-                        <div class="mt-6">
-                            <a href="{{ route('playlists.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                Create Playlist
-                            </a>
-                        </div>
+                    @endif
+                    <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                        #{{ $index + 1 }}
                     </div>
-                    @endforelse
                 </div>
+                <h3 class="text-white font-medium text-sm truncate">{{ $track->title }}</h3>
+                <p class="text-gray-400 text-xs truncate">{{ $track->artists->first()->name ?? 'Unknown Artist' }}</p>
             </div>
-
-            <!-- Recent Activity -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
-                </div>
-                <div class="p-6">
-                    @forelse($recentActivity as $activity)
-                    <div class="flex items-center py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                                @if($activity['icon'] === 'music')
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
-                                </svg>
-                                @else
-                                <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
-                                </svg>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $activity['title'] }}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $activity['description'] }}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">{{ $activity['time']->diffForHumans() }}</p>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="text-center py-8">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">No recent activity</p>
-                    </div>
-                    @endforelse
-                </div>
+            @empty
+            <div class="col-span-full text-center py-12">
+                <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                </svg>
+                <h3 class="text-gray-400 text-lg mb-2">No trending tracks yet</h3>
+                <p class="text-gray-500">Check back later for the hottest tracks</p>
             </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="{{ route('playlists.create') }}" class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold">Create Playlist</h3>
-                        <p class="text-sm opacity-90">Start curating your music</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="{{ route('music.index') }}" class="bg-gradient-to-r from-green-500 to-teal-600 rounded-xl p-6 text-white hover:from-green-600 hover:to-teal-700 transition-all transform hover:scale-105">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
-                    </svg>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold">Explore Music</h3>
-                        <p class="text-sm opacity-90">Discover new tracks</p>
-                    </div>
-                </div>
-            </a>
-
-            <a href="{{ route('artists.index') }}" class="bg-gradient-to-r from-orange-500 to-red-600 rounded-xl p-6 text-white hover:from-orange-600 hover:to-red-700 transition-all transform hover:scale-105">
-                <div class="flex items-center">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-                    </svg>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold">Browse Artists</h3>
-                        <p class="text-sm opacity-90">Follow your favorites</p>
-                    </div>
-                </div>
-            </a>
+            @endforelse
         </div>
     </div>
 </div>

@@ -122,6 +122,11 @@ class Music extends Model
                     ->withTimestamps();
     }
 
+    public function trendingRequests()
+    {
+        return $this->hasMany(TrendingRequest::class, 'music_id');
+    }
+
     public function getLikesCountAttribute()
     {
         return $this->likes()->count();
