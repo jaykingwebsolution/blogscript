@@ -118,9 +118,15 @@ class WebhookController extends Controller
         }
 
         $payload = $request->getContent();
-        $expectedSignature = 'sha256=' . hash_hmac('sha256', $payload, $webhookSecret);
+        $computedHash = hash_hmac('sha256', $payload, $webhookSecret);
 
-        return hash_equals($expectedSignature, $signature);
+        // Accept signatures with or without 'sha256=' prefix
+        $normalizedSignature = $signature;
+        if (Str::startsWith($normalizedSignature, 'sha256=')) {
+            $normalizedSignature = substr($normalizedSignature, strlen('sha256='));
+        }
+
+        return hash_equals($computedHash, $normalizedSignature);
     }
 
     /**
