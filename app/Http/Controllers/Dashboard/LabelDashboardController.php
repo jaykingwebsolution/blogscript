@@ -9,7 +9,6 @@ use App\Models\Artist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Storage;
 
 class LabelDashboardController extends Controller
 {
@@ -198,40 +197,14 @@ class LabelDashboardController extends Controller
             'created_by' => Auth::id(),
         ]);
 
+        return redirect()->route('dashboard.record-label')
+            ->with('success', 'Music uploaded successfully! It will be reviewed by our team.');
+    }
+
     /**
      * Create new artist
      */
     public function createArtist(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'bio' => 'nullable|string|max:2000',
-            'genre' => 'required|string|max:100',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'social_links' => 'nullable|array',
-            'social_links.*' => 'nullable|url'
-        ]);
-
-        $profilePicture = null;
-        if ($request->hasFile('profile_picture')) {
-            $profilePicture = $request->file('profile_picture')->store('artists/profiles', 'public');
-        }
-
-        Artist::create([
-            'name' => $request->name,
-            'slug' => \Str::slug($request->name),
-            'bio' => $request->bio,
-            'genre' => $request->genre,
-            'profile_picture' => $profilePicture,
-            'social_links' => $request->social_links ?? [],
-            'created_by' => Auth::id(),
-            'status' => 'pending'
-        ]);
-
-        return redirect()->route('dashboard.record-label')
-            ->with('success', 'Artist created successfully! Pending admin approval.');
-    }
-}
     {
         $request->validate([
             'name' => 'required|string|max:255',
