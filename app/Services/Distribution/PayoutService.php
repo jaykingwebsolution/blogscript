@@ -22,7 +22,7 @@ class PayoutService
     public function processAutomaticPayouts(): int
     {
         $processedCount = 0;
-        $minimumThreshold = config('services.distribution.auto_payout_threshold', 100.00);
+        $minimumThreshold = config('distribution.auto_payout_threshold', 100.00);
 
         // Find users eligible for automatic payouts
         $eligibleUsers = $this->findEligibleUsers($minimumThreshold);
