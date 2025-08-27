@@ -110,9 +110,21 @@ class PlaylistController extends Controller
         // Generate unique slug
         $validated['slug'] = Str::slug($validated['title']);
         $originalSlug = $validated['slug'];
-        $counter = 1;
-        while (Playlist::where('slug', $validated['slug'])->exists()) {
-            $validated['slug'] = $originalSlug . '-' . $counter++;
+
+        // Fetch all slugs that match the base pattern
+        $allSimilarSlugs = Playlist::where('slug', 'LIKE', $originalSlug . '%')->pluck('slug')->toArray();
+
+        if (in_array($originalSlug, $allSimilarSlugs)) {
+            $max = 0;
+            foreach ($allSimilarSlugs as $slug) {
+                if (preg_match('/^' . preg_quote($originalSlug, '/') . '-(\d+)$/', $slug, $matches)) {
+                    $num = intval($matches[1]);
+                    if ($num > $max) {
+                        $max = $num;
+                    }
+                }
+            }
+            $validated['slug'] = $originalSlug . '-' . ($max + 1);
         }
 
         $playlist = Playlist::create($validated);
