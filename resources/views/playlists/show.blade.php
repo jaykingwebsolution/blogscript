@@ -227,7 +227,8 @@ function closeDeleteModal() {
 function removeSong(musicId) {
     if (!confirm('Remove this song from the playlist?')) return;
     
-    fetch(`/playlists/{{ $playlist->id }}/music/${musicId}`, {
+    const playlistId = document.querySelector('[data-playlist-id]').dataset.playlistId;
+    fetch(`/playlists/${playlistId}/music/${musicId}`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
