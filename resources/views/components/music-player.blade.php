@@ -176,6 +176,25 @@
 </div>
 
 <script>
+// Helper functions for track data extraction
+function extractTrackDataFromElement(element) {
+    return {
+        id: element.dataset.id,
+        title: element.dataset.title,
+        artist: element.dataset.artist,
+        cover: element.dataset.cover,
+        url: element.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+    };
+}
+
+function getAllTrackData(selector = '.play-track-btn') {
+    const tracks = [];
+    document.querySelectorAll(selector).forEach(btn => {
+        tracks.push(extractTrackDataFromElement(btn));
+    });
+    return tracks;
+}
+
 class MusicPlayer {
     constructor() {
         this.audio = document.getElementById('audio-element');
@@ -270,13 +289,7 @@ class MusicPlayer {
             if (e.target.matches('.play-track-btn') || e.target.closest('.play-track-btn')) {
                 e.preventDefault();
                 const btn = e.target.matches('.play-track-btn') ? e.target : e.target.closest('.play-track-btn');
-                const trackData = {
-                    id: btn.dataset.id,
-                    title: btn.dataset.title,
-                    artist: btn.dataset.artist,
-                    cover: btn.dataset.cover,
-                    url: btn.dataset.url || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-                };
+                const trackData = extractTrackDataFromElement(btn);
                 this.playTrack(trackData);
             }
         });

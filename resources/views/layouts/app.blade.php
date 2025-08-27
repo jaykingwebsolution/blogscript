@@ -47,7 +47,7 @@
     @stack('styles')
 </head>
 <body class="h-full bg-gray-50 dark:bg-spotify-black font-sans antialiased">
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden pb-20"><!-- Added pb-20 to account for music player -->
         @include('components.spotify-sidebar')
         
         <main class="flex-1 flex flex-col min-h-screen max-w-full overflow-hidden">

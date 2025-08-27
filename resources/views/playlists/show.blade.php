@@ -76,6 +76,22 @@
                         @auth
                         @if($playlist->user_id === Auth::id())
                         <div class="flex flex-wrap gap-2 mt-4">
+                            @if($playlist->music->count() > 0)
+                            <button onclick="playAllPlaylistSongs()" 
+                                    class="inline-flex items-center px-4 py-2 bg-spotify-green hover:bg-green-600 text-black text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                Play
+                            </button>
+                            <button onclick="shufflePlaylistSongs()" 
+                                    class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                                Shuffle
+                            </button>
+                            @endif
                             <a href="{{ route('playlists.edit', $playlist) }}" 
                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,6 +107,25 @@
                                 Delete
                             </button>
                         </div>
+                        @else
+                        @if($playlist->music->count() > 0)
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <button onclick="playAllPlaylistSongs()" 
+                                    class="inline-flex items-center px-4 py-2 bg-spotify-green hover:bg-green-600 text-black text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                Play
+                            </button>
+                            <button onclick="shufflePlaylistSongs()" 
+                                    class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                                Shuffle
+                            </button>
+                        </div>
+                        @endif
                         @endif
                         @endauth
                     </div>
@@ -107,11 +142,26 @@
             @if($playlist->music->count() > 0)
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     @foreach($playlist->music->sortBy('pivot.order_in_playlist') as $index => $music)
-                        <div class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <div class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group relative">
                             <div class="flex items-center space-x-4">
                                 <!-- Track Number -->
-                                <div class="flex-shrink-0 w-8 text-center">
+                                <div class="flex-shrink-0 w-8 text-center group-hover:opacity-0">
                                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $index + 1 }}</span>
+                                </div>
+                                
+                                <!-- Play Button (shown on hover) -->
+                                <div class="flex-shrink-0 w-8 text-center opacity-0 group-hover:opacity-100 absolute">
+                                    <button class="play-track-btn text-spotify-green hover:text-green-600"
+                                            data-id="{{ $music->id }}"
+                                            data-title="{{ $music->title }}"
+                                            data-artist="{{ $music->artist_name ?? ($music->artist->name ?? 'Unknown Artist') }}"
+                                            data-cover="{{ $music->cover_image ? asset('storage/' . $music->cover_image) : asset('images/default-music.svg') }}"
+                                            data-url="{{ $music->audio_url ?? ($music->audio_file ? asset('storage/' . $music->audio_file) : '') }}"
+                                            onclick="playSongFromPlaylist({{ $music->id }})">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </button>
                                 </div>
                                 
                                 <!-- Album Art -->
@@ -141,7 +191,9 @@
                                 <!-- Duration -->
                                 @if($music->duration)
                                 <div class="flex-shrink-0">
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ gmdate('i:s', $music->duration) }}</span>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                                        <x-duration :seconds="$music->duration" />
+                                    </span>
                                 </div>
                                 @endif
                                 
@@ -227,7 +279,7 @@ function closeDeleteModal() {
 function removeSong(musicId) {
     if (!confirm('Remove this song from the playlist?')) return;
     
-    const playlistId = document.querySelector('[data-playlist-id]').dataset.playlistId;
+    const playlistId = '{{ $playlist->id }}';
     fetch(`/playlists/${playlistId}/music/${musicId}`, {
         method: 'DELETE',
         headers: {
@@ -247,6 +299,40 @@ function removeSong(musicId) {
         console.error('Error:', error);
         alert('An error occurred');
     });
+}
+
+function playSongFromPlaylist(songId) {
+    const songElement = document.querySelector(`[data-id="${songId}"]`);
+    if (songElement && window.musicPlayer) {
+        const trackData = extractTrackDataFromElement(songElement);
+        window.musicPlayer.playTrack(trackData);
+    } else {
+        console.log('Playing song:', songId);
+    }
+}
+
+function playAllPlaylistSongs() {
+    const playlistSongs = getAllTrackData('.play-track-btn');
+    
+    if (playlistSongs.length > 0 && window.musicPlayer) {
+        window.musicPlayer.playTrack(playlistSongs[0]);
+        console.log('Playing playlist starting with:', playlistSongs[0].title);
+    }
+}
+
+function shufflePlaylistSongs() {
+    const playlistSongs = getAllTrackData('.play-track-btn');
+    
+    // Shuffle the array
+    for (let i = playlistSongs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [playlistSongs[i], playlistSongs[j]] = [playlistSongs[j], playlistSongs[i]];
+    }
+    
+    if (playlistSongs.length > 0 && window.musicPlayer) {
+        window.musicPlayer.playTrack(playlistSongs[0]);
+        console.log('Shuffle playing playlist starting with:', playlistSongs[0].title);
+    }
 }
 </script>
 @endif
