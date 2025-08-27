@@ -92,10 +92,9 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'artist_name' => 'required|string|max:255',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
-            'audio_file' => 'required_without:music_url|file|mimes:mp3,wav,ogg,m4a|max:51200', // 50MB max
+            'audio_file' => 'required_without:audio_url|file|mimes:mp3,wav,ogg,m4a|max:51200', // 50MB max
             'image_url' => 'nullable|url',
-            'music_url' => 'required_without:audio_file|url',
-            'download_url' => 'nullable|url',
+            'audio_url' => 'required_without:audio_file|url',
             'duration' => 'nullable|string|max:10',
             'genre' => 'nullable|string|max:100',
             'is_featured' => 'boolean',
@@ -114,12 +113,7 @@ class AdminController extends Controller
 
         if ($request->hasFile('audio_file')) {
             $audioPath = $request->file('audio_file')->store('music/audio', 'public');
-            $validated['music_url'] = Storage::url($audioPath);
-            
-            // Also set download URL to the same file if not provided
-            if (!$validated['download_url']) {
-                $validated['download_url'] = Storage::url($audioPath);
-            }
+            $validated['audio_url'] = Storage::url($audioPath);
         }
 
         // Ensure is_featured is false if not checked

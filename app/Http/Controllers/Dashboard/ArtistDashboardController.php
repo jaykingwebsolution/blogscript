@@ -281,15 +281,19 @@ class ArtistDashboardController extends Controller
         ]);
 
         // Handle file uploads
+        $imageUrl = null;
+        $audioUrl = null;
         $coverPath = null;
         $audioPath = null;
 
         if ($request->hasFile('cover_image')) {
             $coverPath = $request->file('cover_image')->store('music/covers', 'public');
+            $imageUrl = Storage::url($coverPath);
         }
 
         if ($request->hasFile('audio_file')) {
             $audioPath = $request->file('audio_file')->store('music/audio', 'public');
+            $audioUrl = Storage::url($audioPath);
         }
 
         // Create music entry
@@ -297,8 +301,8 @@ class ArtistDashboardController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'genre' => $request->genre,
-            'cover_image' => $coverPath,
-            'audio_file' => $audioPath,
+            'image_url' => $imageUrl,
+            'audio_url' => $audioUrl,
             'release_date' => $request->release_date ?? now(),
             'status' => 'pending',
             'created_by' => Auth::id(),

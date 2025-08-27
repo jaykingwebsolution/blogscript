@@ -142,6 +142,66 @@ class LabelDashboardController extends Controller
     }
 
     /**
+     * Show add music form (simplified upload without distribution)
+     */
+    public function showAddMusic()
+    {
+        $user = Auth::user();
+
+        if (!$user->isRecordLabel()) {
+            return redirect()->route('dashboard');
+        }
+
+        return view('dashboard.record-label.add-music');
+    }
+
+    /**
+     * Add music to platform (simplified upload without distribution)
+     */
+    public function addMusic(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'artist_name' => 'required|string|max:255',
+            'genre' => 'required|string|max:100',
+            'release_date' => 'required|date',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'audio_file' => 'required|file|mimes:mp3,wav|max:51200',
+            'description' => 'nullable|string|max:1000'
+        ]);
+
+        // Handle file uploads
+        $imageUrl = null;
+        $audioUrl = null;
+
+        if ($request->hasFile('cover_image')) {
+            $coverPath = $request->file('cover_image')->store('music/covers', 'public');
+            $imageUrl = Storage::url($coverPath);
+        }
+
+        if ($request->hasFile('audio_file')) {
+            $audioPath = $request->file('audio_file')->store('music/audio', 'public');
+            $audioUrl = Storage::url($audioPath);
+        }
+
+        // Create music entry
+        Music::create([
+            'title' => $request->title,
+            'artist_name' => $request->artist_name,
+            'genre' => $request->genre,
+            'description' => $request->description,
+            'image_url' => $imageUrl,
+            'audio_url' => $audioUrl,
+            'release_date' => $request->release_date,
+            'status' => 'pending',
+            'created_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('dashboard.record-label')
+            ->with('success', 'Music uploaded successfully! It will be reviewed by our team.');
+    }
+
+    /**
      * Create new artist
      */
     public function createArtist(Request $request)

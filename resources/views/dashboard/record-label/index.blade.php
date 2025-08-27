@@ -79,7 +79,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2">Add Music</h3>
                     <p class="text-gray-300 text-sm mb-6">Upload songs for your artists to our platform.</p>
-                    <a href="{{ route('dashboard.record-label.submit-song') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                    <a href="{{ route('dashboard.record-label.add-music') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
                         Add Music
                     </a>
                 </div>
