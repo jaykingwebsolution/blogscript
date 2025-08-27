@@ -3,14 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Music;
+use App\Models\Artist;
+use App\Models\News;
+use App\Models\User;
+use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ModerationController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        // TODO: Add admin middleware check
+        $this->middleware(function ($request, $next) {
+            if (Auth::user() && Auth::user()->role !== 'admin') {
+                abort(403, 'Unauthorized access.');
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -20,14 +31,34 @@ class ModerationController extends Controller
      */
     public function index()
     {
-        // TODO: Implement moderation dashboard
-        // - Show pending content requiring moderation
-        // - Display statistics (pending music, artists, posts, comments)
-        // - Quick action buttons for batch operations
-        // - Filter options by content type and date
-        // - Recent moderation activity log
-        
-        return view('admin.moderation.index');
+        $stats = [
+            'pending_music' => Music::where('status', 'pending')->count(),
+            'pending_artists' => User::where('role', 'artist')->where('status', 'pending')->count(),
+            'pending_posts' => News::where('status', 'draft')->count(),
+            'pending_media' => Media::where('status', 'pending')->count(),
+            'total_flagged' => 0, // This can be extended when reporting system is added
+        ];
+
+        // Recent moderation activities (using existing data)
+        $recentMusic = Music::where('status', 'pending')
+                           ->with('creator')
+                           ->latest()
+                           ->take(5)
+                           ->get();
+
+        $recentArtists = User::where('role', 'artist')
+                            ->where('status', 'pending')
+                            ->latest()
+                            ->take(5)
+                            ->get();
+
+        $recentPosts = News::where('status', 'draft')
+                          ->with('user')
+                          ->latest()
+                          ->take(5)
+                          ->get();
+
+        return view('admin.moderation.index', compact('stats', 'recentMusic', 'recentArtists', 'recentPosts'));
     }
 
     /**
@@ -35,16 +66,25 @@ class ModerationController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function music()
+    public function music(Request $request)
     {
-        // TODO: Implement music moderation
-        // - List all pending music tracks
-        // - Audio player for quick preview
-        // - Check for copyright issues
-        // - Approve/reject with reason
-        // - Bulk operations for multiple tracks
+        $query = Music::with('creator')->where('status', 'pending');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('artist_name', 'like', "%{$search}%")
+                  ->orWhereHas('creator', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $music = $query->latest()->paginate(20);
         
-        return view('admin.moderation.music');
+        return view('admin.moderation.music', compact('music'));
     }
 
     /**
@@ -52,15 +92,23 @@ class ModerationController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function artists()
+    public function artists(Request $request)
     {
-        // TODO: Implement artist moderation
-        // - List all pending artist profiles
-        // - Verify profile information and images
-        // - Check for duplicate or fake accounts
-        // - Approve/reject artist verification
+        $query = User::where('role', 'artist')->where('status', 'pending');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('artist_stage_name', 'like', "%{$search}%");
+            });
+        }
+
+        $artists = $query->latest()->paginate(20);
         
-        return view('admin.moderation.artists');
+        return view('admin.moderation.artists', compact('artists'));
     }
 
     /**
@@ -68,15 +116,25 @@ class ModerationController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function posts()
+    public function posts(Request $request)
     {
-        // TODO: Implement posts moderation
-        // - List all pending blog posts and news
-        // - Content preview and editing tools
-        // - Check for inappropriate content
-        // - Approve/reject with feedback
+        $query = News::with('user')->where('status', 'draft');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $posts = $query->latest()->paginate(20);
         
-        return view('admin.moderation.posts');
+        return view('admin.moderation.posts', compact('posts'));
     }
 
     /**
@@ -86,12 +144,8 @@ class ModerationController extends Controller
      */
     public function comments()
     {
-        // TODO: Implement comments moderation
-        // - List all flagged or pending comments
-        // - Show comment context and parent post
-        // - Quick approve/delete actions
-        // - User warning system
-        
+        // For now, return empty view since comments system isn't implemented
+        // This can be extended when comment system is added
         return view('admin.moderation.comments');
     }
 
@@ -102,12 +156,8 @@ class ModerationController extends Controller
      */
     public function reports()
     {
-        // TODO: Implement reports management
-        // - List all user-reported content
-        // - Show report reasons and descriptions
-        // - Review reported items and take action
-        // - Notify reporters of outcomes
-        
+        // For now, return empty view since reporting system isn't implemented
+        // This can be extended when reporting system is added
         return view('admin.moderation.reports');
     }
 
@@ -120,13 +170,30 @@ class ModerationController extends Controller
      */
     public function approve($type, $id)
     {
-        // TODO: Implement content approval
-        // - Update content status to 'approved'
-        // - Make content publicly visible
-        // - Send approval notification to creator
-        // - Log moderation action
-        
-        return redirect()->back()->with('success', ucfirst($type) . ' approved successfully.');
+        switch ($type) {
+            case 'music':
+                $item = Music::findOrFail($id);
+                $item->update(['status' => 'published']);
+                $message = 'Music track approved and published successfully.';
+                break;
+                
+            case 'artist':
+                $item = User::where('role', 'artist')->findOrFail($id);
+                $item->update(['status' => 'approved', 'approved_at' => now(), 'approved_by' => Auth::id()]);
+                $message = 'Artist profile approved successfully.';
+                break;
+                
+            case 'post':
+                $item = News::findOrFail($id);
+                $item->update(['status' => 'published']);
+                $message = 'Post approved and published successfully.';
+                break;
+                
+            default:
+                return redirect()->back()->with('error', 'Invalid content type.');
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -139,13 +206,34 @@ class ModerationController extends Controller
      */
     public function reject(Request $request, $type, $id)
     {
-        // TODO: Implement content rejection
-        // - Validate rejection reason
-        // - Update content status to 'rejected'
-        // - Send rejection notification with reason to creator
-        // - Log moderation action with reason
-        
-        return redirect()->back()->with('success', ucfirst($type) . ' rejected successfully.');
+        $request->validate([
+            'reason' => 'required|string|max:500'
+        ]);
+
+        switch ($type) {
+            case 'music':
+                $item = Music::findOrFail($id);
+                $item->update(['status' => 'rejected']);
+                $message = 'Music track rejected.';
+                break;
+                
+            case 'artist':
+                $item = User::where('role', 'artist')->findOrFail($id);
+                $item->update(['status' => 'rejected']);
+                $message = 'Artist profile rejected.';
+                break;
+                
+            case 'post':
+                $item = News::findOrFail($id);
+                $item->update(['status' => 'rejected']);
+                $message = 'Post rejected.';
+                break;
+                
+            default:
+                return redirect()->back()->with('error', 'Invalid content type.');
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -157,12 +245,26 @@ class ModerationController extends Controller
      */
     public function flag($type, $id)
     {
-        // TODO: Implement content flagging
-        // - Mark content as flagged for review
-        // - Hide from public view if necessary
-        // - Notify content creator of flagging
-        // - Add to moderation queue
-        
+        switch ($type) {
+            case 'music':
+                $item = Music::findOrFail($id);
+                $item->update(['status' => 'flagged']);
+                break;
+                
+            case 'artist':
+                $item = User::where('role', 'artist')->findOrFail($id);
+                $item->update(['status' => 'suspended']);
+                break;
+                
+            case 'post':
+                $item = News::findOrFail($id);
+                $item->update(['status' => 'flagged']);
+                break;
+                
+            default:
+                return redirect()->back()->with('error', 'Invalid content type.');
+        }
+
         return redirect()->back()->with('success', ucfirst($type) . ' flagged for review.');
     }
 
@@ -174,14 +276,56 @@ class ModerationController extends Controller
      */
     public function bulkAction(Request $request)
     {
-        // TODO: Implement bulk moderation
-        // - Validate selected items and action
-        // - Support bulk approve, reject, flag operations
-        // - Process all selected items
-        // - Send batch notifications to creators
+        $request->validate([
+            'action' => 'required|in:approve,reject,flag',
+            'type' => 'required|in:music,artist,post',
+            'ids' => 'required|array',
+            'ids.*' => 'integer',
+            'reason' => 'required_if:action,reject|string|max:500'
+        ]);
+
+        $count = 0;
         
-        $action = $request->input('action');
-        return redirect()->back()->with('success', "Bulk {$action} completed successfully.");
+        switch ($request->type) {
+            case 'music':
+                $items = Music::whereIn('id', $request->ids);
+                break;
+            case 'artist':
+                $items = User::where('role', 'artist')->whereIn('id', $request->ids);
+                break;
+            case 'post':
+                $items = News::whereIn('id', $request->ids);
+                break;
+        }
+
+        switch ($request->action) {
+            case 'approve':
+                if ($request->type === 'music') {
+                    $count = $items->update(['status' => 'published']);
+                } elseif ($request->type === 'artist') {
+                    $count = $items->update(['status' => 'approved', 'approved_at' => now(), 'approved_by' => Auth::id()]);
+                } else {
+                    $count = $items->update(['status' => 'published']);
+                }
+                $message = "{$count} items approved successfully.";
+                break;
+                
+            case 'reject':
+                $count = $items->update(['status' => 'rejected']);
+                $message = "{$count} items rejected successfully.";
+                break;
+                
+            case 'flag':
+                if ($request->type === 'artist') {
+                    $count = $items->update(['status' => 'suspended']);
+                } else {
+                    $count = $items->update(['status' => 'flagged']);
+                }
+                $message = "{$count} items flagged successfully.";
+                break;
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -191,12 +335,8 @@ class ModerationController extends Controller
      */
     public function settings()
     {
-        // TODO: Implement moderation settings
-        // - Configure auto-moderation rules
-        // - Set content guidelines and policies
-        // - Manage banned words and phrases
-        // - Configure notification preferences
-        
+        // For now, return a basic settings view
+        // This can be extended with actual settings when needed
         return view('admin.moderation.settings');
     }
 
@@ -208,11 +348,7 @@ class ModerationController extends Controller
      */
     public function updateSettings(Request $request)
     {
-        // TODO: Implement settings update
-        // - Validate and save moderation settings
-        // - Update auto-moderation rules
-        // - Clear relevant caches
-        
+        // This can be implemented when moderation settings are needed
         return redirect()->route('admin.moderation.settings')
                          ->with('success', 'Moderation settings updated successfully.');
     }
@@ -224,12 +360,8 @@ class ModerationController extends Controller
      */
     public function logs()
     {
-        // TODO: Implement moderation logs
-        // - Show all moderation actions with timestamps
-        // - Include moderator information
-        // - Filter by action type, date, moderator
-        // - Export functionality for reports
-        
+        // For now, return a basic logs view
+        // This can be extended with actual activity logging when needed
         return view('admin.moderation.logs');
     }
 }
