@@ -27,6 +27,8 @@ class User extends Authenticatable
         'social_links',
         'artist_stage_name',
         'artist_genre',
+        'country',
+        'state',
         'distribution_paid',
         'distribution_paid_at',
         'distribution_payment_reference',
@@ -102,6 +104,11 @@ class User extends Authenticatable
     }
 
     public function createdMusic()
+    {
+        return $this->hasMany(Music::class, 'created_by');
+    }
+
+    public function music()
     {
         return $this->hasMany(Music::class, 'created_by');
     }

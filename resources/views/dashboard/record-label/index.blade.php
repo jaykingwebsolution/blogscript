@@ -68,7 +68,7 @@
         </div>
 
         <!-- Action Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <!-- Submit Song -->
             <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
                 <div class="text-center">
@@ -101,21 +101,7 @@
                 </div>
             </div>
 
-            <!-- Music Distribution -->
-            <div class="bg-gradient-to-br from-purple-900/50 to-purple-700/50 rounded-xl p-8 border border-purple-700/50">
-                <div class="text-center">
-                    <div class="bg-purple-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Music Distribution</h3>
-                    <p class="text-gray-300 text-sm mb-6">Get your music on Spotify, Apple Music, and other major platforms worldwide.</p>
-                    <a href="{{ route('distribution.index') }}" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
-                        Start Distribution
-                    </a>
-                </div>
-            </div>
+
         </div>
 
         <!-- Recent Activity -->

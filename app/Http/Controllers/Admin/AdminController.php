@@ -205,36 +205,6 @@ class AdminController extends Controller
         return view('admin.artists.index', compact('artists'));
     }
 
-    public function artistCreate()
-    {
-        return view('admin.artists.create');
-    }
-
-    public function artistStore(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:100|unique:artists,username',
-            'bio' => 'nullable|string',
-            'image_url' => 'nullable|url',
-            'genre' => 'nullable|string|max:100',
-            'country' => 'nullable|string|max:100',
-            'is_trending' => 'boolean',
-            'status' => 'required|in:draft,published,archived'
-        ]);
-
-        // Generate slug from name if not provided
-        $validated['slug'] = \Str::slug($validated['name']);
-        $validated['created_by'] = Auth::id();
-
-        // Ensure is_trending is false if not checked
-        $validated['is_trending'] = $request->has('is_trending');
-
-        Artist::create($validated);
-
-        return redirect()->route('admin.artists.index')->with('success', 'Artist added successfully!');
-    }
-
     public function artistEdit(Artist $artist)
     {
         $artist->loadCount(['music']);
@@ -321,7 +291,22 @@ class AdminController extends Controller
             'bio' => 'nullable|string|max:1000',
             'artist_stage_name' => 'nullable|string|max:255',
             'artist_genre' => 'nullable|string|max:100',
+            'country' => 'nullable|string|size:2',
+            'state' => 'nullable|string|max:10',
         ]);
+
+        // Validate that country exists in our config
+        if (!empty($validated['country']) && !array_key_exists($validated['country'], config('countries.countries'))) {
+            return back()->withErrors(['country' => 'Invalid country selected.'])->withInput();
+        }
+
+        // Validate that state belongs to selected country
+        if (!empty($validated['state']) && !empty($validated['country'])) {
+            $countryStates = config('countries.countries.' . $validated['country'] . '.states', []);
+            if (!empty($countryStates) && !array_key_exists($validated['state'], $countryStates)) {
+                return back()->withErrors(['state' => 'Invalid state selected for the chosen country.'])->withInput();
+            }
+        }
 
         $validated['password'] = Hash::make($validated['password']);
         
@@ -356,7 +341,22 @@ class AdminController extends Controller
             'bio' => 'nullable|string|max:1000',
             'artist_stage_name' => 'nullable|string|max:255',
             'artist_genre' => 'nullable|string|max:100',
+            'country' => 'nullable|string|size:2',
+            'state' => 'nullable|string|max:10',
         ]);
+
+        // Validate that country exists in our config
+        if (!empty($validated['country']) && !array_key_exists($validated['country'], config('countries.countries'))) {
+            return back()->withErrors(['country' => 'Invalid country selected.'])->withInput();
+        }
+
+        // Validate that state belongs to selected country
+        if (!empty($validated['state']) && !empty($validated['country'])) {
+            $countryStates = config('countries.countries.' . $validated['country'] . '.states', []);
+            if (!empty($countryStates) && !array_key_exists($validated['state'], $countryStates)) {
+                return back()->withErrors(['state' => 'Invalid state selected for the chosen country.'])->withInput();
+            }
+        }
 
         // Handle status change logic
         if ($validated['status'] !== $user->status) {
