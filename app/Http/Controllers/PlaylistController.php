@@ -238,4 +238,61 @@ class PlaylistController extends Controller
             'message' => 'Playlist order updated successfully!'
         ]);
     }
+
+    /**
+     * Create a new playlist via AJAX and optionally add music to it
+     */
+    public function createPlaylistAjax(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'visibility' => 'required|in:public,private,unlisted',
+            'music_id' => 'nullable|exists:music,id',
+        ]);
+
+        $data = $request->only(['title', 'description', 'visibility']);
+        $data['user_id'] = Auth::id();
+
+        $playlist = Playlist::create($data);
+
+        // Add music to playlist if provided
+        if ($request->music_id) {
+            $music = Music::find($request->music_id);
+            if ($music) {
+                $playlist->music()->attach($music->id, ['order_in_playlist' => 1]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Playlist created successfully!',
+            'playlist' => [
+                'id' => $playlist->id,
+                'title' => $playlist->title,
+                'music_count' => $playlist->music()->count(),
+                'cover_image_url' => $playlist->cover_image_url,
+            ]
+        ]);
+    }
+
+    /**
+     * Get user's playlists for AJAX requests
+     */
+    public function getUserPlaylists()
+    {
+        $playlists = Auth::user()->playlists()->latest()->get()->map(function ($playlist) {
+            return [
+                'id' => $playlist->id,
+                'title' => $playlist->title,
+                'music_count' => $playlist->music_count,
+                'cover_image_url' => $playlist->cover_image_url,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'playlists' => $playlists
+        ]);
+    }
 }

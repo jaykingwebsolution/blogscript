@@ -17,7 +17,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        $playlists = $user->playlists()->with('tracks')->latest()->get();
+        $playlists = $user->playlists()->with('music')->latest()->get();
         $likedSongs = $user->likedSongs()->with(['user', 'artist'])->latest()->get();
         
         // If user is artist/record label, show their uploaded music

@@ -342,6 +342,10 @@
         </div>
     </div>
 </div>
+
+<!-- Global Playlist Modal -->
+@include('components.global-playlist-modal')
+
 @endsection
 
 @push('scripts')

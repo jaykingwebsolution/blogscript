@@ -135,6 +135,11 @@
                                 <path d="M8 5v10l7-5z"/>
                             </svg>
                         </button>
+                        <button onclick="showPlaylistModal({{ $song->id }})" class="absolute top-2 right-2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
                     </div>
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-1 truncate">{{ $song->title }}</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 truncate">{{ $song->artist->name ?? $song->user->name }}</p>
@@ -167,7 +172,7 @@
                     </div>
                     <h3 class="font-semibold text-gray-900 dark:text-white mb-2">{{ $playlist->name }}</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{{ $playlist->description ?? 'Personal playlist' }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $playlist->tracks->count() }} songs</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $playlist->music->count() }} songs</p>
                 </div>
                 @endforeach
             </div>
@@ -186,12 +191,17 @@
                 @foreach($uploadedMusic->take(6) as $track)
                 <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
                     <div class="relative mb-4">
-                        <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : 'asset("images/default-music.svg")' }}" 
+                        <img src="{{ $track->cover_image ? asset('storage/' . $track->cover_image) : asset('images/default-music.svg') }}" 
                              alt="{{ $track->title }}" 
                              class="w-full aspect-square object-cover rounded-lg shadow-md">
                         <button class="play-btn absolute bottom-2 right-2 w-12 h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                             <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M8 5v10l7-5z"/>
+                            </svg>
+                        </button>
+                        <button onclick="showPlaylistModal({{ $track->id }})" class="absolute top-2 right-2 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                             </svg>
                         </button>
                     </div>
@@ -228,4 +238,8 @@
         
     </div>
 </div>
+
+<!-- Global Playlist Modal -->
+@include('components.global-playlist-modal')
+
 @endsection
