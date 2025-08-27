@@ -65,7 +65,7 @@
                                 <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR (€)</option>
                                 <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP (£)</option>
                             </select>
-                            <input type="number" id="amount" name="amount" value="{{ old('amount', 0) }}" step="0.01" min="0"
+                            <input type="number" id="amount" name="amount" value="{{ old('amount') }}" step="0.01" min="0"
                                    class="flex-1 px-3 py-2 border border-spotify-light-gray bg-spotify-black text-white rounded-r-md focus:outline-none focus:ring-2 focus:ring-spotify-green focus:border-transparent" 
                                    placeholder="0.00" required>
                         </div>
