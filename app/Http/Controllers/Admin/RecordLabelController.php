@@ -3,14 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class RecordLabelController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        // TODO: Add admin middleware check
+        $this->middleware(function ($request, $next) {
+            if (Auth::user() && Auth::user()->role !== 'admin') {
+                abort(403, 'Unauthorized access.');
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -18,15 +26,37 @@ class RecordLabelController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // TODO: Implement record labels listing
-        // - List all users with 'record_label' role
-        // - Show statistics (total artists, songs, revenue)
-        // - Provide search and filtering options
-        // - Include pagination for large datasets
+        $query = User::where('role', 'record_label')
+                    ->withCount(['music as total_music'])
+                    ->latest();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $recordLabels = $query->paginate(15)->withQueryString();
         
-        return view('admin.record-labels.index');
+        // Get statistics
+        $stats = [
+            'total_labels' => User::where('role', 'record_label')->count(),
+            'active_labels' => User::where('role', 'record_label')->where('status', 'approved')->count(),
+            'pending_labels' => User::where('role', 'record_label')->where('status', 'pending')->count(),
+            'suspended_labels' => User::where('role', 'record_label')->where('status', 'suspended')->count(),
+        ];
+        
+        return view('admin.record-labels.index', compact('recordLabels', 'stats'));
     }
 
     /**
@@ -36,11 +66,6 @@ class RecordLabelController extends Controller
      */
     public function create()
     {
-        // TODO: Implement record label creation form
-        // - Create form for new record label registration
-        // - Include fields for label name, contact info, business details
-        // - Add validation rules for required fields
-        
         return view('admin.record-labels.create');
     }
 
@@ -52,12 +77,31 @@ class RecordLabelController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Implement record label creation
-        // - Validate input data
-        // - Create user account with 'record_label' role
-        // - Send welcome/activation email
-        // - Redirect with success message
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'bio' => 'nullable|string|max:1000',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'social_links' => 'nullable|array',
+            'social_links.*' => 'nullable|url',
+            'status' => 'required|in:approved,pending,suspended'
+        ]);
+
+        $validated['role'] = 'record_label';
+        $validated['password'] = Hash::make($validated['password']);
         
+        if ($request->hasFile('profile_picture')) {
+            $validated['profile_picture'] = $request->file('profile_picture')->store('profile_pictures', 'public');
+        }
+
+        if ($validated['status'] === 'approved') {
+            $validated['approved_at'] = now();
+            $validated['approved_by'] = Auth::id();
+        }
+
+        User::create($validated);
+
         return redirect()->route('admin.record-labels.index')
                          ->with('success', 'Record label created successfully.');
     }
@@ -65,51 +109,76 @@ class RecordLabelController extends Controller
     /**
      * Display the specified record label.
      * 
-     * @param  int  $id
+     * @param  User  $recordLabel
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $recordLabel)
     {
-        // TODO: Implement record label details view
-        // - Show detailed information about the record label
-        // - Display associated artists and music tracks
-        // - Show revenue and performance statistics
-        // - Include recent activities and transactions
+        if ($recordLabel->role !== 'record_label') {
+            abort(404);
+        }
         
-        return view('admin.record-labels.show', compact('id'));
+        $recordLabel->loadCount(['music as total_music']);
+        
+        return view('admin.record-labels.show', compact('recordLabel'));
     }
 
     /**
      * Show the form for editing the specified record label.
      * 
-     * @param  int  $id
+     * @param  User  $recordLabel
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $recordLabel)
     {
-        // TODO: Implement record label edit form
-        // - Load existing record label data
-        // - Show editable form with current values
-        // - Include business information and settings
+        if ($recordLabel->role !== 'record_label') {
+            abort(404);
+        }
         
-        return view('admin.record-labels.edit', compact('id'));
+        return view('admin.record-labels.edit', compact('recordLabel'));
     }
 
     /**
      * Update the specified record label in storage.
      * 
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  User  $recordLabel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $recordLabel)
     {
-        // TODO: Implement record label update
-        // - Validate updated information
-        // - Update record label details in database
-        // - Send notification if important details changed
-        // - Redirect with success message
+        if ($recordLabel->role !== 'record_label') {
+            abort(404);
+        }
         
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $recordLabel->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'bio' => 'nullable|string|max:1000',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'social_links' => 'nullable|array',
+            'social_links.*' => 'nullable|url',
+            'status' => 'required|in:approved,pending,suspended'
+        ]);
+
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+        
+        if ($request->hasFile('profile_picture')) {
+            $validated['profile_picture'] = $request->file('profile_picture')->store('profile_pictures', 'public');
+        }
+
+        if ($validated['status'] === 'approved' && $recordLabel->status !== 'approved') {
+            $validated['approved_at'] = now();
+            $validated['approved_by'] = Auth::id();
+        }
+
+        $recordLabel->update($validated);
+
         return redirect()->route('admin.record-labels.index')
                          ->with('success', 'Record label updated successfully.');
     }
@@ -117,17 +186,25 @@ class RecordLabelController extends Controller
     /**
      * Remove the specified record label from storage.
      * 
-     * @param  int  $id
+     * @param  User  $recordLabel
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $recordLabel)
     {
-        // TODO: Implement record label deletion
-        // - Check for associated artists and music before deletion
-        // - Soft delete or transfer ownership of associated content
-        // - Log the deletion for audit purposes
-        // - Redirect with success message
+        if ($recordLabel->role !== 'record_label') {
+            abort(404);
+        }
         
+        // Check if record label has music or artists associated
+        $musicCount = $recordLabel->music()->count();
+        
+        if ($musicCount > 0) {
+            return redirect()->back()
+                           ->with('error', 'Cannot delete record label with associated music. Please transfer or remove music first.');
+        }
+
+        $recordLabel->delete();
+
         return redirect()->route('admin.record-labels.index')
                          ->with('success', 'Record label deleted successfully.');
     }
@@ -140,11 +217,14 @@ class RecordLabelController extends Controller
      */
     public function approve($id)
     {
-        // TODO: Implement record label approval
-        // - Update status to 'approved'
-        // - Send approval notification email
-        // - Grant access to label dashboard features
+        $recordLabel = User::where('role', 'record_label')->findOrFail($id);
         
+        $recordLabel->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'approved_by' => Auth::id()
+        ]);
+
         return redirect()->back()->with('success', 'Record label approved successfully.');
     }
 
@@ -156,12 +236,10 @@ class RecordLabelController extends Controller
      */
     public function suspend($id)
     {
-        // TODO: Implement record label suspension
-        // - Update status to 'suspended'
-        // - Disable access to label dashboard
-        // - Send suspension notification
-        // - Hide associated content if needed
+        $recordLabel = User::where('role', 'record_label')->findOrFail($id);
         
+        $recordLabel->update(['status' => 'suspended']);
+
         return redirect()->back()->with('success', 'Record label suspended successfully.');
     }
 }
