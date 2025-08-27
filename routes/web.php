@@ -330,12 +330,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/music/{music}/feature', [AdminController::class, 'musicFeature'])->name('music.feature');
     Route::post('/music/{music}/unfeature', [AdminController::class, 'musicUnfeature'])->name('music.unfeature');
     
-    // Artist Management
-    Route::get('/artists', [AdminController::class, 'artistIndex'])->name('artists.index');
-    Route::get('/artists/{artist}/edit', [AdminController::class, 'artistEdit'])->name('artists.edit');
-    Route::put('/artists/{artist}', [AdminController::class, 'artistUpdate'])->name('artists.update');
-    Route::delete('/artists/{artist}', [AdminController::class, 'artistDestroy'])->name('artists.destroy');
-    
     // User Management
     Route::get('/users', [AdminController::class, 'userIndex'])->name('users.index');
     Route::get('/users/create', [AdminController::class, 'userCreate'])->name('users.create');
