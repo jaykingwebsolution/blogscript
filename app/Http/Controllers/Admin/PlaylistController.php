@@ -120,8 +120,8 @@ class PlaylistController extends Controller
         // Attach music tracks if provided
         if (!empty($validated['music_ids'])) {
             $musicData = [];
-            foreach ($validated['music_ids'] as $index => $musicId) {
-                $musicData[$musicId] = ['order_in_playlist' => $index + 1];
+            foreach ($validated['music_ids'] as $musicId) {
+                $musicData[] = $musicId;
             }
             $playlist->music()->attach($musicData);
         }
