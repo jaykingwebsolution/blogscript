@@ -189,7 +189,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-8 text-center">
+                                <td colspan="{{ $userTableColCount }}" class="px-6 py-8 text-center">
                                     <div class="text-gray-500">
                                         <i class="fas fa-users text-3xl mb-2"></i>
                                         <p>No users found.</p>
