@@ -14,8 +14,14 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Distribution Requests</h1>
-                        <p class="text-gray-600 dark:text-gray-400">Manage music distribution submissions</p>
+                        <p class="text-gray-600 dark:text-gray-400">Manage music distribution submissions from paid users</p>
                     </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('admin.distribution.dashboard') }}" 
+                       class="px-4 py-2 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
@@ -83,7 +89,7 @@
 
         <!-- Filters -->
         <div class="bg-gray-50 dark:bg-gray-900 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-            <form method="GET" action="{{ route('admin.distribution.index') }}" class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="{{ route('admin.distribution.requests.index') }}" class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <input type="text" name="search" value="{{ request('search') }}" 
                            placeholder="Search by artist, song title, genre, or user email..." 
@@ -103,7 +109,7 @@
                             class="px-4 py-2 bg-spotify-green text-white font-medium rounded-lg hover:bg-spotify-green/90 transition-colors">
                         <i class="fas fa-search mr-2"></i>Filter
                     </button>
-                    <a href="{{ route('admin.distribution.index') }}" 
+                    <a href="{{ route('admin.distribution.requests.index') }}" 
                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
                         Clear
                     </a>
@@ -150,7 +156,14 @@
                                     <td class="px-6 py-4">
                                         <div class="text-sm text-gray-900 dark:text-white font-medium">{{ $request->user->name }}</div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">{{ $request->user->email }}</div>
-                                        <div class="text-xs text-gray-400 dark:text-gray-500 capitalize">{{ $request->user->role }}</div>
+                                        <div class="flex items-center text-xs text-gray-400 dark:text-gray-500 capitalize">
+                                            {{ $request->user->role }}
+                                            @if($request->user->distribution_paid)
+                                                <span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                                    <i class="fas fa-check-circle mr-1"></i>Paid
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
                                         {{ $request->genre }}
@@ -159,7 +172,11 @@
                                         {{ $request->release_date->format('M d, Y') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $request->status_color }}">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                            @if($request->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300
+                                            @elseif($request->status === 'approved') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
+                                            @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300
+                                            @endif">
                                             @if($request->status === 'pending')
                                                 <i class="fas fa-clock mr-1"></i>
                                             @elseif($request->status === 'approved')
@@ -175,12 +192,12 @@
                                     </td>
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex justify-end gap-2">
-                                            <a href="{{ route('admin.distribution.show', $request) }}" 
+                                            <a href="{{ route('admin.distribution.requests.show', $request) }}" 
                                                class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             @if($request->status === 'pending')
-                                                <form method="POST" action="{{ route('admin.distribution.approve', $request) }}" class="inline">
+                                                <form method="POST" action="{{ route('admin.distribution.requests.approve', $request) }}" class="inline">
                                                     @csrf
                                                     <button type="submit" 
                                                             class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 ml-2"
@@ -193,7 +210,7 @@
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             @endif
-                                            <form method="POST" action="{{ route('admin.distribution.destroy', $request) }}" class="inline">
+                                            <form method="POST" action="{{ route('admin.distribution.requests.destroy', $request) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" 
@@ -221,7 +238,7 @@
                         <i class="fas fa-music text-6xl"></i>
                     </div>
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No distribution requests found</h3>
-                    <p class="text-gray-600 dark:text-gray-400">No requests match your current filters.</p>
+                    <p class="text-gray-600 dark:text-gray-400">No requests match your current filters or no paid users have submitted distribution requests.</p>
                 </div>
             @endif
         </div>
@@ -262,7 +279,7 @@
 
 <script>
 function openDeclineModal(requestId) {
-    document.getElementById('declineForm').action = `/admin/distribution/${requestId}/decline`;
+    document.getElementById('declineForm').action = `/admin/distribution/requests/${requestId}/decline`;
     document.getElementById('declineModal').classList.remove('hidden');
 }
 

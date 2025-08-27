@@ -362,13 +362,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/settings', [\App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update');
     Route::post('/settings/remove-file', [\App\Http\Controllers\Admin\SiteSettingController::class, 'removeFile'])->name('settings.remove-file');
 
-    // Distribution Management
-    Route::get('/distribution', [\App\Http\Controllers\Admin\DistributionController::class, 'index'])->name('distribution.index');
-    Route::get('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'show'])->name('distribution.show');
-    Route::post('/distribution/{distributionRequest}/approve', [\App\Http\Controllers\Admin\DistributionController::class, 'approve'])->name('distribution.approve');
-    Route::post('/distribution/{distributionRequest}/decline', [\App\Http\Controllers\Admin\DistributionController::class, 'decline'])->name('distribution.decline');
-    Route::put('/distribution/{distributionRequest}/status', [\App\Http\Controllers\Admin\DistributionController::class, 'updateStatus'])->name('distribution.update-status');
-    Route::delete('/distribution/{distributionRequest}', [\App\Http\Controllers\Admin\DistributionController::class, 'destroy'])->name('distribution.destroy');
+    // Distribution Dashboard and Management
+    Route::prefix('distribution')->name('distribution.')->group(function () {
+        // Main Distribution Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\Distribution\DistributionDashboardController::class, 'index'])->name('dashboard');
+        
+        // Distribution Requests Management
+        Route::prefix('requests')->name('requests.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'index'])->name('index');
+            Route::get('/{distributionRequest}', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'show'])->name('show');
+            Route::post('/{distributionRequest}/approve', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'approve'])->name('approve');
+            Route::post('/{distributionRequest}/decline', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'decline'])->name('decline');
+            Route::put('/{distributionRequest}/status', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'updateStatus'])->name('update-status');
+            Route::delete('/{distributionRequest}', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'destroy'])->name('destroy');
+        });
+        
+        // Distribution Pricing Management
+        Route::prefix('pricing')->name('pricing.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'store'])->name('store');
+            Route::post('/generate-random', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'generateRandom'])->name('generate-random');
+            Route::get('/{distributionPricing}/edit', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'edit'])->name('edit');
+            Route::put('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'update'])->name('update');
+            Route::delete('/{distributionPricing}', [\App\Http\Controllers\Admin\Distribution\DistributionPricingController::class, 'destroy'])->name('destroy');
+        });
+    });
     
     // Pricing Management
     Route::get('/pricing', [\App\Http\Controllers\Admin\PricingController::class, 'index'])->name('pricing.index');
@@ -399,14 +418,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pages/{page}/edit', [\App\Http\Controllers\Admin\PageController::class, 'edit'])->name('pages.edit');
     Route::put('/pages/{page}', [\App\Http\Controllers\Admin\PageController::class, 'update'])->name('pages.update');
     
-    // Distribution Pricing Management
-    Route::get('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'index'])->name('distribution-pricing.index');
-    Route::get('/distribution-pricing/create', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'create'])->name('distribution-pricing.create');
-    Route::post('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'store'])->name('distribution-pricing.store');
-    Route::post('/distribution-pricing/generate-random', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'generateRandom'])->name('distribution-pricing.generate-random');
-    Route::get('/distribution-pricing/{distributionPricing}/edit', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'edit'])->name('distribution-pricing.edit');
-    Route::put('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'update'])->name('distribution-pricing.update');
-    Route::delete('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'destroy'])->name('distribution-pricing.destroy');
+
     
     // Spotify Import Management
     Route::get('/spotify-import', [\App\Http\Controllers\Admin\SpotifyImportController::class, 'index'])->name('spotify-import.index');

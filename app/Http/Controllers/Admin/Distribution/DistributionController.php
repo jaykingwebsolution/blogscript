@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Distribution;
 
 use App\Http\Controllers\Controller;
 use App\Models\DistributionRequest;
@@ -25,7 +25,11 @@ class DistributionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = DistributionRequest::with('user');
+        $query = DistributionRequest::with('user')
+            // Only show requests from users who have paid for distribution
+            ->whereHas('user', function ($userQuery) {
+                $userQuery->where('distribution_paid', true);
+            });
 
         // Filter by status if provided
         if ($request->filled('status') && in_array($request->status, ['pending', 'approved', 'declined'])) {
@@ -41,22 +45,31 @@ class DistributionController extends Controller
                   ->orWhere('genre', 'LIKE', "%{$search}%")
                   ->orWhereHas('user', function ($userQuery) use ($search) {
                       $userQuery->where('name', 'LIKE', "%{$search}%")
-                               ->orWhere('email', 'LIKE', "%{$search}%");
+                               ->orWhere('email', 'LIKE', "%{$search}%")
+                               ->where('distribution_paid', true);
                   });
             });
         }
 
         $requests = $query->orderBy('created_at', 'desc')->paginate(15);
         
-        // Get counts for each status
+        // Get counts for each status (only for paid users)
         $statusCounts = [
-            'all' => DistributionRequest::count(),
-            'pending' => DistributionRequest::pending()->count(),
-            'approved' => DistributionRequest::approved()->count(),
-            'declined' => DistributionRequest::declined()->count(),
+            'all' => DistributionRequest::whereHas('user', function ($q) {
+                $q->where('distribution_paid', true);
+            })->count(),
+            'pending' => DistributionRequest::where('status', 'pending')->whereHas('user', function ($q) {
+                $q->where('distribution_paid', true);
+            })->count(),
+            'approved' => DistributionRequest::where('status', 'approved')->whereHas('user', function ($q) {
+                $q->where('distribution_paid', true);
+            })->count(),
+            'declined' => DistributionRequest::where('status', 'declined')->whereHas('user', function ($q) {
+                $q->where('distribution_paid', true);
+            })->count(),
         ];
 
-        return view('admin.distribution.index', compact('requests', 'statusCounts'));
+        return view('admin.distribution_dashboard.requests.index', compact('requests', 'statusCounts'));
     }
 
     /**
@@ -64,8 +77,13 @@ class DistributionController extends Controller
      */
     public function show(DistributionRequest $distributionRequest)
     {
+        // Ensure the user has paid for distribution
+        if (!$distributionRequest->user->distribution_paid) {
+            abort(404, 'Distribution request not found.');
+        }
+
         $distributionRequest->load('user');
-        return view('admin.distribution.show', compact('distributionRequest'));
+        return view('admin.distribution_dashboard.requests.show', compact('distributionRequest'));
     }
 
     /**
@@ -73,6 +91,11 @@ class DistributionController extends Controller
      */
     public function approve(Request $request, DistributionRequest $distributionRequest)
     {
+        // Ensure the user has paid for distribution
+        if (!$distributionRequest->user->distribution_paid) {
+            abort(404, 'Distribution request not found.');
+        }
+
         $request->validate([
             'notes' => 'nullable|string|max:1000',
         ]);
@@ -82,7 +105,7 @@ class DistributionController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('admin.distribution.show', $distributionRequest)
+        return redirect()->route('admin.distribution.requests.show', $distributionRequest)
             ->with('success', 'Distribution request has been approved.');
     }
 
@@ -91,6 +114,11 @@ class DistributionController extends Controller
      */
     public function decline(Request $request, DistributionRequest $distributionRequest)
     {
+        // Ensure the user has paid for distribution
+        if (!$distributionRequest->user->distribution_paid) {
+            abort(404, 'Distribution request not found.');
+        }
+
         $request->validate([
             'notes' => 'required|string|max:1000',
         ]);
@@ -100,7 +128,7 @@ class DistributionController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('admin.distribution.show', $distributionRequest)
+        return redirect()->route('admin.distribution.requests.show', $distributionRequest)
             ->with('success', 'Distribution request has been declined.');
     }
 
@@ -109,6 +137,11 @@ class DistributionController extends Controller
      */
     public function updateStatus(Request $request, DistributionRequest $distributionRequest)
     {
+        // Ensure the user has paid for distribution
+        if (!$distributionRequest->user->distribution_paid) {
+            abort(404, 'Distribution request not found.');
+        }
+
         $request->validate([
             'status' => 'required|in:pending,approved,declined',
             'notes' => 'nullable|string|max:1000',
@@ -132,6 +165,11 @@ class DistributionController extends Controller
      */
     public function destroy(DistributionRequest $distributionRequest)
     {
+        // Ensure the user has paid for distribution
+        if (!$distributionRequest->user->distribution_paid) {
+            abort(404, 'Distribution request not found.');
+        }
+
         // Delete associated files if they exist
         if ($distributionRequest->cover_image) {
             \Storage::disk('public')->delete($distributionRequest->cover_image);
@@ -143,7 +181,7 @@ class DistributionController extends Controller
 
         $distributionRequest->delete();
 
-        return redirect()->route('admin.distribution.index')
+        return redirect()->route('admin.distribution.requests.index')
             ->with('success', 'Distribution request has been deleted.');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Distribution;
 
 use App\Http\Controllers\Controller;
 use App\Models\DistributionPricing;
@@ -27,7 +27,7 @@ class DistributionPricingController extends Controller
     {
         $pricingPlans = DistributionPricing::getOrderedPlans();
 
-        return view('admin.distribution-pricing.index', compact('pricingPlans'));
+        return view('admin.distribution_dashboard.pricing.index', compact('pricingPlans'));
     }
 
     /**
@@ -35,7 +35,7 @@ class DistributionPricingController extends Controller
      */
     public function create()
     {
-        return view('admin.distribution-pricing.create');
+        return view('admin.distribution_dashboard.pricing.create');
     }
 
     /**
@@ -58,7 +58,7 @@ class DistributionPricingController extends Controller
             'price' => $request->price,
         ]);
 
-        return redirect()->route('admin.distribution-pricing.index')
+        return redirect()->route('admin.distribution.pricing.index')
             ->with('success', 'Distribution pricing plan created successfully.');
     }
 
@@ -67,7 +67,7 @@ class DistributionPricingController extends Controller
      */
     public function edit(DistributionPricing $distributionPricing)
     {
-        return view('admin.distribution-pricing.edit', compact('distributionPricing'));
+        return view('admin.distribution_dashboard.pricing.edit', compact('distributionPricing'));
     }
 
     /**
@@ -90,7 +90,7 @@ class DistributionPricingController extends Controller
             'price' => $request->price,
         ]);
 
-        return redirect()->route('admin.distribution-pricing.index')
+        return redirect()->route('admin.distribution.pricing.index')
             ->with('success', 'Distribution pricing plan updated successfully.');
     }
 
@@ -99,7 +99,7 @@ class DistributionPricingController extends Controller
      */
     public function generateRandom()
     {
-        $planNames = [
+        $availableNames = [
             'Basic Distribution Package',
             'Premium Music Distribution',
             'Pro Artist Package',
@@ -132,11 +132,11 @@ class DistributionPricingController extends Controller
                 'price' => $price,
             ]);
         } catch (\Exception $e) {
-            return redirect()->route('admin.distribution-pricing.create')
+            return redirect()->route('admin.distribution.pricing.create')
                 ->with('error', 'Failed to create random distribution plan. Please try again. Error: ' . $e->getMessage());
         }
 
-        return redirect()->route('admin.distribution-pricing.create')
+        return redirect()->route('admin.distribution.pricing.create')
             ->with('success', "Random distribution plan created successfully: {$randomName} ({$randomDuration}) - ₦".number_format($price, 2));
     }
 
@@ -147,7 +147,7 @@ class DistributionPricingController extends Controller
     {
         $distributionPricing->delete();
 
-        return redirect()->route('admin.distribution-pricing.index')
+        return redirect()->route('admin.distribution.pricing.index')
             ->with('success', 'Distribution pricing plan deleted successfully.');
     }
 }
