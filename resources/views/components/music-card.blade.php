@@ -1,7 +1,7 @@
 <!-- Music Card Component -->
 @props(['music'])
 
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
     <div class="relative">
         <img src="{{ $music->image_url ?? '/images/default-music.jpg' }}" 
              alt="{{ $music->title }}" 
@@ -69,7 +69,7 @@
             @auth
                 <!-- Quick Actions -->
                 <div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onclick="addToPlaylistQuick({{ $music->id }})" 
+                    <button onclick="showPlaylistModal({{ $music->id }})" 
                             class="p-1 text-gray-400 hover:text-spotify-green transition-colors"
                             title="Add to playlist">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
