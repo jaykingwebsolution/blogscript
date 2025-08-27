@@ -96,6 +96,14 @@
                         <div class="pt-8">
                             <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Your Library</h3>
                             <div class="mt-3 space-y-1">
+                                <a href="{{ route('playlists.create') }}" 
+                                   class="sidebar-link {{ request()->routeIs('playlists.create') ? 'active' : '' }}">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                    Create Playlist
+                                </a>
+                                
                                 <a href="{{ route('playlists.my-playlists') }}" 
                                    class="sidebar-link {{ request()->routeIs('playlists.my-playlists') ? 'active' : '' }}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
