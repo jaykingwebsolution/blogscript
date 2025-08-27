@@ -38,7 +38,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-400">This Month</p>
-                    <p class="text-2xl font-bold text-white">{{ end($analytics['monthly_submissions']['data']) }}</p>
+                    <p class="text-2xl font-bold text-white">{{ array_slice($analytics['monthly_submissions']['data'], -1)[0] }}</p>
                     <p class="text-sm text-yellow-400 mt-1">New submissions</p>
                 </div>
                 <div class="p-3 bg-yellow-500/10 rounded-lg">
