@@ -66,7 +66,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-spotify-light-gray text-sm">Featured Playlists</p>
-                    <p class="text-3xl font-bold text-yellow-400">{{ $playlists->where('is_featured', true)->count() }}</p>
+                    <p class="text-3xl font-bold text-yellow-400">{{ $featuredPlaylistsCount }}</p>
                 </div>
                 <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
