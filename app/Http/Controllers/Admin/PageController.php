@@ -104,7 +104,7 @@ class PageController extends Controller
         }
 
         // Update the setting
-        \App\Models\SiteSetting::setValue($settingKey, $request->input('content'));
+        SiteSetting::setValue($settingKey, $request->input('content'));
         
         return redirect()->route('admin.pages.index')
             ->with('success', ucfirst(str_replace('-', ' ', $page)) . ' page updated successfully.');
