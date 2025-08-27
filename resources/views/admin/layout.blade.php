@@ -224,8 +224,15 @@
                 <!-- Playlists Management Section -->
                 <div class="pt-4">
                     <h3 class="px-4 text-xs font-semibold text-spotify-light-gray uppercase tracking-wider mb-2">Playlists Management</h3>
+                    <a href="{{ route('admin.playlists.create') }}" 
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.playlists.create') ? 'active' : 'text-spotify-light-gray' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Create Playlist
+                    </a>
                     <a href="{{ route('admin.playlists.index') }}" 
-                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.playlists.*') ? 'active' : 'text-spotify-light-gray' }}">
+                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.playlists.index') || request()->routeIs('admin.playlists.show') || request()->routeIs('admin.playlists.edit') ? 'active' : 'text-spotify-light-gray' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
                         </svg>

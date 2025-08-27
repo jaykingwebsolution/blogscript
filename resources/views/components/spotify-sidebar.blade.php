@@ -45,21 +45,19 @@
 
             <div class="pt-4">
                 @auth
-                    @if(auth()->user()->isArtist() || auth()->user()->isRecordLabel())
-                        <a href="{{ route('playlists.create') }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white w-full transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            <span>Create Playlist</span>
-                        </a>
-                    @else
-                        <button class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white w-full transition-colors" onclick="alert('Please upgrade to Premium to create playlists')">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            <span>Create Playlist</span>
-                        </button>
-                    @endif
+                    <a href="{{ route('playlists.create') }}" class="sidebar-link {{ request()->routeIs('playlists.create') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white w-full transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        <span>Create Playlist</span>
+                    </a>
+                    
+                    <a href="{{ route('playlists.my-playlists') }}" class="sidebar-link {{ request()->routeIs('playlists.my-playlists') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                        </svg>
+                        <span>My Playlists</span>
+                    </a>
                     
                     <a href="{{ route('dashboard.liked-songs') }}" class="sidebar-link {{ request()->routeIs('dashboard.liked-songs') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -74,6 +72,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
                             <span>Create Playlist</span>
+                        </button>
+                        
+                        <button class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors" onclick="alert('Please log in to see playlists')">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                            </svg>
+                            <span>My Playlists</span>
                         </button>
                         
                         <button class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors" onclick="alert('Please log in to see liked songs')">
@@ -96,9 +101,9 @@
                         $recentPlaylists = auth()->user()->playlists()->take(3)->get();
                     @endphp
                     @forelse($recentPlaylists as $playlist)
-                        <a href="{{ route('playlists.show', $playlist->id) }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm transition-colors">
+                        <a href="{{ route('playlists.show', $playlist) }}" class="sidebar-link flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white text-sm transition-colors">
                             <img src="{{ $playlist->cover_image ? asset('storage/' . $playlist->cover_image) : asset('images/default-playlist.svg') }}" alt="Playlist" class="w-6 h-6 rounded">
-                            <span class="truncate">{{ $playlist->name }}</span>
+                            <span class="truncate">{{ $playlist->title }}</span>
                         </a>
                     @empty
                         @for($i = 1; $i <= 3; $i++)
