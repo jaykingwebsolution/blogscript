@@ -11,24 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('distribution_earnings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('distribution_request_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('platform'); // spotify, apple_music, boomplay, etc.
-            $table->string('territory')->nullable(); // Country/region
-            $table->decimal('amount', 10, 4); // Earnings amount
-            $table->string('currency', 3)->default('USD');
-            $table->integer('streams')->default(0);
-            $table->integer('downloads')->default(0);
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->enum('status', ['pending', 'confirmed', 'disputed'])->default('pending');
-            $table->timestamps();
-            
-            $table->index(['user_id', 'platform', 'status']);
-            $table->index(['distribution_request_id', 'period_start', 'period_end']);
-        });
+        if (!Schema::hasTable('distribution_earnings')) {
+            Schema::create('distribution_earnings', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('distribution_request_id')->constrained()->onDelete('cascade');
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->string('platform'); // spotify, apple_music, boomplay, etc.
+                $table->string('territory')->nullable(); // Country/region
+                $table->decimal('amount', 10, 4); // Earnings amount
+                $table->string('currency', 3)->default('USD');
+                $table->integer('streams')->default(0);
+                $table->integer('downloads')->default(0);
+                $table->date('period_start');
+                $table->date('period_end');
+                $table->enum('status', ['pending', 'confirmed', 'disputed'])->default('pending');
+                $table->timestamps();
+                
+                $table->index(['user_id', 'platform', 'status']);
+                $table->index(['distribution_request_id', 'period_start', 'period_end']);
+            });
+        }
     }
 
     /**

@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('distribution_api_settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('provider'); // paystack, flutterwave
-            $table->string('environment')->default('test'); // test, live
-            $table->string('public_key')->nullable();
-            $table->text('secret_key')->nullable(); // Encrypted
-            $table->json('configuration')->nullable(); // Additional settings
-            $table->boolean('is_active')->default(false);
-            $table->timestamps();
-            
-            $table->unique(['provider', 'environment']);
-            $table->index('is_active');
-        });
+        if (!Schema::hasTable('distribution_api_settings')) {
+            Schema::create('distribution_api_settings', function (Blueprint $table) {
+                $table->id();
+                $table->string('provider'); // paystack, flutterwave
+                $table->string('environment')->default('test'); // test, live
+                $table->string('public_key')->nullable();
+                $table->text('secret_key')->nullable(); // Encrypted
+                $table->json('configuration')->nullable(); // Additional settings
+                $table->boolean('is_active')->default(false);
+                $table->timestamps();
+                
+                $table->unique(['provider', 'environment']);
+                $table->index('is_active');
+            });
+        }
     }
 
     /**

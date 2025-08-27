@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('distribution_assets', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('distribution_request_id')->constrained()->onDelete('cascade');
-            $table->string('asset_type'); // audio, cover_image, additional_art
-            $table->string('file_path');
-            $table->string('file_name');
-            $table->string('file_size')->nullable();
-            $table->string('mime_type');
-            $table->json('metadata')->nullable(); // Additional file metadata
-            $table->timestamps();
-            
-            $table->index(['distribution_request_id', 'asset_type']);
-        });
+        if (!Schema::hasTable('distribution_assets')) {
+            Schema::create('distribution_assets', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('distribution_request_id')->constrained()->onDelete('cascade');
+                $table->string('asset_type'); // audio, cover_image, additional_art
+                $table->string('file_path');
+                $table->string('file_name');
+                $table->string('file_size')->nullable();
+                $table->string('mime_type');
+                $table->json('metadata')->nullable(); // Additional file metadata
+                $table->timestamps();
+                
+                $table->index(['distribution_request_id', 'asset_type']);
+            });
+        }
     }
 
     /**
