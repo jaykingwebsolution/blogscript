@@ -276,13 +276,9 @@
                     </a>
                     <a href="{{ route('admin.notifications.index') }}" 
                        class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.notifications.index') || request()->routeIs('admin.notifications.edit') ? 'active' : 'text-spotify-light-gray' }}">
-                    <a href="{{ route('admin.notifications.index') }}" 
-                       class="nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('admin.notifications.index') || request()->routeIs('admin.notifications.edit') ? 'active' : 'text-spotify-light-gray' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 3h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z"/>
                         </svg>
-                        Manage Notifications
-                    </a>
                         Manage Notifications
                     </a>
                 </div>

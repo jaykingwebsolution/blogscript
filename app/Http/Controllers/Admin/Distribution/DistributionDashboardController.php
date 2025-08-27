@@ -53,6 +53,58 @@ class DistributionDashboardController extends Controller
     }
 
     /**
+     * Display the distribution requests index page.
+     */
+    public function requests(Request $request)
+    {
+        $query = DistributionRequest::with('user')
+            // Only show requests from users who have paid for distribution
+            ->whereHas('user', function ($userQuery) {
+                $userQuery->where('distribution_paid', true);
+            });
+
+        // Filter by status if provided
+        if ($request->filled('status') && in_array($request->status, ['pending', 'approved', 'declined'])) {
+            $query->where('status', $request->status);
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('artist_name', 'LIKE', "%{$search}%")
+                  ->orWhere('song_title', 'LIKE', "%{$search}%")
+                  ->orWhere('genre', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'LIKE', "%{$search}%")
+                               ->orWhere('email', 'LIKE', "%{$search}%")
+                               ->where('distribution_paid', true);
+                  });
+            });
+        }
+
+        $requests = $query->orderBy('created_at', 'desc')->paginate(15);
+        
+        // Get counts for each status (only for paid users) with a single query
+        $baseQuery = DistributionRequest::whereHas('user', function ($q) {
+            $q->where('distribution_paid', true);
+        });
+        $statusCountsRaw = $baseQuery
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+        $statusCounts = [
+            'all' => $baseQuery->count(),
+            'pending' => isset($statusCountsRaw['pending']) ? $statusCountsRaw['pending'] : 0,
+            'approved' => isset($statusCountsRaw['approved']) ? $statusCountsRaw['approved'] : 0,
+            'declined' => isset($statusCountsRaw['declined']) ? $statusCountsRaw['declined'] : 0,
+        ];
+
+        return view('admin.distribution_dashboard.requests.index', compact('requests', 'statusCounts'));
+    }
+
+    /**
      * Get count of users who have paid for distribution.
      */
     private function getPaidUsersCount()

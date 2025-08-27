@@ -381,7 +381,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         // Distribution Requests Management
         Route::prefix('requests')->name('requests.')->group(function () {
-            Route::get('/', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'index'])->name('index');
+            Route::get('/', [\App\Http\Controllers\Admin\Distribution\DistributionDashboardController::class, 'requests'])->name('index');
             Route::get('/{distributionRequest}', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'show'])->name('show');
             Route::post('/{distributionRequest}/approve', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'approve'])->name('approve');
             Route::post('/{distributionRequest}/decline', [\App\Http\Controllers\Admin\Distribution\DistributionController::class, 'decline'])->name('decline');
