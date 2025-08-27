@@ -5,23 +5,23 @@
 
 @section('content')
 <div class="mb-6">
-    <h2 class="text-xl font-semibold text-gray-900">Media & Upload Management</h2>
-    <p class="text-sm text-gray-600">Review and manage user uploads and media content</p>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Media & Upload Management</h2>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Review and manage user uploads and media content</p>
 </div>
 
 <!-- Tabs -->
 <div class="mb-6">
-    <div class="border-b border-gray-200">
+    <div class="border-b border-gray-200 dark:border-gray-700">
         <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-            <button onclick="showTab('pending')" id="pending-tab" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+            <button onclick="showTab('pending')" id="pending-tab" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
                 Pending Approval
                 @if($pendingMedia->count() > 0)
-                <span class="bg-red-100 text-red-600 ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                <span class="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
                     {{ $pendingMedia->count() }}
                 </span>
                 @endif
             </button>
-            <button onclick="showTab('all')" id="all-tab" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
+            <button onclick="showTab('all')" id="all-tab" class="tab-button border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
                 All Media
             </button>
         </nav>
