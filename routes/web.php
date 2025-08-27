@@ -340,6 +340,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'index'])->name('distribution-pricing.index');
     Route::get('/distribution-pricing/create', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'create'])->name('distribution-pricing.create');
     Route::post('/distribution-pricing', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'store'])->name('distribution-pricing.store');
+    Route::post('/distribution-pricing/generate-random', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'generateRandom'])->name('distribution-pricing.generate-random');
     Route::get('/distribution-pricing/{distributionPricing}/edit', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'edit'])->name('distribution-pricing.edit');
     Route::put('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'update'])->name('distribution-pricing.update');
     Route::delete('/distribution-pricing/{distributionPricing}', [\App\Http\Controllers\Admin\DistributionPricingController::class, 'destroy'])->name('distribution-pricing.destroy');
