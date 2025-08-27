@@ -24,7 +24,7 @@ return new class extends Migration
             // DSP delivery tracking
             $table->enum('dsp_delivery_status', ['pending', 'processing', 'delivered', 'failed'])->default('pending')->after('status');
             $table->json('dsp_platforms')->nullable()->after('dsp_delivery_status'); // Platform delivery status
-            $table->timestamp('delivered_at')->nullable()->after('dsp_platforms');
+            $table->datetime('delivered_at')->nullable()->after('dsp_platforms');
             
             // Additional tracking
             $table->decimal('distribution_fee', 8, 2)->nullable()->after('delivered_at');
