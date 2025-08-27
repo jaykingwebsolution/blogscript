@@ -212,8 +212,7 @@ document.getElementById('cover-upload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const label = file.parentNode.nextElementSibling || file.parentNode.querySelector('label');
+            const label = e.target.parentNode.nextElementSibling || e.target.parentNode.querySelector('label');
             label.innerHTML = `
                 <img src="${e.target.result}" class="w-24 h-24 mx-auto rounded-lg object-cover mb-4">
                 <p class="text-blue-400 font-semibold">${file.name}</p>
