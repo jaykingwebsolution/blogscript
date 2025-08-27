@@ -61,6 +61,19 @@ class DistributionController extends Controller
             'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB
             'audio_file' => 'required|mimes:mp3,wav,m4a,aac|max:51200', // 50MB
             'description' => 'nullable|string|max:1000',
+            // Enhanced metadata fields
+            'isrc' => 'nullable|string|max:255',
+            'upc' => 'nullable|string|max:255',
+            'record_label' => 'nullable|string|max:255',
+            'contributors' => 'nullable|array',
+            'contributors.*.name' => 'nullable|string|max:255',
+            'contributors.*.role' => 'nullable|string|max:255',
+            'contributors.*.percentage' => 'nullable|numeric|min:0|max:100',
+            'territory_type' => 'required|in:worldwide,selected',
+            'territories' => 'required_if:territory_type,selected|array',
+            'territories.*' => 'string|max:255',
+            'explicit_content' => 'boolean',
+            'lyrics' => 'nullable|string|max:10000',
         ]);
         
         // Handle file uploads
@@ -74,7 +87,24 @@ class DistributionController extends Controller
             $audioFilePath = $request->file('audio_file')->store('distribution/audio', 'public');
         }
 
-        DistributionRequest::create([
+        // Process territories
+        $territories = $request->territory_type === 'worldwide' ? null : $request->territories;
+
+        // Process contributors - filter out empty entries
+        $contributors = [];
+        if ($request->contributors) {
+            foreach ($request->contributors as $contributor) {
+                if (!empty($contributor['name'])) {
+                    $contributors[] = [
+                        'name' => $contributor['name'],
+                        'role' => $contributor['role'] ?? '',
+                        'percentage' => $contributor['percentage'] ?? 0,
+                    ];
+                }
+            }
+        }
+
+        $distributionRequest = DistributionRequest::create([
             'user_id' => $user->id,
             'artist_name' => $request->artist_name,
             'song_title' => $request->song_title,
@@ -84,6 +114,15 @@ class DistributionController extends Controller
             'audio_file' => $audioFilePath,
             'description' => $request->description,
             'status' => 'pending',
+            // Enhanced metadata
+            'isrc' => $request->isrc,
+            'upc' => $request->upc,
+            'record_label' => $request->record_label,
+            'contributors' => empty($contributors) ? null : $contributors,
+            'territories' => $territories,
+            'explicit_content' => $request->has('explicit_content'),
+            'lyrics' => $request->lyrics,
+            'dsp_delivery_status' => 'pending',
         ]);
 
         return redirect()->route('distribution.my-submissions')

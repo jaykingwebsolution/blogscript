@@ -82,6 +82,87 @@
                     </div>
                 </div>
 
+                <!-- Enhanced Metadata Fields -->
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-info-circle text-spotify-green mr-2"></i>
+                        Release Metadata
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- ISRC -->
+                        <div>
+                            <label for="isrc" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                ISRC Code
+                                <span class="text-xs text-gray-500">(International Standard Recording Code)</span>
+                            </label>
+                            <input type="text" id="isrc" name="isrc" value="{{ old('isrc') }}" 
+                                   placeholder="e.g., USRC17607839"
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave empty if you don't have one - we'll generate it for you</p>
+                            @error('isrc')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- UPC -->
+                        <div>
+                            <label for="upc" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                UPC/Barcode
+                                <span class="text-xs text-gray-500">(Universal Product Code)</span>
+                            </label>
+                            <input type="text" id="upc" name="upc" value="{{ old('upc') }}" 
+                                   placeholder="e.g., 123456789012"
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave empty if you don't have one - we'll generate it for you</p>
+                            @error('upc')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Record Label -->
+                    <div class="mt-6">
+                        <label for="record_label" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Record Label
+                        </label>
+                        <input type="text" id="record_label" name="record_label" value="{{ old('record_label') }}" 
+                               placeholder="Enter record label name (optional)"
+                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        @error('record_label')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Explicit Content -->
+                    <div class="mt-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="explicit_content" name="explicit_content" value="1" 
+                                   {{ old('explicit_content') ? 'checked' : '' }}
+                                   class="h-4 w-4 text-spotify-green focus:ring-spotify-green border-gray-300 rounded">
+                            <label for="explicit_content" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                                This release contains explicit content
+                            </label>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Check this if your release contains profanity, sexual content, or mature themes</p>
+                        @error('explicit_content')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Lyrics (Optional) -->
+                <div class="mt-6">
+                    <label for="lyrics" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Lyrics <span class="text-xs text-gray-500">(Optional)</span>
+                    </label>
+                    <textarea id="lyrics" name="lyrics" rows="6" placeholder="Enter your lyrics here..."
+                              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">{{ old('lyrics') }}</textarea>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Adding lyrics can help with music discovery and may be displayed on some streaming platforms</p>
+                    @error('lyrics')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- File Uploads -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -195,6 +276,8 @@
 </div>
 
 <script>
+    let contributorIndex = {{ old('contributors') ? count(old('contributors')) : 1 }};
+
     // File upload preview functionality
     document.addEventListener('DOMContentLoaded', function() {
         const coverInput = document.getElementById('cover_image');
@@ -215,6 +298,70 @@
                 label.textContent = file.name;
             }
         });
+    });
+
+    function addContributor() {
+        const container = document.getElementById('contributors-container');
+        const newContributor = document.createElement('div');
+        newContributor.className = 'contributor-input-group mb-3';
+        newContributor.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" 
+                       name="contributors[${contributorIndex}][name]" 
+                       placeholder="Full Name"
+                       class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                <select name="contributors[${contributorIndex}][role]" 
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="">Select Role</option>
+                    <option value="artist">Artist</option>
+                    <option value="producer">Producer</option>
+                    <option value="songwriter">Songwriter</option>
+                    <option value="composer">Composer</option>
+                    <option value="featured">Featured Artist</option>
+                    <option value="vocalist">Vocalist</option>
+                    <option value="instrumentalist">Instrumentalist</option>
+                </select>
+                <div class="flex">
+                    <input type="number" 
+                           name="contributors[${contributorIndex}][percentage]" 
+                           placeholder="Share %"
+                           min="0" max="100" step="0.1"
+                           class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-2 focus:ring-spotify-green focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <button type="button" onclick="removeContributor(this)" class="px-3 py-2 bg-red-500 text-white rounded-r-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(newContributor);
+        contributorIndex++;
+    }
+
+    function removeContributor(button) {
+        const container = document.getElementById('contributors-container');
+        if (container.children.length > 1) {
+            button.closest('.contributor-input-group').remove();
+        }
+    }
+
+    function toggleTerritories() {
+        const selectedRadio = document.querySelector('input[name="territory_type"]:checked');
+        const territorySelection = document.getElementById('territory-selection');
+        
+        if (selectedRadio && selectedRadio.value === 'selected') {
+            territorySelection.classList.remove('hidden');
+        } else {
+            territorySelection.classList.add('hidden');
+            // Uncheck all territory checkboxes when hiding
+            document.querySelectorAll('input[name="territories[]"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleTerritories();
     });
 </script>
 @endsection
