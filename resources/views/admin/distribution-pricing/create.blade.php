@@ -122,10 +122,6 @@
                     <span>Create Plan</span>
                 </button>
             </div>
-                    </svg>
-                    <span>Create Plan</span>
-                </button>
-            </div>
         </form>
     </div>
 </div>
