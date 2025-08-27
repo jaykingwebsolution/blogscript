@@ -12,11 +12,17 @@ class DistributionPricing extends Model
     protected $fillable = [
         'name',
         'duration', 
-        'price'
+        'price',
+        'description',
+        'features',
+        'is_active',
+        'type'
     ];
 
     protected $casts = [
-        'price' => 'decimal:2'
+        'price' => 'decimal:2',
+        'features' => 'array',
+        'is_active' => 'boolean'
     ];
 
     /**
@@ -47,6 +53,45 @@ class DistributionPricing extends Model
      */
     public static function hasPlans()
     {
-        return self::count() > 0;
+        return self::where('is_active', true)->count() > 0;
+    }
+
+    /**
+     * Get active plans ordered by price
+     */
+    public static function getActivePlans()
+    {
+        return self::where('is_active', true)
+                  ->orderBy('price', 'asc')
+                  ->get();
+    }
+
+    /**
+     * Get plan type display name
+     */
+    public function getTypeDisplayNameAttribute(): string
+    {
+        return match($this->type) {
+            'standard' => 'Musician',
+            'premium' => 'Musician Plus', 
+            'ultimate' => 'Ultimate',
+            default => ucfirst($this->type)
+        };
+    }
+
+    /**
+     * Check if this is the most popular plan
+     */
+    public function isPopular(): bool
+    {
+        return $this->type === 'premium';
+    }
+
+    /**
+     * Get features as formatted list
+     */
+    public function getFormattedFeaturesAttribute(): array
+    {
+        return $this->features ?? [];
     }
 }

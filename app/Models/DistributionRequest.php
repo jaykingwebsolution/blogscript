@@ -15,18 +15,35 @@ class DistributionRequest extends Model
         'artist_name',
         'song_title',
         'genre',
+        'isrc',
+        'upc',
+        'contributors',
+        'explicit_content',
+        'territories',
+        'record_label',
+        'lyrics',
         'release_date',
         'cover_image',
         'audio_file',
         'description',
         'status',
         'notes',
+        'dsp_delivery_status',
+        'dsp_platforms',
+        'delivered_at',
+        'distribution_fee',
     ];
 
     protected $casts = [
         'release_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'contributors' => 'array',
+        'territories' => 'array',
+        'explicit_content' => 'boolean',
+        'dsp_platforms' => 'array',
+        'delivered_at' => 'datetime',
+        'distribution_fee' => 'decimal:2',
     ];
 
     /**
@@ -35,6 +52,38 @@ class DistributionRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the assets associated with this distribution request.
+     */
+    public function assets()
+    {
+        return $this->hasMany(DistributionAsset::class);
+    }
+
+    /**
+     * Get the earnings associated with this distribution request.
+     */
+    public function earnings()
+    {
+        return $this->hasMany(DistributionEarning::class);
+    }
+
+    /**
+     * Get the audio asset
+     */
+    public function audioAsset()
+    {
+        return $this->assets()->where('asset_type', 'audio')->first();
+    }
+
+    /**
+     * Get the cover image asset
+     */
+    public function coverImageAsset()
+    {
+        return $this->assets()->where('asset_type', 'cover_image')->first();
     }
 
     /**
@@ -126,5 +175,86 @@ class DistributionRequest extends Model
             'Folk' => 'Folk',
             'Other' => 'Other',
         ];
+    }
+
+    /**
+     * Check if DSP delivery is pending
+     */
+    public function isDspDeliveryPending(): bool
+    {
+        return $this->dsp_delivery_status === 'pending';
+    }
+
+    /**
+     * Check if DSP delivery is delivered
+     */
+    public function isDspDelivered(): bool
+    {
+        return $this->dsp_delivery_status === 'delivered';
+    }
+
+    /**
+     * Get DSP delivery status color
+     */
+    public function getDspDeliveryStatusColorAttribute(): string
+    {
+        return match ($this->dsp_delivery_status) {
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'processing' => 'bg-blue-100 text-blue-800',
+            'delivered' => 'bg-green-100 text-green-800',
+            'failed' => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800',
+        };
+    }
+
+    /**
+     * Get total earnings for this release
+     */
+    public function getTotalEarningsAttribute(): float
+    {
+        return $this->earnings()->where('status', 'confirmed')->sum('amount');
+    }
+
+    /**
+     * Get formatted total earnings
+     */
+    public function getFormattedTotalEarningsAttribute(): string
+    {
+        $total = $this->total_earnings;
+        return '$' . number_format($total, 2);
+    }
+
+    /**
+     * Get contributors as formatted string
+     */
+    public function getFormattedContributorsAttribute(): string
+    {
+        if (!$this->contributors) {
+            return '';
+        }
+
+        $contributors = collect($this->contributors);
+        return $contributors->pluck('name')->implode(', ');
+    }
+
+    /**
+     * Get territories as formatted string
+     */
+    public function getFormattedTerritoriesAttribute(): string
+    {
+        if (!$this->territories) {
+            return 'Worldwide';
+        }
+
+        $territories = collect($this->territories);
+        return $territories->implode(', ');
+    }
+
+    /**
+     * Check if explicit content
+     */
+    public function isExplicit(): bool
+    {
+        return $this->explicit_content === true;
     }
 }

@@ -194,6 +194,38 @@ class User extends Authenticatable
     {
         return $this->hasMany(DistributionRequest::class);
     }
+
+    /**
+     * Get distribution earnings
+     */
+    public function distributionEarnings()
+    {
+        return $this->hasMany(DistributionEarning::class);
+    }
+
+    /**
+     * Get distribution payouts
+     */
+    public function distributionPayouts()
+    {
+        return $this->hasMany(DistributionPayout::class);
+    }
+
+    /**
+     * Get total confirmed earnings
+     */
+    public function getTotalDistributionEarningsAttribute(): float
+    {
+        return $this->distributionEarnings()->where('status', 'confirmed')->sum('amount');
+    }
+
+    /**
+     * Get pending payout amount
+     */
+    public function getPendingPayoutAmountAttribute(): float
+    {
+        return $this->distributionPayouts()->where('status', 'pending')->sum('amount');
+    }
     
     public function likedSongs()
     {
