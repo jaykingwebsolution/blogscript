@@ -12,7 +12,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-4xl font-bold">Welcome, {{ Auth::user()->artist_stage_name ?? Auth::user()->name }}</h1>
+                    <h1 class="text-4xl font-bold">Welcome, {{ e(Auth::user()->artist_stage_name ?? Auth::user()->name) }}</h1>
                     <p class="text-gray-300 text-xl">Artist Dashboard</p>
                 </div>
             </div>
