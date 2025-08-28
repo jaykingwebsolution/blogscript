@@ -146,6 +146,9 @@ Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlists.
 Route::get('/playlists/create', [PlaylistController::class, 'create'])->name('playlists.create')->middleware('auth');
 Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->name('playlists.show');
 
+// Upgrade Route
+Route::get('/upgrade', [\App\Http\Controllers\UpgradeController::class, 'index'])->name('upgrade');
+
 // Dashboard and Profile Routes (Authenticated Users)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
@@ -549,6 +552,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/music/{music}/like-status', [LikeController::class, 'status'])->name('music.like.status');
     Route::get('/music/liked', [LikeController::class, 'index'])->name('music.liked');
     Route::delete('/music/liked/clear', [LikeController::class, 'clear'])->name('music.liked.clear');
+});
+
+// Follow/Unfollow Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/users/{user}/follow', [\App\Http\Controllers\FollowController::class, 'toggle'])->name('users.follow.toggle');
+    Route::get('/users/{user}/follow-status', [\App\Http\Controllers\FollowController::class, 'status'])->name('users.follow.status');
+    Route::get('/users/{user}/followers', [\App\Http\Controllers\FollowController::class, 'followers'])->name('users.followers');
+    Route::get('/users/{user}/following', [\App\Http\Controllers\FollowController::class, 'following'])->name('users.following');
 });
 
 // Playlist Routes (authenticated - additional actions)

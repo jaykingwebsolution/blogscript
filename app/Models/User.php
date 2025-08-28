@@ -133,6 +133,21 @@ class User extends Authenticatable
         return $this->hasOne(Subscription::class);
     }
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class)->where('status', 'active')->latest();
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription()->where('expires_at', '>', now())->exists();
+    }
+
     public function verificationRequests()
     {
         return $this->hasMany(VerificationRequest::class);
@@ -153,6 +168,30 @@ class User extends Authenticatable
         return $this->hasMany(UserNotification::class);
     }
 
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id')->withTimestamps();
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id')->withTimestamps();
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->following()->where('followed_id', $user->id)->exists();
+    }
+
+    public function getFollowersCountAttribute()
+    {
+        return $this->followers()->count();
+    }
+
+    public function getFollowingCountAttribute()
+    {
+        return $this->following()->count();
+    }
 
     public function isVerified()
     {
