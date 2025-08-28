@@ -145,9 +145,9 @@
                     @endif
                 </p>
                 @if(!auth()->user()->isVerified())
-                <a href="{{ route('dashboard.verification') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
-                    Apply for Verification
-                </a>
+                <button class="bg-orange-500 text-white font-semibold py-3 px-6 rounded-full opacity-50 cursor-not-allowed inline-block" disabled>
+                    Apply for Verification (Coming Soon)
+                </button>
                 @else
                 <span class="bg-green-500 text-white font-semibold py-3 px-6 rounded-full inline-block">
                     Verified Artist
