@@ -128,11 +128,6 @@ class User extends Authenticatable
         return $this->hasMany(News::class, 'created_by');
     }
 
-    public function subscription()
-    {
-        return $this->hasOne(Subscription::class);
-    }
-
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
@@ -289,13 +284,6 @@ class User extends Authenticatable
     public function subscriptionPlan()
     {
         return $this->belongsTo(PricingPlan::class, 'subscription_plan_id');
-    }
-
-    public function hasActiveSubscription()
-    {
-        return $this->subscription_status === 'active' && 
-               $this->subscription_expires_at && 
-               $this->subscription_expires_at->isFuture();
     }
 
     public function isSubscriptionExpired()
