@@ -96,13 +96,99 @@
                         <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Submit Trending Songs</h3>
+                <h3 class="text-xl font-bold mb-2">Submit Trending</h3>
                 <p class="text-gray-300 text-sm mb-6">Request to feature your songs in trending sections for increased visibility.</p>
-                <a href="{{ route('dashboard.artist.submit-trending-song') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
-                    Submit Trending
+                <div class="flex flex-col space-y-2">
+                    <a href="{{ route('dashboard.artist.submit-trending-song') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition-colors inline-block">
+                        Submit Song
+                    </a>
+                    <a href="{{ route('dashboard.artist.submit-trending-mixtape') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition-colors inline-block">
+                        Submit Mixtape
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Action Cards Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Distribute Music -->
+        <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
+            <div class="text-center">
+                <div class="bg-green-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Distribute Music</h3>
+                <p class="text-gray-300 text-sm mb-6">Get your music on major streaming platforms worldwide.</p>
+                <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                    Start Distribution
                 </a>
             </div>
         </div>
+
+        <!-- Verify Account -->
+        <div class="bg-gradient-to-br from-orange-900/50 to-orange-700/50 rounded-xl p-8 border border-orange-700/50">
+            <div class="text-center">
+                <div class="bg-orange-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Get Verified</h3>
+                <p class="text-gray-300 text-sm mb-6">
+                    @if(auth()->user()->isVerified())
+                        You are verified! ✓
+                    @else
+                        Apply for artist verification to gain credibility.
+                    @endif
+                </p>
+                @if(!auth()->user()->isVerified())
+                <button class="bg-orange-500 text-white font-semibold py-3 px-6 rounded-full opacity-50 cursor-not-allowed inline-block" disabled>
+                    Apply for Verification (Coming Soon)
+                </button>
+                @else
+                <span class="bg-green-500 text-white font-semibold py-3 px-6 rounded-full inline-block">
+                    Verified Artist
+                </span>
+                @endif
+            </div>
+        </div>
+
+        <!-- Earnings (Visible after subscription) -->
+        @if(auth()->user()->hasActiveSubscription())
+        <div class="bg-gradient-to-br from-purple-900/50 to-purple-700/50 rounded-xl p-8 border border-purple-700/50">
+            <div class="text-center">
+                <div class="bg-purple-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Earnings</h3>
+                <p class="text-gray-300 text-sm mb-6">View your revenue and payout information.</p>
+                <a href="{{ route('dashboard.artist.earnings') }}" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                    View Earnings
+                </a>
+            </div>
+        </div>
+        @else
+        <!-- Upgrade to see earnings -->
+        <div class="bg-gradient-to-br from-gray-900/50 to-gray-700/50 rounded-xl p-8 border border-gray-700/50">
+            <div class="text-center">
+                <div class="bg-gray-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Earnings</h3>
+                <p class="text-gray-300 text-sm mb-6">Upgrade to Artist plan to track your earnings and revenue.</p>
+                <a href="{{ route('upgrade') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                    Upgrade to View
+                </a>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Recent Activity & Performance -->

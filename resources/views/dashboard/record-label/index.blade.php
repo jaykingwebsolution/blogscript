@@ -100,6 +100,53 @@
                     </a>
                 </div>
             </div>
+        </div>
+
+        <!-- Additional Action Cards Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Distribute Music -->
+            <div class="bg-gradient-to-br from-green-900/50 to-green-700/50 rounded-xl p-8 border border-green-700/50">
+                <div class="text-center">
+                    <div class="bg-green-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Distribute Music</h3>
+                    <p class="text-gray-300 text-sm mb-6">Get your artists' music on major streaming platforms worldwide.</p>
+                    <a href="{{ route('payment.distribution') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                        Start Distribution
+                    </a>
+                </div>
+            </div>
+
+            <!-- Verify Account -->
+            <div class="bg-gradient-to-br from-orange-900/50 to-orange-700/50 rounded-xl p-8 border border-orange-700/50">
+                <div class="text-center">
+                    <div class="bg-orange-400/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Get Verified</h3>
+                    <p class="text-gray-300 text-sm mb-6">
+                        @if(auth()->user()->isVerified())
+                            Your label is verified! ✓
+                        @else
+                            Apply for record label verification to gain credibility.
+                        @endif
+                    </p>
+                    @if(!auth()->user()->isVerified())
+                    <a href="{{ route('dashboard.verification') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                        Apply for Verification
+                    </a>
+                    @else
+                    <span class="bg-green-500 text-white font-semibold py-3 px-6 rounded-full inline-block">
+                        Verified Label
+                    </span>
+                    @endif
+                </div>
+            </div>
 
 
         </div>

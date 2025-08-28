@@ -128,9 +128,19 @@ class User extends Authenticatable
         return $this->hasMany(News::class, 'created_by');
     }
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
     public function subscription()
     {
-        return $this->hasOne(Subscription::class);
+        return $this->hasOne(Subscription::class)->where('status', 'active')->latest();
+    }
+
+    public function hasActiveSubscription()
+    {
+        return $this->subscription()->where('expires_at', '>', now())->exists();
     }
 
     public function verificationRequests()
@@ -153,6 +163,30 @@ class User extends Authenticatable
         return $this->hasMany(UserNotification::class);
     }
 
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id')->withTimestamps();
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id')->withTimestamps();
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->following()->where('followed_id', $user->id)->exists();
+    }
+
+    public function getFollowersCountAttribute()
+    {
+        return $this->followers()->count();
+    }
+
+    public function getFollowingCountAttribute()
+    {
+        return $this->following()->count();
+    }
 
     public function isVerified()
     {
@@ -250,13 +284,6 @@ class User extends Authenticatable
     public function subscriptionPlan()
     {
         return $this->belongsTo(PricingPlan::class, 'subscription_plan_id');
-    }
-
-    public function hasActiveSubscription()
-    {
-        return $this->subscription_status === 'active' && 
-               $this->subscription_expires_at && 
-               $this->subscription_expires_at->isFuture();
     }
 
     public function isSubscriptionExpired()

@@ -79,22 +79,6 @@
                     </button>
                 </a>
                 
-                <a href="{{ route('music.index') }}" class="group bg-gradient-to-r from-green-600/20 to-green-800/20 dark:from-green-600/50 dark:to-green-800/50 rounded-lg p-4 flex items-center space-x-4 cursor-pointer transition-all hover:scale-105">
-                    <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-green-600 to-green-800 rounded shadow-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-gray-900 dark:text-white truncate">Recently Played</h3>
-                    </div>
-                    <button class="w-10 h-10 bg-spotify-green rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform scale-90 group-hover:scale-100 transition-all flex-shrink-0">
-                        <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M8 5v10l7-5z"/>
-                        </svg>
-                    </button>
-                </a>
-                
                 <a href="{{ route('dashboard.library') }}" class="group bg-gradient-to-r from-blue-600/20 to-blue-800/20 dark:from-blue-600/50 dark:to-blue-800/50 rounded-lg p-4 flex items-center space-x-4 cursor-pointer transition-all hover:scale-105">
                     <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded shadow-lg flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 lg:w-8 lg:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -118,34 +102,6 @@
     <!-- Featured Content Sections -->
     <div class="space-y-8 px-4 lg:px-8 pb-32">
         <div class="max-w-7xl mx-auto space-y-12">
-            
-            <!-- Recently Played -->
-            <section>
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Recently Played</h2>
-                    <a href="{{ route('music.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium text-sm">Show all</a>
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-                    @for($i = 1; $i <= 6; $i++)
-                    <div class="music-card group bg-white dark:bg-gray-800/50 rounded-lg p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all cursor-pointer">
-                        <div class="relative mb-3 sm:mb-4">
-                            <img src="{{ asset('images/default-music.svg') }}" 
-                                 alt="Album {{ $i }}" 
-                                 class="w-full aspect-square object-cover rounded-lg shadow-md">
-                            <button class="play-btn absolute bottom-2 right-2 w-10 h-10 sm:w-12 sm:h-12 bg-spotify-green rounded-full flex items-center justify-center text-white shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                                <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M8 5v10l7-5z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1 truncate text-sm sm:text-base">Amazing Track {{ $i }}</h3>
-                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">Artist Name {{ $i }}</p>
-                    </div>
-                    @endfor
-                </div>
-            </section>
-
             <!-- Popular Artists -->
             <section>
                 <div class="flex items-center justify-between mb-6">
