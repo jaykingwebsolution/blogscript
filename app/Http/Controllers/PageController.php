@@ -35,6 +35,14 @@ class PageController extends Controller
         return view('pages.dmca', compact('content'));
     }
 
+    public function termsOfService()
+    {
+        // Get content from site settings - this maintains existing functionality 
+        // while allowing admin management through the dedicated DMCA/Policy Pages section
+        $content = SiteSetting::get('terms_of_service_content', '<h1>Terms of Service</h1><p>Terms of service content goes here.</p>');
+        return view('pages.terms-of-service', compact('content'));
+    }
+
     public function submitContactForm(Request $request)
     {
         $request->validate([

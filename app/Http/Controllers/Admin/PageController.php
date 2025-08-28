@@ -152,4 +152,50 @@ class PageController extends Controller
 
         return $pages[$page] ?? null;
     }
+
+    /**
+     * Get all available pages for public display (sidebar/footer)
+     */
+    public static function getPublicPages(): array
+    {
+        $pages = [
+            [
+                'id' => 'about',
+                'title' => 'About Us',
+                'slug' => 'about',
+                'route_name' => 'about',
+                'url' => route('about'),
+            ],
+            [
+                'id' => 'contact',
+                'title' => 'Contact',
+                'slug' => 'contact',
+                'route_name' => 'contact',
+                'url' => route('contact'),
+            ],
+            [
+                'id' => 'privacy-policy',
+                'title' => 'Privacy Policy',
+                'slug' => 'privacy-policy',
+                'route_name' => 'privacy-policy',
+                'url' => route('privacy-policy'),
+            ],
+            [
+                'id' => 'terms-of-service',
+                'title' => 'Terms of Service',
+                'slug' => 'terms-of-service',
+                'route_name' => 'terms-of-service',
+                'url' => route('terms-of-service'),
+            ],
+            [
+                'id' => 'dmca',
+                'title' => 'DMCA',
+                'slug' => 'dmca',
+                'route_name' => 'dmca',
+                'url' => route('dmca'),
+            ],
+        ];
+
+        return $pages;
+    }
 }
