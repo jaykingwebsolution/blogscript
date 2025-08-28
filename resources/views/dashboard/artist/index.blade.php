@@ -122,7 +122,7 @@
                 </div>
                 <h3 class="text-xl font-bold mb-2">Distribute Music</h3>
                 <p class="text-gray-300 text-sm mb-6">Get your music on major streaming platforms worldwide.</p>
-                <a href="{{ route('payment.distribution') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
+                <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors inline-block">
                     Start Distribution
                 </a>
             </div>
