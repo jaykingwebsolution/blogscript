@@ -15,6 +15,9 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // Get public pages for footer links (retrieve once to avoid duplicate calls)
+        $publicPages = PageController::getPublicPages();
+
         try {
             // Get featured/latest content from database
             $latestMusic = Music::published()->with(['category', 'tags'])->latest()->take(4)->get();
@@ -26,9 +29,6 @@ class HomeController extends Controller
             // Include Spotify imported content
             $spotifyArtists = SpotifyArtist::getFeatured(6);
             $recentSpotifyImports = SpotifyArtist::getRecentlyImported(4);
-
-            // Get public pages for footer links
-            $publicPages = PageController::getPublicPages();
 
             return view('home', compact(
                 'latestMusic', 
@@ -50,7 +50,7 @@ class HomeController extends Controller
                 'spotifyHighlights' => collect(),
                 'spotifyArtists' => collect(),
                 'recentSpotifyImports' => collect(),
-                'publicPages' => PageController::getPublicPages(),
+                'publicPages' => $publicPages,
                 'useDummyData' => true
             ]);
         }
