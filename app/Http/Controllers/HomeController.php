@@ -9,6 +9,7 @@ use App\Models\Video;
 use App\Models\News;
 use App\Models\SpotifyPost;
 use App\Models\SpotifyArtist;
+use App\Http\Controllers\Admin\PageController;
 
 class HomeController extends Controller
 {
@@ -26,6 +27,9 @@ class HomeController extends Controller
             $spotifyArtists = SpotifyArtist::getFeatured(6);
             $recentSpotifyImports = SpotifyArtist::getRecentlyImported(4);
 
+            // Get public pages for footer links
+            $publicPages = PageController::getPublicPages();
+
             return view('home', compact(
                 'latestMusic', 
                 'featuredArtists', 
@@ -33,7 +37,8 @@ class HomeController extends Controller
                 'recentVideos',
                 'spotifyHighlights',
                 'spotifyArtists',
-                'recentSpotifyImports'
+                'recentSpotifyImports',
+                'publicPages'
             ));
         } catch (\Exception $e) {
             // Fallback to empty collections if database is not available
@@ -45,6 +50,7 @@ class HomeController extends Controller
                 'spotifyHighlights' => collect(),
                 'spotifyArtists' => collect(),
                 'recentSpotifyImports' => collect(),
+                'publicPages' => PageController::getPublicPages(),
                 'useDummyData' => true
             ]);
         }
