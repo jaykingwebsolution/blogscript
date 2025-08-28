@@ -148,9 +148,7 @@
 
         <!-- Spotify-style Footer -->
         <div class="p-4 border-t border-gray-800">
-            @php
-                $publicPages = \App\Http\Controllers\Admin\PageController::getPublicPages();
-            @endphp
+            {{-- $publicPages should be passed to this view from the controller or a view composer --}}
             
             <!-- User actions (auth-specific) -->
             @auth
