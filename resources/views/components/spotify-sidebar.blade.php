@@ -1,3 +1,7 @@
+@php
+    $publicPages = \App\Http\Controllers\Admin\PageController::getPublicPages();
+@endphp
+
 <!-- Spotify-style Sidebar -->
 <aside class="hidden lg:flex lg:flex-col lg:w-64 bg-spotify-black border-r border-gray-800 overflow-y-auto">
     <div class="flex flex-col h-full">
@@ -148,8 +152,6 @@
 
         <!-- Spotify-style Footer -->
         <div class="p-4 border-t border-gray-800">
-            {{-- $publicPages should be passed to this view from the controller or a view composer --}}
-            
             <!-- User actions (auth-specific) -->
             @auth
                 <div class="mb-4">
@@ -282,10 +284,6 @@
 
             <!-- Mobile Footer (same as desktop) -->
             <div class="p-4 border-t border-gray-800 mt-auto">
-                @php
-                    $publicPages = \App\Http\Controllers\Admin\PageController::getPublicPages();
-                @endphp
-                
                 <!-- User actions (auth-specific) -->
                 @auth
                     <div class="mb-4">

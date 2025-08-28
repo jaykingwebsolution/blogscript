@@ -230,9 +230,6 @@
                     <a href="{{ route('admin.music.create') }}" class="block w-full bg-secondary text-white text-center py-3 rounded-lg hover:bg-primary transition-colors font-medium">
                         <i class="fas fa-music mr-2"></i>Add Music
                     </a>
-                    <a href="{{ route('admin.artists.create') }}" class="block w-full bg-accent text-white text-center py-3 rounded-lg hover:bg-yellow-600 transition-colors font-medium">
-                        <i class="fas fa-microphone mr-2"></i>Add Artist
-                    </a>
                     <a href="{{ route('admin.notifications.create') }}" class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium">
                         <i class="fas fa-bell mr-2"></i>Send Notification
                     </a>
