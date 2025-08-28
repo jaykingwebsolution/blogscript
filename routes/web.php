@@ -125,6 +125,7 @@ Route::post('/contact', [PageController::class, 'submitContactForm'])->name('con
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/dmca', [PageController::class, 'dmca'])->name('dmca');
+Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
 
 // Search
 Route::get('/search', [SearchController::class, 'index'])->name('search');

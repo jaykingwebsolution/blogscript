@@ -1,3 +1,7 @@
+@php
+    $publicPages = \App\Http\Controllers\Admin\PageController::getPublicPages();
+@endphp
+
 <!-- Spotify-style Sidebar -->
 <aside class="hidden lg:flex lg:flex-col lg:w-64 bg-spotify-black border-r border-gray-800 overflow-y-auto">
     <div class="flex flex-col h-full">
@@ -40,6 +44,21 @@
                         <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
                     </svg>
                     <span>Your Library</span>
+                </a>
+
+                <!-- User account navigation -->
+                <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard*') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ route('dashboard.profile') }}" class="sidebar-link {{ request()->routeIs('dashboard.profile') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span>Profile</span>
                 </a>
             @else
                 <a href="{{ route('music.index') }}" class="sidebar-link {{ request()->routeIs('music.index') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
@@ -131,100 +150,56 @@
             </div>
         </nav>
 
-        <!-- User Profile -->
+        <!-- Spotify-style Footer -->
         <div class="p-4 border-t border-gray-800">
+            <!-- User actions (auth-specific) -->
             @auth
-            <!-- User Dropdown -->
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" class="flex items-center space-x-3 w-full text-left hover:bg-gray-700 p-2 rounded-lg transition-colors">
-                    <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('images/default-artist.svg') }}" alt="Profile" class="w-8 h-8 rounded-full">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-gray-400 truncate">{{ ucfirst(auth()->user()->role) }}</p>
-                    </div>
-                    @if(auth()->user()->isVerified())
-                        <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                    @endif
-                    <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </button>
-
-                <div x-show="open" @click.away="open = false" x-transition class="absolute bottom-full left-0 right-0 mb-2 bg-gray-800 rounded-lg shadow-lg ring-1 ring-white/10 z-50">
-                    <div class="py-1">
-                        <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
-                            </svg>
-                            Dashboard
-                        </a>
-                        <a href="{{ route('dashboard.profile') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                            Profile
-                        </a>
-                        @if(auth()->user()->isArtist() || auth()->user()->isRecordLabel())
-                            <a href="{{ route('artist.music.index') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                <div class="mb-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('images/default-artist.svg') }}" alt="Profile" class="w-6 h-6 rounded-full">
+                            <span class="text-xs text-white truncate">{{ auth()->user()->name }}</span>
+                            @if(auth()->user()->isVerified())
+                                <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
-                                My Music
-                            </a>
-                            <a href="{{ route('distribution.create') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Submit Distribution
-                            </a>
-                            <a href="{{ route('distribution.my-submissions') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                </svg>
-                                My Submissions
-                            </a>
-                        @endif
-                        <a href="{{ route('dashboard.subscription') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                            </svg>
-                            Subscription
-                        </a>
-                        @if(auth()->user()->isAdmin())
-                            <div class="border-t border-gray-600"></div>
-                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                                Admin Panel
-                            </a>
-                        @endif
-                        <div class="border-t border-gray-600"></div>
-                        <form method="POST" action="{{ route('logout') }}">
+                            @endif
+                        </div>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button type="submit" class="text-xs text-gray-400 hover:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                 </svg>
-                                Sign Out
                             </button>
                         </form>
                     </div>
                 </div>
-            </div>
             @else
-            <div class="space-y-2">
-                <a href="{{ route('login') }}" class="block w-full text-center py-2 px-4 bg-spotify-green text-white rounded-full font-semibold hover:bg-green-600 transition-colors">
-                    Log In
-                </a>
-                <a href="{{ route('register') }}" class="block w-full text-center py-2 px-4 border border-gray-600 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-colors">
-                    Sign Up
-                </a>
-            </div>
+                <div class="space-y-2 mb-4">
+                    <a href="{{ route('login') }}" class="block w-full text-center py-1.5 px-3 bg-spotify-green text-white rounded-full text-xs font-semibold hover:bg-green-600 transition-colors">
+                        Log In
+                    </a>
+                    <a href="{{ route('register') }}" class="block w-full text-center py-1.5 px-3 border border-gray-600 text-gray-300 rounded-full text-xs font-semibold hover:bg-gray-700 transition-colors">
+                        Sign Up
+                    </a>
+                </div>
             @endauth
+            
+            <!-- Dynamic Pages Links -->
+            <div class="space-y-1 mb-4">
+                @foreach($publicPages as $page)
+                    <a href="{{ $page['url'] }}" class="block text-xs text-gray-400 hover:text-white transition-colors py-1">
+                        {{ $page['title'] }}
+                    </a>
+                @endforeach
+            </div>
+
+            <!-- Copyright/Brand -->
+            <div class="text-xs text-gray-500 pt-2 border-t border-gray-800">
+                <p>&copy; {{ date('Y') }} MusicStream</p>
+                <p class="mt-1">Your ultimate music platform</p>
+            </div>
         </div>
     </div>
 </aside>
@@ -274,9 +249,90 @@
                     </svg>
                     <span>Browse Playlists</span>
                 </a>
-                
-                <!-- Add other mobile navigation items -->
+
+                @auth
+                    <a href="{{ route('dashboard.library') }}" class="sidebar-link {{ request()->routeIs('dashboard.library') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                        <span>Your Library</span>
+                    </a>
+
+                    <!-- User account navigation -->
+                    <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard*') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="{{ route('dashboard.profile') }}" class="sidebar-link {{ request()->routeIs('dashboard.profile') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        <span>Profile</span>
+                    </a>
+                @else
+                    <a href="{{ route('music.index') }}" class="sidebar-link {{ request()->routeIs('music.index') ? 'active' : '' }} flex items-center space-x-3 px-3 py-2 rounded-lg text-white/80 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                        <span>Browse Music</span>
+                    </a>
+                @endauth
             </nav>
+
+            <!-- Mobile Footer (same as desktop) -->
+            <div class="p-4 border-t border-gray-800 mt-auto">
+                <!-- User actions (auth-specific) -->
+                @auth
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <img src="{{ auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('images/default-artist.svg') }}" alt="Profile" class="w-6 h-6 rounded-full">
+                                <span class="text-xs text-white truncate">{{ auth()->user()->name }}</span>
+                                @if(auth()->user()->isVerified())
+                                    <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                            </div>
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="text-xs text-gray-400 hover:text-white transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <div class="space-y-2 mb-4">
+                        <a href="{{ route('login') }}" class="block w-full text-center py-1.5 px-3 bg-spotify-green text-white rounded-full text-xs font-semibold hover:bg-green-600 transition-colors">
+                            Log In
+                        </a>
+                        <a href="{{ route('register') }}" class="block w-full text-center py-1.5 px-3 border border-gray-600 text-gray-300 rounded-full text-xs font-semibold hover:bg-gray-700 transition-colors">
+                            Sign Up
+                        </a>
+                    </div>
+                @endauth
+                
+                <!-- Dynamic Pages Links -->
+                <div class="space-y-1 mb-4">
+                    @foreach($publicPages as $page)
+                        <a href="{{ $page['url'] }}" class="block text-xs text-gray-400 hover:text-white transition-colors py-1">
+                            {{ $page['title'] }}
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- Copyright/Brand -->
+                <div class="text-xs text-gray-500 pt-2 border-t border-gray-800">
+                    <p>&copy; {{ date('Y') }} MusicStream</p>
+                    <p class="mt-1">Your ultimate music platform</p>
+                </div>
+            </div>
         </div>
     </aside>
     
