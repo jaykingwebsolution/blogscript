@@ -9,11 +9,15 @@ use App\Models\Video;
 use App\Models\News;
 use App\Models\SpotifyPost;
 use App\Models\SpotifyArtist;
+use App\Http\Controllers\Admin\PageController;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // Get public pages for footer links (retrieve once to avoid duplicate calls)
+        $publicPages = PageController::getPublicPages();
+
         try {
             // Get featured/latest content from database
             $latestMusic = Music::published()->with(['category', 'tags'])->latest()->take(4)->get();
@@ -33,7 +37,8 @@ class HomeController extends Controller
                 'recentVideos',
                 'spotifyHighlights',
                 'spotifyArtists',
-                'recentSpotifyImports'
+                'recentSpotifyImports',
+                'publicPages'
             ));
         } catch (\Exception $e) {
             // Fallback to empty collections if database is not available
@@ -45,6 +50,7 @@ class HomeController extends Controller
                 'spotifyHighlights' => collect(),
                 'spotifyArtists' => collect(),
                 'recentSpotifyImports' => collect(),
+                'publicPages' => $publicPages,
                 'useDummyData' => true
             ]);
         }
