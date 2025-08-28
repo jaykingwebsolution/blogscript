@@ -12,7 +12,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-4xl font-bold">Welcome, {{ Auth::user()->name }}</h1>
+                    <h1 class="text-4xl font-bold">Welcome, {{ e(Auth::user()->name) }}</h1>
                     <p class="text-gray-300 text-xl">Listener Dashboard</p>
                 </div>
             </div>
