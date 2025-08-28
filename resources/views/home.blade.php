@@ -285,9 +285,6 @@
 <!-- Site Footer -->
 <footer class="bg-spotify-black border-t border-gray-800 mt-16">
     <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-        @php
-            $publicPages = \App\Http\Controllers\Admin\PageController::getPublicPages();
-        @endphp
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <!-- Company Info -->
